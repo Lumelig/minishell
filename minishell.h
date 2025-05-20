@@ -58,3 +58,5 @@ typedef struct s_cmd_node
 	t_file_list			  *files;
 	struct s_cmd_node	*next;
 }	t_cmd_node;
+
+#endif

@@ -7,7 +7,7 @@ int main(void)
     while (1)
     {
         // Display prompt and read user input
-        input = readline("minishell> ");
+        input = readline("minihell> ");
 
         // Exit on EOF (Ctrl+D) or NULL input
         if (!input)
