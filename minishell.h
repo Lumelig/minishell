@@ -1,3 +1,6 @@
+#ifndef MINISHELL_H
+#define MINISHELL_H
+
 #include <stdlib.h>      // getenv
 
 #include <stdio.h>       // printf, perror
@@ -23,3 +26,35 @@
 
 #include <readline/readline.h>      // readline, rl_on_new_line, rl_replace_line, rl_redisplay
 #include <readline/history.h>       // add_history, rl_clear_history
+
+typedef struct s_file_node t_file_node;
+typedef struct s_cmd_node t_cmd_node;
+
+typedef struct s_file_list
+{
+	t_file_node	*head;
+	t_file_node	*tail;
+	ssize_t		  size;
+}	t_file_list;
+
+typedef struct s_cmd_list
+{
+	t_cmd_node	*head;
+	t_cmd_node	*tail;
+	ssize_t		  size;
+}	t_cmd_list;
+
+typedef struct s_file_node
+{
+	char				        *filename;
+	int					        redir_type;
+	struct s_file_node	*next;
+}	t_file_node;
+
+typedef struct s_cmd_node
+{
+	int					      cmd_type;
+	char				      **cmd;
+	t_file_list			  *files;
+	struct s_cmd_node	*next;
+}	t_cmd_node;
