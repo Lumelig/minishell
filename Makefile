@@ -32,7 +32,7 @@ $(LIBFT_DIR)/libft.a:
 
 # Compile the final binary
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -L$(LIBFT_DIR) -lreadline -o $@ $^
+	$(CC) $(CFLAGS) -L$(LIBFT_DIR) -lreadline -o $@ $^ $(LIBFT_DIR)/libft.a
 	
 banner:
 	
@@ -54,11 +54,12 @@ banner:
 # Compile object files
 $(OBJ_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
-	@$(MAKE) -C $(LIBFT_DIR) clean
+	@$(MAKE) -C $(LIBFT_DIR)
 
 # Clean object files
 clean:
 	@rm -rf $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR/obj)
 
 
 # Clean everything
