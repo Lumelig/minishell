@@ -14,6 +14,22 @@ bool	empty_input(char *input)
 	return (false);
 }
 
+void print_history(void)
+{
+    HIST_ENTRY **the_list;
+    int i = 0;
+
+    the_list = history_list();
+    if (the_list)
+    {
+        while (the_list[i])
+        {
+            printf("%d: %s\n", i + history_base, the_list[i]->line);
+            i++;
+        }
+    }
+}
+
 int	main(int argc, char **argv, char **env)
 {
     char *input;
@@ -40,7 +56,7 @@ int	main(int argc, char **argv, char **env)
         // If user typed something, add to history
         if (*input)
             add_history(input);
-
+		print_history();
         // Simple echo of the command
         printf("You typed: %s\n", input);
 		user = ft_atoi(input);

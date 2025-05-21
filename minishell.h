@@ -3,6 +3,7 @@
 
 #include <stdlib.h>      // getenv
 #include "libft/libft.h"
+# include <stdbool.h>
 
 #include <stdio.h>       // printf, perror
 #include <stdlib.h>      // malloc, free, exit
