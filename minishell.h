@@ -29,6 +29,23 @@
 #include <readline/readline.h>      // readline, rl_on_new_line, rl_replace_line, rl_redisplay
 #include <readline/history.h>       // add_history, rl_clear_history
 
+typedef enum {
+    TOKEN_WORD,        // e.g., echo, hello
+    TOKEN_PIPE,        // |
+    TOKEN_REDIR_IN,    // <
+    TOKEN_REDIR_OUT,   // >
+    TOKEN_REDIR_APPEND,// >>
+    TOKEN_HEREDOC,     // <<
+    TOKEN_EOF
+} t_token_type;
+
+typedef struct s_token {
+    t_token_type type;
+    char *value;
+    struct s_token *next;
+} t_token;
+
+
 typedef struct s_file_node t_file_node;
 typedef struct s_cmd_node t_cmd_node;
 
@@ -60,5 +77,7 @@ typedef struct s_cmd_node
 	t_file_list			  *files;
 	struct s_cmd_node	*next;
 }	t_cmd_node;
+
+t_token *tokenize(char *line);
 
 #endif

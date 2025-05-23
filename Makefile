@@ -11,7 +11,7 @@ LIBFT_DIR	= libft
 TARGET = $(BIN_DIR)/minishell
 
 # Source files (manually listed)
-SRC_FILES = main.c 
+SRC_FILES = main.c parsing.c
 
 # Define the full source and object file paths (without using SRC_DIR)
 SRC = $(SRC_FILES)
