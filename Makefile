@@ -1,6 +1,6 @@
 # Compiler and compiler flags
 CC = cc
-CFLAGS     = -Wall -Wextra -Werror -Iinclude -I$(LIBFT_DIR) -g
+CFLAGS     = -Wall -Wextra -Werror -Iinclude -I$(LIBFT_DIR) #-fsanitize=address -g
 
 # Directories
 OBJ_DIR 	= obj
@@ -11,7 +11,7 @@ LIBFT_DIR	= libft
 TARGET = $(BIN_DIR)/minishell
 
 # Source files (manually listed)
-SRC_FILES = main.c parsing.c
+SRC_FILES = main.c parsing.c quote.c
 
 # Define the full source and object file paths (without using SRC_DIR)
 SRC = $(SRC_FILES)

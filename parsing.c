@@ -1,5 +1,22 @@
 #include "minishell.h"
 
+
+
+// Helper function to clean up tokens on error
+static t_token *cleanup_tokens(t_token *head) {
+    t_token *current = head;
+    t_token *next;
+    
+    while (current) {
+        next = current->next;
+        free(current->value);
+        free(current);
+        current = next;
+    }
+    
+    return NULL;
+}
+
 // Enhanced add_token function with error checking
 static int add_token(t_token **head, t_token_type type, const char *value) {
     t_token *new_token = malloc(sizeof(t_token));
@@ -27,23 +44,6 @@ static int add_token(t_token **head, t_token_type type, const char *value) {
     
     return 1;  // Success
 }
-
-// Helper function to clean up tokens on error
-static t_token *cleanup_tokens(t_token *head) {
-    t_token *current = head;
-    t_token *next;
-    
-    while (current) {
-        next = current->next;
-        free(current->value);
-        free(current);
-        current = next;
-    }
-    
-    return NULL;
-}
-
-
 t_token *tokenize(char *line) {
     if (!line)
         return NULL;
@@ -87,27 +87,70 @@ t_token *tokenize(char *line) {
             }
         } 
         else {
-            // Handle words/arguments
+            // Handle quoted strings and words
             int start = i;
+            char quote_char = 0;
             
-            // Find end of word (stop at whitespace or special characters)
-            while (line[i] && !isspace(line[i]) && 
-                   line[i] != '|' && line[i] != '<' && line[i] != '>') {
-                i++;
-            }
-            
-            if (i > start) {  // Only create token if we have content
-                char *word = ft_substr(line, start, i - start);
-                if (!word || !add_token(&head, TOKEN_WORD, word)) {
-                    free(word);
-                    return cleanup_tokens(head);
+            // Check if this is a quoted string
+            if (line[i] == '"' || line[i] == '\'') {
+                quote_char = line[i];
+                i++; // Skip opening quote
+                start = i; // Start after the quote
+                
+                // Find closing quote
+                while (line[i] && line[i] != quote_char) {
+                    i++;
                 }
-                free(word);  // Free after copying in add_token
+                
+                if (line[i] == quote_char) {
+                    // Found closing quote
+                    if (i > start) {  // Only create token if we have content
+                        char *word = ft_substr(line, start, i - start);
+                        if (!word || !add_token(&head, TOKEN_WORD, word)) {
+                            free(word);
+                            return cleanup_tokens(head);
+                        }
+                        free(word);
+                    } else {
+                        // Empty quoted string ""
+                        if (!add_token(&head, TOKEN_WORD, "")) {
+                            return cleanup_tokens(head);
+                        }
+                    }
+                    i++; // Skip closing quote
+                } else {
+                    // Unclosed quote - treat as regular word from original start
+                    i = start - 1; // Go back to include the quote
+                    while (line[i] && !isspace(line[i]) && 
+                           line[i] != '|' && line[i] != '<' && line[i] != '>') {
+                        i++;
+                    }
+                    
+                    char *word = ft_substr(line, start - 1, i - (start - 1));
+                    if (!word || !add_token(&head, TOKEN_WORD, word)) {
+                        free(word);
+                        return cleanup_tokens(head);
+                    }
+                    free(word);
+                }
+            } else {
+                // Regular unquoted word
+                while (line[i] && !isspace(line[i]) && 
+                       line[i] != '|' && line[i] != '<' && line[i] != '>') {
+                    i++;
+                }
+                
+                if (i > start) {  // Only create token if we have content
+                    char *word = ft_substr(line, start, i - start);
+                    if (!word || !add_token(&head, TOKEN_WORD, word)) {
+                        free(word);
+                        return cleanup_tokens(head);
+                    }
+                    free(word);
+                }
             }
         }
     }
     
     return head;
 }
-
-

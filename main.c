@@ -1,17 +1,18 @@
 #include "minishell.h"
-bool	empty_input(char *input)
-{
-	int	i;
 
-	i = 0;
-	while (input[i] && ft_is_space(input[i]))
-		i++;
-	if (i == (int)ft_strlen(input))
-	{
-		free(input);
-		return (true);
-	}
-	return (false);
+bool empty_input(char *input)
+{
+    int i;
+
+    if (!input)
+        return (true);
+    
+    i = 0;
+    while (input[i] && ft_is_space(input[i]))
+        i++;
+    
+    // Don't free input here - let caller handle it
+    return (input[i] == '\0');
 }
 
 void print_history(void)
@@ -30,49 +31,188 @@ void print_history(void)
     }
 }
 
-int	main(int argc, char **argv, char **env)
+// Function to free token list
+void free_tokens(t_token *token)
 {
-	t_token *token;
+    t_token *temp;
+    
+    while (token)
+    {
+        temp = token->next;
+        free(token->value);
+        free(token);
+        token = temp;
+    }
+}
+
+int main(int argc, char **argv, char **env)
+{
+    t_token *token;
     char *input;
-	char *buf = NULL;
-	char *cwd;
-	(void)argc;
+    char *cwd;
+    (void)argc;
     (void)argv;
-	(void)env;
+    (void)env;
+
+    // Initialize readline history
+    using_history();
 
     while (1)
     {
-		cwd = getcwd(buf, BUFSIZ);
-        printf("%s$", cwd);
-		
-        input = readline("\033[1;32 \033[0m");
-		if (empty_input(input))
-			continue ;
+        // Get current working directory for prompt
+        cwd = getcwd(NULL, 0);
+        if (cwd)
+        {
+            printf("%s$ ", cwd);
+            free(cwd);
+        }
+        else
+        {
+            printf("minihell$ ");
+        }
 
+        // Get input (this handles quote continuation)
+        input = get_complete_input();
+        
+        // Check if user pressed Ctrl+D
         if (!input)
         {
             printf("exit\n");
             break;
         }
 
-        if (*input)
-            add_history(input);
-		print_history();
-       
-		token = tokenize(input);
-		while (token)
-		{
-			printf("%s \n", token->value);
-			token = token->next;
-		}
+        // Check if input is empty (only whitespace)
+        if (empty_input(input))
+        {
+            free(input);
+            continue;
+        }
 
-		if(!ft_strncmp("exit", input, 4))
-		{
-			free(input);
-			return (0);
-		}
+        // Add to history if not empty
+        add_history(input);
+
+        // Debug: print history (remove this in production)
+        print_history();
+
+        // Tokenize input
+        token = tokenize(input);
+        
+        // Debug: print tokens (remove this in production)
+        t_token *current = token;
+        while (current)
+        {
+            printf("Token: '%s'\n", current->value);
+            current = current->next;
+        }
+
+        // Check for exit command
+        if (token && !ft_strncmp("exit", token->value, 5) && 
+            ft_strlen(token->value) == 4)
+        {
+            free_tokens(token);
+            free(input);
+            break;
+        }
+
+        // Here you would execute the command
+        // execute_command(token);
+
+        // Clean up
+        free_tokens(token);
         free(input);
     }
 
-    return 0;
+    // Clean up history
+    clear_history();
+    return (0);
 }
+
+// Alternative version with better prompt handling
+// int main_alternative(int argc, char **argv, char **env)
+// {
+//     t_token *token;
+//     char *input;
+//     char prompt[1024];
+//     (void)argc;
+//     (void)argv;
+//     (void)env;
+
+//     using_history();
+
+//     while (1)
+//     {
+//         // Create a nice prompt with current directory
+//         char *cwd = getcwd(NULL, 0);
+//         if (cwd)
+//         {
+//             snprintf(prompt, sizeof(prompt), "\033[1;32m%s\033[0m$ ", basename(cwd));
+//             free(cwd);
+//         }
+//         else
+//         {
+//             strcpy(prompt, "minishell$ ");
+//         }
+
+//         // Use readline with custom prompt
+//         input = readline(prompt);
+        
+//         if (!input)
+//         {
+//             printf("exit\n");
+//             break;
+//         }
+
+//         if (empty_input(input))
+//         {
+//             free(input);
+//             continue;
+//         }
+
+//         // Handle quote continuation
+//         int quote_status = check_quotes_balanced(input);
+//         char *complete_input = input;
+        
+//         while (quote_status != 0)
+//         {
+//             char *cont_prompt = get_continuation_prompt(quote_status);
+//             char *continuation = readline(cont_prompt);
+            
+//             if (!continuation)
+//                 break;
+                
+//             char *temp = malloc(strlen(complete_input) + strlen(continuation) + 2);
+//             sprintf(temp, "%s\n%s", complete_input, continuation);
+            
+//             if (complete_input != input)
+//                 free(complete_input);
+//             free(continuation);
+//             complete_input = temp;
+            
+//             quote_status = check_quotes_balanced(complete_input);
+//         }
+
+//         add_history(complete_input);
+        
+//         token = tokenize(complete_input);
+        
+//         if (token && !strcmp(token->value, "exit"))
+//         {
+//             free_tokens(token);
+//             if (complete_input != input)
+//                 free(complete_input);
+//             free(input);
+//             break;
+//         }
+
+//         // Execute command here
+//         // execute_command(token);
+
+//         free_tokens(token);
+//         if (complete_input != input)
+//             free(complete_input);
+//         free(input);
+//     }
+
+//     clear_history();
+//     return (0);
+// }
