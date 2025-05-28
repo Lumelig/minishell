@@ -2,7 +2,7 @@
 #define MINISHELL_H
 
 #include <stdlib.h>      // getenv
-#include "libft/libft.h"
+#include "libft.h"
 # include <stdbool.h>
 
 #include <stdio.h>       // printf, perror

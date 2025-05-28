@@ -53,7 +53,7 @@ t_token *tokenize(char *line) {
     
     while (line[i]) {
         // Skip whitespace
-        if (isspace(line[i])) {
+        if (ft_isspace(line[i])) {
             i++;
             continue;
         }

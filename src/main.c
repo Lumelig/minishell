@@ -8,7 +8,7 @@ bool empty_input(char *input)
         return (true);
     
     i = 0;
-    while (input[i] && ft_is_space(input[i]))
+    while (input[i] && ft_isspace(input[i]))
         i++;
     
     // Don't free input here - let caller handle it

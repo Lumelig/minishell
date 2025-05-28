@@ -93,8 +93,7 @@ char *get_complete_input(void) {
     char *temp = NULL;
     int quote_status;
     
-    // Get initial input
-    line = readline("minishell$ ");
+    line = readline("");
     if (!line)
         return NULL;
     
@@ -111,8 +110,8 @@ char *get_complete_input(void) {
     free(line);
     
     while (quote_status != 0) {
-        char *continuation_prompt = get_continuation_prompt(quote_status);
-        line = readline(continuation_prompt);
+        line = readline(get_continuation_prompt(quote_status));
+
         
         if (!line) {
             // User pressed Ctrl+D, return what we have
@@ -126,21 +125,14 @@ char *get_complete_input(void) {
             free(line);
             return NULL;
         }
-        
-        sprintf(temp, "%s\n%s", complete_input, line);
+        temp = ft_strjoin(line, complete_input);
         free(complete_input);
-        free(line);
-        complete_input = temp;
         
         // Check if quotes are now balanced
-        quote_status = check_quotes_balanced(complete_input);
+        quote_status = check_quotes_balanced(temp);
     }
     
-    // Add to history if we have content
-    if (complete_input && strlen(complete_input) > 0)
-        add_history(complete_input);
-    
-    return complete_input;
+    return temp;
 }
 
 // Main shell loop implementation
