@@ -93,4 +93,6 @@ int check_quotes_balanced_enhanced(char *line);
 
 int check_quotes_balanced(char *line);
 
+t_token *expand_and_split_tokens(t_token *tokens);
+
 #endif

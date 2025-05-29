@@ -1,45 +1,9 @@
 #include "minishell.h"
 
-// Function to check if quotes are balanced in a line
-int check_quotes_balanced(char *line) {
-    int single_quotes = 0;
-    int double_quotes = 0;
-    int i = 0;
-    
-    while (line[i]) {
-        if (line[i] == '\'' && double_quotes == 0) {
-            single_quotes = !single_quotes;
-        } else if (line[i] == '"' && single_quotes == 0) {
-            double_quotes = !double_quotes;
-        }
-        i++;
-    }
-    
-    // Return the type of unclosed quote, or 0 if balanced
-    if (single_quotes)
-        return 1; // Single quote unclosed
-    if (double_quotes)
-        return 2; // Double quote unclosed
-    return 0; // Balanced
-}
-
-// Get the appropriate prompt for continuation
-char *get_continuation_prompt(int quote_type) {
-    if (quote_type == 1)
-        return "quote> ";  // Single quote continuation
-    else if (quote_type == 2)
-        return "dquote> "; // Double quote continuation
-    return "minishell$ ";  // Default prompt
-}
-
-// Main function to handle multi-line input with quote continuation
-
-
-// Enhanced quote checker that handles escape sequences
 int check_quotes_balanced_enhanced(char *line) 
 {
-    int single_quotes = 0;
-    int double_quotes = 0;
+    int in_single_quotes = 0;
+    int in_double_quotes = 0;
     int i = 0;
     
     while (line[i]) {
@@ -49,19 +13,31 @@ int check_quotes_balanced_enhanced(char *line)
             continue;
         }
         
-        if (line[i] == '\'' && double_quotes == 0) {
-            single_quotes = !single_quotes;
-        } else if (line[i] == '"' && single_quotes == 0) {
-            double_quotes = !double_quotes;
+        // Only toggle single quotes if we're NOT inside double quotes
+        if (line[i] == '\'' && !in_double_quotes) {
+            in_single_quotes = !in_single_quotes;
+        } 
+        // Only toggle double quotes if we're NOT inside single quotes
+        else if (line[i] == '"' && !in_single_quotes) {
+            in_double_quotes = !in_double_quotes;
         }
         i++;
     }
     
-    if (single_quotes)
-        return 1;
-    if (double_quotes)
-        return 2;
-    return 0;
+    if (in_single_quotes)
+        return 1;  // Unclosed single quote
+    if (in_double_quotes)
+        return 2;  // Unclosed double quote
+    return 0;      // All quotes balanced
+}
+
+// Get the appropriate prompt for continuation
+char *get_continuation_prompt(int quote_type) {
+    if (quote_type == 1)
+        return "quote> ";  // Single quote continuation
+    else if (quote_type == 2)
+        return "dquote> "; // Double quote continuation
+    return "minishell$ ";  // Default prompt
 }
 
 t_quote_state check_line_completion(char *line) 
@@ -75,9 +51,12 @@ t_quote_state check_line_completion(char *line)
             continue;
         }
         
+        // Only toggle single quotes if we're NOT inside double quotes
         if (line[i] == '\'' && !state.in_double_quote) {
             state.in_single_quote = !state.in_single_quote;
-        } else if (line[i] == '"' && !state.in_single_quote) {
+        } 
+        // Only toggle double quotes if we're NOT inside single quotes
+        else if (line[i] == '"' && !state.in_single_quote) {
             state.in_double_quote = !state.in_double_quote;
         }
         i++;
@@ -98,10 +77,9 @@ char *get_complete_input(void) {
         return NULL;
     
     // Check if quotes are balanced
-    quote_status = check_quotes_balanced(line);
+    quote_status = check_quotes_balanced_enhanced(line);  // Fixed function call
     
     if (quote_status == 0) {
-
         return line;
     }
     
@@ -111,7 +89,6 @@ char *get_complete_input(void) {
     
     while (quote_status != 0) {
         line = readline(get_continuation_prompt(quote_status));
-
         
         if (!line) {
             // User pressed Ctrl+D, return what we have
@@ -125,16 +102,19 @@ char *get_complete_input(void) {
             free(line);
             return NULL;
         }
-        temp = ft_strjoin(line, complete_input);
+        
+        // Fixed: proper string concatenation with newline
+        sprintf(temp, "%s\n%s", complete_input, line);
         free(complete_input);
+        free(line);
+        complete_input = temp;
         
         // Check if quotes are now balanced
-        quote_status = check_quotes_balanced(temp);
+        quote_status = check_quotes_balanced_enhanced(complete_input);
     }
     
-    return temp;
+    return (complete_input);
 }
-
 // Main shell loop implementation
 // void minishell_loop(void) {
 //     char *input;

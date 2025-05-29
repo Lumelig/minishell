@@ -43,7 +43,8 @@ TARGET		= $(BIN_DIR)/$(NAME)
 # Source files (add new .c files here)
 SRC_FILES	= main.c \
 			  parsing.c \
-			  quote.c
+			  quote.c \
+			  expand.c
 
 # Object files
 SRC			= $(addprefix $(SRC_DIR)/, $(SRC_FILES))
