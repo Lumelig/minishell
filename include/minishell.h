@@ -79,10 +79,12 @@ typedef struct s_cmd_node
 }	t_cmd_node;
 
 typedef struct s_quote_state {
-    int in_single_quote;
-    int in_double_quote;
-    int needs_continuation;
+    int in_single;
+    int in_double;
+	int	in_bquote;
+    int continuation;
 } t_quote_state;
+
 t_token *tokenize(char *line);
 
 char *get_complete_input(void);
