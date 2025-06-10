@@ -8,7 +8,7 @@ int check_quotes_balanced_enhanced(char *line)
     
     while (line[i]) {
         if (in_single) {
-            // Inside single quotes: NOTHING can be escaped, only look for closing quote
+            // Inside single quotes: NOTHING can be escaped, only look for closing single quote
             if (line[i] == '\'') {
                 in_single = 0;
             }
@@ -104,7 +104,7 @@ char *get_complete_input(void) {
     char *temp = NULL;
     int quote_status;
     
-    line = readline(">");  // Add default prompt
+    line = readline("minishell$ ");  // Default prompt
     if (!line)
         return NULL;
     
@@ -128,43 +128,29 @@ char *get_complete_input(void) {
         }
         
         // Proper string concatenation with newline
-		temp = ft_strjoin(complete_input, line);
-        //sprintf(temp, "%s\n%s", complete_input, line);
-        //free(complete_input);
+        temp = malloc(strlen(complete_input) + strlen(line) + 2); // +2 for \n and \0
+        if (!temp) {
+            free(complete_input);
+            free(line);
+            return NULL;
+        }
+        
+        sprintf(temp, "%s\n%s", complete_input, line);
+        free(complete_input);
         free(line);
-        //complete_input = temp;
+        complete_input = temp;
         
         // Check if quotes are now balanced
         quote_status = check_quotes_balanced_enhanced(complete_input);
     }
     
-    return temp;
+    return complete_input;
 }
 
-// Main shell loop implementation
-// void minishell_loop(void) {
-//     char *input;
-    
-//     while (1) {
-//         input = get_complete_input();
-        
-//         if (!input) {
-//             printf("exit\n");
-//             break;
-//         }
-        
-//         if (strlen(input) == 0) {
-//             free(input);
-//             continue;
-//         }
-        
-//         // Process the complete input
-//         printf("Processing: %s\n", input);
-        
-//         // Here you would call your tokenizer and parser
-//         // t_token *tokens = tokenize(input);
-//         // execute_command(tokens);
-        
-//         free(input);
-//     }
-// }
+// Examples of correct bash behavior:
+// echo "hello'world"     -> single quote is literal inside double quotes
+// echo 'hello"world'     -> double quote is literal inside single quotes  
+// echo "hello            -> needs closing " (not ')
+// echo 'hello            -> needs closing ' (not ")
+// echo "hello'           -> needs closing " (the ' is literal)
+// echo 'hello"           -> needs closing ' (the " is literal)
