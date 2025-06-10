@@ -41,7 +41,7 @@ char *expand_variables(char *str) {
                         char *env_val = getenv(var_name);
                         if (env_val) {
                             strcpy(dst, env_val);
-                            dst += strlen(env_val);
+                            dst += ft_strlen(env_val);
                         }
                     }
                     src++; // Skip }
@@ -56,19 +56,19 @@ char *expand_variables(char *str) {
                 char exit_code[12];
                 sprintf(exit_code, "%d", 0); // Replace with actual exit status
                 strcpy(dst, exit_code);
-                dst += strlen(exit_code);
+                dst += ft_strlen(exit_code);
                 src++;
             } else if (*src == '$') {
                 // Handle $$ (process ID)
                 char pid_str[12];
                 sprintf(pid_str, "%d", getpid());
                 strcpy(dst, pid_str);
-                dst += strlen(pid_str);
+                dst += ft_strlen(pid_str);
                 src++;
             } else {
                 // Handle $VAR format (alphanumeric and underscore)
                 char *var_start = src;
-                while (*src && (isalnum(*src) || *src == '_')) src++;
+                while (*src && (ft_isalnum(*src) || *src == '_')) src++;
                 
                 if (src > var_start) {
                     char var_name[256];
@@ -80,7 +80,7 @@ char *expand_variables(char *str) {
                         char *env_val = getenv(var_name);
                         if (env_val) {
                             strcpy(dst, env_val);
-                            dst += strlen(env_val);
+                            dst += ft_strlen(env_val);
                         }
                     }
                 } else {
@@ -96,7 +96,7 @@ char *expand_variables(char *str) {
     *dst = '\0';
     
     // Reallocate to actual size
-    char *final_result = strdup(result);
+    char *final_result = ft_strdup(result);
     free(result);
     return final_result;
 }
@@ -104,7 +104,7 @@ char *expand_variables(char *str) {
 // Function to expand tilde (~)
 char *expand_tilde(char *str) {
     if (!str || str[0] != '~') {
-        return strdup(str);
+        return ft_strdup(str);
     }
     
     char *result;
@@ -114,14 +114,15 @@ char *expand_tilde(char *str) {
         // ~/... format
         home_dir = getenv("HOME");
         if (!home_dir) {
+			//change getpwuid
             struct passwd *pw = getpwuid(getuid());
             home_dir = pw ? pw->pw_dir : "/";
         }
         
         if (str[1] == '\0') {
-            result = strdup(home_dir);
+            result = ft_strdup(home_dir);
         } else {
-            result = malloc(strlen(home_dir) + strlen(str + 1) + 1);
+            result = malloc(ft_strlen(home_dir) + ft_strlen(str + 1) + 1);
             if (result) {
                 strcpy(result, home_dir);
                 strcat(result, str + 1);
@@ -129,37 +130,37 @@ char *expand_tilde(char *str) {
         }
     } else {
         // ~username/... format
-        char *slash = strchr(str + 1, '/');
+        char *slash = ft_strchr(str + 1, '/');
         char username[256];
         int username_len;
         
         if (slash) {
             username_len = slash - (str + 1);
         } else {
-            username_len = strlen(str + 1);
+            username_len = ft_strlen(str + 1);
         }
         
         if (username_len < 256) {
             strncpy(username, str + 1, username_len);
             username[username_len] = '\0';
-            
+            //change getpwam
             struct passwd *pw = getpwnam(username);
             if (pw) {
                 if (slash) {
-                    result = malloc(strlen(pw->pw_dir) + strlen(slash) + 1);
+                    result = malloc(ft_strlen(pw->pw_dir) + ft_strlen(slash) + 1);
                     if (result) {
                         strcpy(result, pw->pw_dir);
                         strcat(result, slash);
                     }
                 } else {
-                    result = strdup(pw->pw_dir);
+                    result = ft_strdup(pw->pw_dir);
                 }
             } else {
                 // User not found, return original
-                result = strdup(str);
+                result = ft_strdup(str);
             }
         } else {
-            result = strdup(str);
+            result = ft_strdup(str);
         }
     }
     
@@ -169,13 +170,14 @@ char *expand_tilde(char *str) {
 // Function to expand wildcards using glob
 t_token *expand_wildcards(t_token *token) {
     if (!token || token->type != TOKEN_WORD || 
-        (!strchr(token->value, '*') && !strchr(token->value, '?') && !strchr(token->value, '['))) {
+        (!ft_strchr(token->value, '*') && !ft_strchr(token->value, '?') && !ft_strchr(token->value, '['))) {
         return token;
     }
     
     glob_t glob_result;
     int flags = GLOB_TILDE | GLOB_BRACE;
     
+	//chang glob
     if (glob(token->value, flags, NULL, &glob_result) == 0) {
         if (glob_result.gl_pathc > 0) {
             // Create new tokens for each match
@@ -190,7 +192,7 @@ t_token *expand_wildcards(t_token *token) {
                 }
                 
                 new_token->type = TOKEN_WORD;
-                new_token->value = strdup(glob_result.gl_pathv[i]);
+                new_token->value = ft_strdup(glob_result.gl_pathv[i]);
                 new_token->next = NULL;
                 
                 if (!first_new) {
@@ -293,9 +295,10 @@ t_token *split_expanded_words(t_token *tokens) {
         t_token *next = current->next;
         current->next = NULL;
         
-        if (current->type == TOKEN_WORD && strchr(current->value, ' ')) {
+        if (current->type == TOKEN_WORD && ft_strchr(current->value, ' ')) {
             // Split this token by spaces
-            char *str = strdup(current->value);
+            char *str = ft_strdup(current->value);
+			//strtok
             char *token_str = strtok(str, " \t\n");
             
             while (token_str) {
@@ -303,7 +306,7 @@ t_token *split_expanded_words(t_token *tokens) {
                 if (!new_token) break;
                 
                 new_token->type = TOKEN_WORD;
-                new_token->value = strdup(token_str);
+                new_token->value = ft_strdup(token_str);
                 new_token->next = NULL;
                 
                 if (!head) {

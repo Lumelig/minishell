@@ -105,7 +105,7 @@ t_token *tokenize(char *line) {
                 if (line[i] == quote_char) {
                     // Found closing quote
                     if (i > start) {  // Only create token if we have content
-                        char *word = ft_substr(line, start, i - start);
+                        char *word = substr(line, start, i - start);// change substr
                         if (!word || !add_token(&head, TOKEN_WORD, word)) {
                             free(word);
                             return cleanup_tokens(head);
