@@ -121,7 +121,7 @@ t_token *tokenize(char *line) {
                 } else {
                     // Unclosed quote - treat as regular word from original start
                     i = start - 1; // Go back to include the quote
-                    while (line[i] && !isspace(line[i]) && 
+                    while (line[i] && !ft_isspace(line[i]) && 
                            line[i] != '|' && line[i] != '<' && line[i] != '>') {
                         i++;
                     }
@@ -135,7 +135,7 @@ t_token *tokenize(char *line) {
                 }
             } else {
                 // Regular unquoted word
-                while (line[i] && !isspace(line[i]) && 
+                while (line[i] && !ft_isspace(line[i]) && 
                        line[i] != '|' && line[i] != '<' && line[i] != '>') {
                     i++;
                 }

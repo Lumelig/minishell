@@ -104,7 +104,7 @@ char *get_complete_input(void) {
     char *temp = NULL;
     int quote_status;
     
-    line = readline("minishell$ ");  // Default prompt
+    line = readline(">");  // Default prompt
     if (!line)
         return NULL;
     
@@ -134,11 +134,7 @@ char *get_complete_input(void) {
             free(line);
             return NULL;
         }
-        
-        sprintf(temp, "%s\n%s", complete_input, line);
-        free(complete_input);
-        free(line);
-        complete_input = temp;
+        complete_input = ft_strjoin(complete_input, line);
         
         // Check if quotes are now balanced
         quote_status = check_quotes_balanced_enhanced(complete_input);
@@ -146,11 +142,3 @@ char *get_complete_input(void) {
     
     return complete_input;
 }
-
-// Examples of correct bash behavior:
-// echo "hello'world"     -> single quote is literal inside double quotes
-// echo 'hello"world'     -> double quote is literal inside single quotes  
-// echo "hello            -> needs closing " (not ')
-// echo 'hello            -> needs closing ' (not ")
-// echo "hello'           -> needs closing " (the ' is literal)
-// echo 'hello"           -> needs closing ' (the " is literal)
