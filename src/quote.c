@@ -1,12 +1,9 @@
 #include "minishell.h"
 
-#include "minishell.h"
-
 int check_quotes_balanced_enhanced(char *line) 
 {
     int in_single = 0;
     int in_double = 0;
-    int in_bquote = 0;
     int i = 0;
     
     while (line[i]) {
@@ -18,31 +15,15 @@ int check_quotes_balanced_enhanced(char *line)
         } else if (in_double) {
             // Inside double quotes: handle specific escapes
             if (line[i] == '\\' && line[i + 1]) {
-                // In double quotes, only these can be escaped: $ ` " \ newline
-                if (line[i + 1] == '$' || line[i + 1] == '`' || 
-                    line[i + 1] == '"' || line[i + 1] == '\\' || 
-                    line[i + 1] == '\n') {
+                // In double quotes, only these can be escaped: $ " \ newline
+                if (line[i + 1] == '$' || line[i + 1] == '"' || 
+                    line[i + 1] == '\\' || line[i + 1] == '\n') {
                     i += 2; // Skip the escaped character
                     continue;
                 }
                 // Other characters: backslash is literal, don't skip
             } else if (line[i] == '"') {
                 in_double = 0;
-            } else if (line[i] == '`') {
-                // Backticks work inside double quotes for command substitution
-                in_bquote = !in_bquote;
-            }
-        } else if (in_bquote) {
-            // Inside backticks: can contain quotes, handle escapes
-            if (line[i] == '\\' && line[i + 1]) {
-                i += 2; // Skip escaped character
-                continue;
-            } else if (line[i] == '`') {
-                in_bquote = 0;
-            } else if (line[i] == '\'') {
-                in_single = 1;
-            } else if (line[i] == '"') {
-                in_double = 1;
             }
         } else {
             // Outside all quotes
@@ -53,8 +34,6 @@ int check_quotes_balanced_enhanced(char *line)
                 in_single = 1;
             } else if (line[i] == '"') {
                 in_double = 1;
-            } else if (line[i] == '`') {
-                in_bquote = 1;
             }
         }
         i++;
@@ -64,8 +43,6 @@ int check_quotes_balanced_enhanced(char *line)
         return 1;  // Unclosed single quote
     else if (in_double)
         return 2;  // Unclosed double quote
-    else if (in_bquote)
-        return 3;  // Unclosed backtick
     else
         return 0;  // All quotes balanced
 }
@@ -76,15 +53,13 @@ char *get_continuation_prompt(int quote_type) {
         return "quote> ";     // Single quote continuation (like bash)
     else if (quote_type == 2)
         return "dquote> ";    // Double quote continuation (like bash)
-    else if (quote_type == 3)
-        return "bquote> ";    // Backtick continuation (fixed typo)
     else
         return "minishell$ "; // Default prompt
 }
 
 t_quote_state check_line_completion(char *line) 
 {
-    t_quote_state state = {0, 0, 0, 0};
+    t_quote_state state = {0, 0, 0};
     int i = 0;
     
     while (line[i]) {
@@ -96,30 +71,14 @@ t_quote_state check_line_completion(char *line)
         } else if (state.in_double) {
             // Inside double quotes: handle specific escapes
             if (line[i] == '\\' && line[i + 1]) {
-                // In double quotes, only these can be escaped: $ ` " \ newline
-                if (line[i + 1] == '$' || line[i + 1] == '`' || 
-                    line[i + 1] == '"' || line[i + 1] == '\\' || 
-                    line[i + 1] == '\n') {
+                // In double quotes, only these can be escaped: $ " \ newline
+                if (line[i + 1] == '$' || line[i + 1] == '"' || 
+                    line[i + 1] == '\\' || line[i + 1] == '\n') {
                     i += 2; // Skip the escaped character
                     continue;
                 }
             } else if (line[i] == '"') {
                 state.in_double = 0;
-            } else if (line[i] == '`') {
-                // Backticks work inside double quotes for command substitution
-                state.in_bquote = !state.in_bquote;
-            }
-        } else if (state.in_bquote) {
-            // Inside backticks: can contain quotes, handle escapes
-            if (line[i] == '\\' && line[i + 1]) {
-                i += 2; // Skip escaped character
-                continue;
-            } else if (line[i] == '`') {
-                state.in_bquote = 0;
-            } else if (line[i] == '\'') {
-                state.in_single = 1;
-            } else if (line[i] == '"') {
-                state.in_double = 1;
             }
         } else {
             // Outside all quotes
@@ -130,14 +89,12 @@ t_quote_state check_line_completion(char *line)
                 state.in_single = 1;
             } else if (line[i] == '"') {
                 state.in_double = 1;
-            } else if (line[i] == '`') {
-                state.in_bquote = 1;
             }
         }
         i++;
     }
     
-    state.continuation = state.in_single || state.in_double || state.in_bquote;
+    state.continuation = state.in_single || state.in_double;
     return state;
 }
 
@@ -147,7 +104,7 @@ char *get_complete_input(void) {
     char *temp = NULL;
     int quote_status;
     
-    line = readline("minishell$ ");  // Add default prompt
+    line = readline(">");  // Add default prompt
     if (!line)
         return NULL;
     
@@ -170,25 +127,18 @@ char *get_complete_input(void) {
             break;
         }
         
-        // Append newline and new input
-        temp = malloc(strlen(complete_input) + strlen(line) + 2);
-        if (!temp) {
-            free(complete_input);
-            free(line);
-            return NULL;
-        }
-        
         // Proper string concatenation with newline
-        sprintf(temp, "%s\n%s", complete_input, line);
-        free(complete_input);
+		temp = ft_strjoin(complete_input, line);
+        //sprintf(temp, "%s\n%s", complete_input, line);
+        //free(complete_input);
         free(line);
-        complete_input = temp;
+        //complete_input = temp;
         
         // Check if quotes are now balanced
         quote_status = check_quotes_balanced_enhanced(complete_input);
     }
     
-    return complete_input;
+    return temp;
 }
 
 // Main shell loop implementation

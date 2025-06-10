@@ -8,6 +8,7 @@
 #include <pwd.h>
 #include <sys/types.h>
 
+//Need to be cleaner
 
 // Function to expand environment variables in a string
 char *expand_variables(char *str) {
@@ -27,8 +28,9 @@ char *expand_variables(char *str) {
                 // Handle ${VAR} format
                 src++; // Skip {
                 char *var_start = src;
-                while (*src && *src != '}') src++;
-                
+                while (*src && *src != '}') 
+					src++;
+
                 if (*src == '}') {
                     char var_name[256];
                     int var_len = src - var_start;

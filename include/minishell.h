@@ -81,7 +81,6 @@ typedef struct s_cmd_node
 typedef struct s_quote_state {
     int in_single;
     int in_double;
-	int	in_bquote;
     int continuation;
 } t_quote_state;
 
