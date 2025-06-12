@@ -48,6 +48,7 @@ typedef struct s_token {
 
 typedef struct s_file_node t_file_node;
 typedef struct s_cmd_node t_cmd_node;
+typedef __sig_atomic_t sig_atomic_t;
 
 typedef struct s_file_list
 {
@@ -83,6 +84,28 @@ typedef struct s_quote_state {
     int in_double;
     int continuation;
 } t_quote_state;
+
+typedef struct s_envlist // char **env into a list
+{
+	char				*key;
+	char				delimiter;
+	char				*value;
+	struct s_envlist	*next;
+}	t_envlist;
+
+typedef struct s_env // Controling struct for env
+{
+	pid_t		pid; // extra information put here for easy access
+	int			size;
+	int			shlvl; // help to handle an edge case
+	t_envlist	*head;
+	t_envlist	*tail;
+	int			exit_status; // same as for pid above
+}	t_env;
+
+void	setup_signal_handlers(void);
+
+bool	init_environment(t_env *my_env,char **env,char **argv,int argc);
 
 t_token *tokenize(char *line);
 
