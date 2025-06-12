@@ -84,6 +84,25 @@ typedef struct s_quote_state {
     int continuation;
 } t_quote_state;
 
+typedef struct s_envlist // char **env into a list
+{
+	char				*key;
+	char				*value;
+	struct s_envlist	*next;
+}	t_envlist;
+
+typedef struct s_env // Controling struct for env
+{
+	pid_t		pid; // extra information put here for easy access
+	int			size;
+	int			shlvl; // help to handle an edge case
+	t_envlist	*head;
+	t_envlist	*tail;
+	int			exit_status; // same as for pid above
+}	t_env;
+
+bool	init_environment(t_env *my_env,char **env,char **argv,int argc);
+
 t_token *tokenize(char *line);
 
 char *get_complete_input(void);

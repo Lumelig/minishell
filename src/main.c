@@ -15,6 +15,7 @@ bool empty_input(char *input)
     return (input[i] == '\0');
 }
 
+//delet later
 void print_history(void)
 {
     HIST_ENTRY **the_list;
@@ -45,25 +46,36 @@ void free_tokens(t_token *token)
     }
 }
 
+// void	print_env_list(t_envlist *head)
+// {
+// 	t_envlist *current = head;
+
+// 	while (current)
+// 	{
+// 		printf("%s%s\n", current->key, current->value ? current->value : "");
+// 		current = current->next;
+// 	}
+// }
+
 int main(int argc, char **argv, char **env)
 {
     t_token *token;
     char *input;
     char *cwd;
-    (void)argc;
-    (void)argv;
-    (void)env;
+	t_env	my_env;
 
     // Initialize readline history
     using_history();
-
+	init_environment(&my_env, env, argv, argc);
+	//print_env_list(my_env.head);
+	//setup_signal_handlers()
     while (1)
     {
         // Get current working directory for prompt
         cwd = getcwd(NULL, 0);
         if (cwd)
         {
-            printf("%s$ ", cwd);
+            printf("%s ", cwd);
             free(cwd);
         }
         else

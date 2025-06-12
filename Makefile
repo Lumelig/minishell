@@ -40,15 +40,15 @@ INCLUDE_DIR	= include
 # Target executable
 TARGET		= $(BIN_DIR)/$(NAME)
 
-# Source files (add new .c files here)
-SRC_FILES	= main.c \
-			  parsing.c \
-			  quote.c \
-			  expand.c
+# Source files
+SRC_FILES = src/main.c \
+            src/parsing/parsing.c \
+            src/parsing/quote.c \
+            src/parsing/expand.c \
+            src/parsing/environment.c
 
 # Object files
-SRC			= $(addprefix $(SRC_DIR)/, $(SRC_FILES))
-OBJ			= $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))
+OBJ			= $(patsubst src/%, $(OBJ_DIR)/%, $(SRC_FILES:.c=.o))
 
 # Header files for dependency tracking
 HEADERS		= $(wildcard $(INCLUDE_DIR)/*.h)
@@ -86,15 +86,8 @@ $(LIBFT): | directories
 
 # Compile object files with progress tracking
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS) | directories
-	@$(eval CURRENT=$(shell echo $$(($(CURRENT)+1))))
-	@printf "$(BLUE)[$(CURRENT)/$(TOTAL_FILES)]$(RESET) Compiling $(YELLOW)$<$(RESET)... "
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-	@printf "$(GREEN)✓$(RESET)\n"
-
-# Fallback for files in root directory (temporary compatibility)
-$(OBJ_DIR)/%.o: %.c $(HEADERS) | directories
-	@$(eval CURRENT=$(shell echo $$(($(CURRENT)+1))))
-	@printf "$(BLUE)[$(CURRENT)/$(TOTAL_FILES)]$(RESET) Compiling $(YELLOW)$<$(RESET)... "
+	@printf "$(BLUE)Compiling $(YELLOW)$<$(RESET)... "
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 	@printf "$(GREEN)✓$(RESET)\n"
 
@@ -129,7 +122,6 @@ run: $(TARGET)
 valgrind: $(TARGET)
 	@printf "$(CYAN)Running $(NAME) with valgrind...$(RESET)\n"
 	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(TARGET)
-
 
 # Clean object files
 clean:

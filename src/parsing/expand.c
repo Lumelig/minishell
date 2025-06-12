@@ -14,7 +14,7 @@
 char *expand_variables(char *str) {
     if (!str) return NULL;
     
-    char *result = malloc(strlen(str) * 4 + 1); // Allocate extra space for expansion
+    char *result = malloc(ft_strlen(str) * 4 + 1); // Allocate extra space for expansion
     if (!result) return NULL;
     
     char *src = str;
@@ -24,9 +24,9 @@ char *expand_variables(char *str) {
         if (*src == '$') {
             src++; // Skip $
             
-            if (*src == '{') {
-                // Handle ${VAR} format
-                src++; // Skip {
+            if (*src == '{') 
+			{
+                src++;
                 char *var_start = src;
                 while (*src && *src != '}') 
 					src++;
