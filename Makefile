@@ -45,7 +45,9 @@ SRC_FILES = src/main.c \
             src/parsing/parsing.c \
             src/parsing/quote.c \
             src/parsing/expand.c \
-            src/parsing/environment.c
+            src/parsing/environment.c \
+			src/parsing/signals.c \
+			
 
 # Object files
 OBJ			= $(patsubst src/%, $(OBJ_DIR)/%, $(SRC_FILES:.c=.o))

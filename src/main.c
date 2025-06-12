@@ -46,16 +46,16 @@ void free_tokens(t_token *token)
     }
 }
 
-// void	print_env_list(t_envlist *head)
-// {
-// 	t_envlist *current = head;
+void	print_env_list(t_envlist *head)
+{
+	t_envlist *current = head;
 
-// 	while (current)
-// 	{
-// 		printf("%s%s\n", current->key, current->value ? current->value : "");
-// 		current = current->next;
-// 	}
-// }
+	while (current)
+	{
+		printf("%s%c%s\n", current->key, current->delimiter, current->value);
+		current = current->next;
+	}
+}
 
 int main(int argc, char **argv, char **env)
 {
@@ -67,8 +67,8 @@ int main(int argc, char **argv, char **env)
     // Initialize readline history
     using_history();
 	init_environment(&my_env, env, argv, argc);
-	//print_env_list(my_env.head);
-	//setup_signal_handlers()
+	print_env_list(my_env.head);
+	setup_signal_handlers();
     while (1)
     {
         // Get current working directory for prompt

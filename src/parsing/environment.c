@@ -50,6 +50,7 @@ bool	add_env_var(t_env *env, char *key, char *value)
 	if (!new_node)
 		return (false);
 	new_node->key = key;
+	new_node->delimiter  = '=';
 	new_node->value = value;
 	new_node->next = NULL;
 	if (!env->head)
