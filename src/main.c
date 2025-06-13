@@ -40,22 +40,23 @@ void free_tokens(t_token *token)
     while (token)
     {
         temp = token->next;
-        free(token->value);
+		if (token->value)
+        	free(token->value);
         free(token);
         token = temp;
     }
 }
 
-void	print_env_list(t_envlist *head)
-{
-	t_envlist *current = head;
+// void	print_env_list(t_envlist *head)
+// {
+// 	t_envlist *current = head;
 
-	while (current)
-	{
-		printf("%s%c%s\n", current->key, current->delimiter, current->value);
-		current = current->next;
-	}
-}
+// 	while (current)
+// 	{
+// 		printf("%s%c%s\n", current->key, current->delimiter, current->value);
+// 		current = current->next;
+// 	}
+// }
 
 int main(int argc, char **argv, char **env)
 {
@@ -65,9 +66,9 @@ int main(int argc, char **argv, char **env)
 	t_env	my_env;
 
     // Initialize readline history
-    using_history();
+
 	init_environment(&my_env, env, argv, argc);
-	print_env_list(my_env.head);
+	//print_env_list(my_env.head);
 	setup_signal_handlers();
     while (1)
     {
@@ -137,6 +138,9 @@ int main(int argc, char **argv, char **env)
     }
 
     // Clean up history
+	free_tokens(token);
+	free(input);
+	free_environment(&my_env);
     clear_history();
     return (0);
 }

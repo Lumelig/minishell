@@ -31,11 +31,15 @@ void set_environment(t_env *my_env, char **key,  char  **value, char *env)
 	val_raw = sep + 1;
 
 	if (!ft_strcmp(*key, "SHLVL"))
-	{
+{
 		shlvl = ft_atoi(val_raw) + 1;
 		my_env->shlvl = shlvl;
-		*value = ft_strjoin("=", ft_itoa(shlvl));
+
+		char *itoa_val = ft_itoa(shlvl);
+		*value = ft_strjoin("=", itoa_val);
+		free(itoa_val);  // ✅ free the temporary string
 	}
+
 	else
 	{
 		*value = ft_strjoin("=", val_raw);
@@ -89,7 +93,11 @@ bool	init_environment(t_env *my_env, char **env, char **argv, int argc)
 		value = NULL;
 		set_environment(my_env, &key, &value, env[i]);
 		if (!add_env_var(my_env, key, value))
+		{
+			free(key);
+			free(value);
 			return (false);
+		}
 		i++;
 	}
 	if (!my_env->shlvl)

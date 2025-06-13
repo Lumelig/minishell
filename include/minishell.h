@@ -119,4 +119,6 @@ int check_quotes_balanced(char *line);
 
 t_token *expand_and_split_tokens(t_token *tokens);
 
+void	free_environment(t_env *my_env);
+
 #endif

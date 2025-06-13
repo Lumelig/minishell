@@ -42,11 +42,13 @@ TARGET		= $(BIN_DIR)/$(NAME)
 
 # Source files
 SRC_FILES = src/main.c \
+			src/utils.c \
             src/parsing/parsing.c \
             src/parsing/quote.c \
             src/parsing/expand.c \
             src/parsing/environment.c \
 			src/parsing/signals.c \
+
 			
 
 # Object files
