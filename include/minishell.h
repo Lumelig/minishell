@@ -103,6 +103,9 @@ typedef struct s_env // Controling struct for env
 	int			exit_status; // same as for pid above
 }	t_env;
 
+
+t_cmd_list *parse_tokens(t_token *tokens);
+
 void	setup_signal_handlers(void);
 
 bool	init_environment(t_env *my_env,char **env,char **argv,int argc);
