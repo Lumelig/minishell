@@ -104,7 +104,7 @@ char *get_complete_input(void) {
     char *temp = NULL;
     int quote_status;
     
-    line = readline(">");  // Default prompt
+    line = readline("minishell$ ");  // Use proper default prompt
     if (!line)
         return NULL;
     
@@ -112,33 +112,56 @@ char *get_complete_input(void) {
     quote_status = check_quotes_balanced_enhanced(line);
     
     if (quote_status == 0) {
+        // Quotes are balanced, add to history and return
+        if (*line)  // Only add non-empty lines to history
+            add_history(line);
         return line;
     }
     
     // Quotes are unbalanced, need continuation
     complete_input = ft_strdup(line);
+    if (!complete_input) {
+        free(line);
+        return NULL;
+    }
     free(line);
     
     while (quote_status != 0) {
         line = readline(get_continuation_prompt(quote_status));
         
         if (!line) {
-            // User pressed Ctrl+D, return what we have
+            // User pressed Ctrl+D, return what we have so far
             break;
         }
         
-        // Proper string concatenation with newline
-        temp = malloc(strlen(complete_input) + strlen(line) + 2); // +2 for \n and \0
+        // Create new string with newline separator
+        size_t complete_len = strlen(complete_input);
+        size_t line_len = strlen(line);
+        temp = malloc(complete_len + line_len + 2); // +2 for \n and \0
+        
         if (!temp) {
             free(complete_input);
             free(line);
             return NULL;
         }
-        complete_input = ft_strjoin(complete_input, line);
+        
+        // Copy complete_input, add newline, then add new line
+        strcpy(temp, complete_input);
+        temp[complete_len] = '\n';
+        strcpy(temp + complete_len + 1, line);
+        
+        // Free old strings and update
+        free(complete_input);
+        free(line);
+        complete_input = temp;
         
         // Check if quotes are now balanced
         quote_status = check_quotes_balanced_enhanced(complete_input);
     }
+    
+    // Add complete input to history
+    if (complete_input && *complete_input)
+        add_history(complete_input);
     
     return complete_input;
 }

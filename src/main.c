@@ -72,7 +72,7 @@ int main(int argc, char **argv, char **env)
 	setup_signal_handlers();
     while (1)
     {
-        // Get current working directory for prompt
+        //Get current working directory for prompt
         cwd = getcwd(NULL, 0);
         if (cwd)
         {
@@ -84,7 +84,7 @@ int main(int argc, char **argv, char **env)
             printf("minihell$ ");
         }
 
-        // Get input (this handles quote continuation)
+        //Get input (this handles quote continuation)
         input = get_complete_input();
         
         // Check if user pressed Ctrl+D
@@ -100,9 +100,6 @@ int main(int argc, char **argv, char **env)
             free(input);
             continue;
         }
-
-        // Add to history if not empty
-        add_history(input);
 
         // Debug: print history (remove this in production)
         print_history();
@@ -141,7 +138,7 @@ int main(int argc, char **argv, char **env)
 	free_tokens(token);
 	free(input);
 	free_environment(&my_env);
-    clear_history();
+    rl_clear_history();
     return (0);
 }
 
