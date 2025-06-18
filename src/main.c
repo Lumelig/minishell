@@ -108,7 +108,7 @@ int main(int argc, char **argv, char **env)
         // Tokenize input
         token = tokenize(input);
 		
-		token = expand_and_split_tokens(token);
+		token = expand_and_split_tokens(token, my_env);
         parse_tokens(token);
         // Debug: print tokens (remove this in production)
         t_token *current = token;
