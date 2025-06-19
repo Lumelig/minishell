@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: student <student@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/01 00:00:00 by student          #+#    #+#             */
+/*   Updated: 2024/01/01 00:00:00 by student         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -10,11 +21,9 @@ bool	empty_input(char *input)
 	i = 0;
 	while (input[i] && ft_isspace(input[i]))
 		i++;
-	// Don't free input here - let caller handle it
 	return (input[i] == '\0');
 }
 
-// delet later
 void	print_history(void)
 {
 	HIST_ENTRY	**the_list;
@@ -32,7 +41,6 @@ void	print_history(void)
 	}
 }
 
-// Function to free token list
 void	free_tokens(t_token *token)
 {
 	t_token	*temp;
@@ -59,22 +67,62 @@ void	print_env_list(t_envlist *head)
 	}
 }
 
-int	main(int argc, char **argv, char **env)
+static void	cleanup_and_exit(t_token *token, char *input, t_env *my_env)
+{
+	free_tokens(token);
+	free(input);
+	free_environment(my_env);
+	rl_clear_history();
+}
+
+static int	check_exit_command(t_token *token)
+{
+	if (token && !ft_strncmp("exit", token->value, 5)
+		&& ft_strlen(token->value) == 4)
+		return (1);
+	return (0);
+}
+
+static void	process_tokens(t_token *token)
+{
+	t_token	*current;
+
+	parse_tokens(token);
+	current = token;
+	while (current)
+	{
+		printf("Token: '%s', Type: %d\n", current->value, current->type);
+		current = current->next;
+	}
+}
+
+static char	*get_input(int is_interactive)
+{
+	char	*input;
+
+	if (is_interactive)
+		input = get_complete_input();
+	else
+	{
+		input = get_next_line(STDIN_FILENO);
+		if (input && input[ft_strlen(input) - 1] == '\n')
+			input[ft_strlen(input) - 1] = '\0';
+	}
+	return (input);
+}
+
+static void	shell_loop(t_env *my_env, int is_interactive)
 {
 	t_token	*token;
 	char	*input;
-	t_env	my_env;
-	//t_token	*current;
 
-	init_environment(&my_env, env, argv, argc);
-	//print_env_list(my_env.head);
-	setup_signal_handlers();
 	while (1)
 	{
-		input = get_complete_input();
+		input = get_input(is_interactive);
 		if (!input)
 		{
-			printf("exit\n");
+			if (is_interactive)
+				printf("exit\n");
 			break ;
 		}
 		if (empty_input(input))
@@ -82,28 +130,31 @@ int	main(int argc, char **argv, char **env)
 			free(input);
 			continue ;
 		}
-		print_history();
+		if (is_interactive)
+			print_history();
 		token = tokenize(input);
-		token = expand_and_split_tokens(token, my_env);
-		parse_tokens(token);
-		//current = token;
-		// while (current)
-		// {
-		// 	printf("Token: '%s'\n", current->value);
-		// 	current = current->next;
-		// }
-		if (token && !ft_strncmp("exit", token->value, 5)
-			&& ft_strlen(token->value) == 4)
+		token = expand_and_split_tokens(token, *my_env);
+		process_tokens(token);
+		if (check_exit_command(token))
 		{
-			free_tokens(token);
-			free(input);
-			break ;
+			cleanup_and_exit(token, input, my_env);
+			exit(0);
 		}
 		free_tokens(token);
 		free(input);
 	}
-	free_tokens(token);
-	free(input);
+}
+
+int	main(int argc, char **argv, char **env)
+{
+	t_env	my_env;
+	int		is_interactive;
+
+	init_environment(&my_env, env, argv, argc);
+	is_interactive = isatty(STDIN_FILENO);
+	if (is_interactive)
+		setup_signal_handlers();
+	shell_loop(&my_env, is_interactive);
 	free_environment(&my_env);
 	rl_clear_history();
 	return (0);

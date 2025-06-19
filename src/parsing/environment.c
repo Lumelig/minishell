@@ -47,7 +47,6 @@ bool add_env_var(t_env *env, char *key, char *value)
 
     if (!key)
         return false;
-
     new_node = (t_envlist *)malloc(sizeof(t_envlist));
     if (!new_node)
         return false;
@@ -122,7 +121,6 @@ bool init_environment(t_env *my_env, char **env, char **argv, int argc)
             return false;
         return true;
     }
-
     i = 0;
     while (env[i])
     {
