@@ -22,7 +22,7 @@ void set_environment(t_env *my_env, char **key, char **value, char *env)
     if (!sep)
     {
         *key = ft_strdup(env);
-        *value = ft_strdup(""); // Empty value instead of NULL
+        *value = ft_strdup("");
         return;
     }
 
@@ -33,11 +33,11 @@ void set_environment(t_env *my_env, char **key, char **value, char *env)
     {
         shlvl = ft_atoi(val_raw) + 1;
         my_env->shlvl = shlvl;
-        *value = ft_itoa(shlvl); // Don't add '=' here - it's handled in add_env_var
+        *value = ft_itoa(shlvl); 
     }
     else
     {
-        *value = ft_strdup(val_raw); // Just duplicate the value, no '='
+        *value = ft_strdup(val_raw);
     }
 }
 
@@ -45,7 +45,7 @@ bool add_env_var(t_env *env, char *key, char *value)
 {
     t_envlist *new_node;
 
-    if (!key) // Safety check
+    if (!key)
         return false;
 
     new_node = (t_envlist *)malloc(sizeof(t_envlist));
@@ -54,7 +54,7 @@ bool add_env_var(t_env *env, char *key, char *value)
     
     new_node->key = key;
     new_node->delimiter = '=';
-    new_node->value = value; // Can be NULL for variables without values
+    new_node->value = value;
     new_node->next = NULL;
     
     if (!env->head)
@@ -92,15 +92,13 @@ bool update_or_add_env_var(t_env *env, char *key, char *value)
     
     if (existing)
     {
-        // Update existing variable
         free(existing->value);
         existing->value = value;
-        free(key); // We don't need the new key since we're updating
+        free(key); 
         return true;
     }
     else
     {
-        // Add new variable
         return add_env_var(env, key, value);
     }
 }
@@ -116,7 +114,6 @@ bool init_environment(t_env *my_env, char **env, char **argv, int argc)
     
     if (!env || !env[0])
     {
-        // No environment provided, create minimal environment
         if (!add_env_var(my_env, ft_strdup("PWD"), ft_strdup(getcwd(NULL, 0))))
             return false;
         if (!add_env_var(my_env, ft_strdup("SHLVL"), ft_strdup("1")))
@@ -129,7 +126,6 @@ bool init_environment(t_env *my_env, char **env, char **argv, int argc)
     i = 0;
     while (env[i])
     {
-        // Skip OLDPWD as bash does
         if (!ft_strncmp(env[i], "OLDPWD=", 7))
         {
             i++;
@@ -154,15 +150,11 @@ bool init_environment(t_env *my_env, char **env, char **argv, int argc)
         }
         i++;
     }
-
-    // Ensure SHLVL exists
     if (!find_env_var(my_env, "SHLVL"))
     {
         if (!add_env_var(my_env, ft_strdup("SHLVL"), ft_strdup("1")))
             return false;
     }
-
-    // Set PWD if not present
     if (!find_env_var(my_env, "PWD"))
     {
         char *cwd = getcwd(NULL, 0);
@@ -200,10 +192,9 @@ char **env_to_array(t_env *env)
         size_t key_len = strlen(current->key);
         size_t val_len = current->value ? strlen(current->value) : 0;
         
-        env_array[i] = malloc(key_len + val_len + 2); // +2 for '=' and '\0'
+        env_array[i] = malloc(key_len + val_len + 2);
         if (!env_array[i])
         {
-            // Cleanup on failure
             while (--i >= 0)
                 free(env_array[i]);
             free(env_array);
