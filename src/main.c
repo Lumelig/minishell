@@ -101,7 +101,10 @@ static char	*get_input(int is_interactive)
 	char	*input;
 
 	if (is_interactive)
+	{
 		input = get_complete_input();
+		printf("%s", input);
+	}
 	else
 	{
 		input = get_next_line(STDIN_FILENO);
