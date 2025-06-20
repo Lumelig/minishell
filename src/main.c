@@ -135,7 +135,8 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		if (is_interactive)
 			print_history();
 		token = tokenize(input);
-		//expand_tokens(token, my_env);
+		expand_tokens(token, my_env->head, my_env);
+		printf("%s\n", token->value);
 		//process_tokens(token);
 		if (check_exit_command(token))
 		{
@@ -153,6 +154,8 @@ int	main(int argc, char **argv, char **env)
 	int		is_interactive;
 
 	init_environment(&my_env, env, argv, argc);
+	//debug
+	//print_env_list(my_env.head);
 	is_interactive = isatty(STDIN_FILENO);
 	if (is_interactive)
 		setup_signal_handlers();

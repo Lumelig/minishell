@@ -39,7 +39,6 @@ static int	add_token(t_token **head, t_token_type type, const char *value)
 		return (0);
 	new_token->type = type;
 	new_token->value = ft_strdup(value);
-	printf("INPUT TO TOKENIZER: '%s'\n",  new_token->value);
 	if (!new_token->value)
 	{
 		free(new_token);

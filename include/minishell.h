@@ -120,7 +120,7 @@ int check_quotes_balanced_enhanced(char *line);
 
 int check_quotes_balanced(char *line);
 
-//void expand_tokens(t_token *tokens, t_env *env);
+void expand_tokens(t_token *token, t_envlist *envlist, t_env *env);
 
 void	free_environment(t_env *my_env);
 
