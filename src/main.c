@@ -83,18 +83,18 @@ static int	check_exit_command(t_token *token)
 	return (0);
 }
 
-static void	process_tokens(t_token *token)
-{
-	t_token	*current;
+// static void	process_tokens(t_token *token)
+// {
+// 	t_token	*current;
 
-	parse_tokens(token);
-	current = token;
-	while (current)
-	{
-		printf("Token: '%s', Type: %d\n", current->value, current->type);
-		current = current->next;
-	}
-}
+// 	parse_tokens(token);
+// 	current = token;
+// 	while (current)
+// 	{
+// 		printf("Token: '%s', Type: %d\n", current->value, current->type);
+// 		current = current->next;
+// 	}
+// }
 
 static char	*get_input(int is_interactive)
 {
@@ -103,7 +103,6 @@ static char	*get_input(int is_interactive)
 	if (is_interactive)
 	{
 		input = get_complete_input();
-		printf("%s", input);
 	}
 	else
 	{
@@ -136,8 +135,8 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		if (is_interactive)
 			print_history();
 		token = tokenize(input);
-		token = expand_and_split_tokens(token, *my_env);
-		process_tokens(token);
+		//expand_tokens(token, my_env);
+		//process_tokens(token);
 		if (check_exit_command(token))
 		{
 			cleanup_and_exit(token, input, my_env);

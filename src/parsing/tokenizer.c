@@ -34,12 +34,12 @@ static int	add_token(t_token **head, t_token_type type, const char *value)
 {
 	t_token	*new_token;
 	t_token	*current;
-
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
 		return (0);
 	new_token->type = type;
 	new_token->value = ft_strdup(value);
+	printf("INPUT TO TOKENIZER: '%s'\n",  new_token->value);
 	if (!new_token->value)
 	{
 		free(new_token);
@@ -161,12 +161,13 @@ static int	handle_quoted_content(char *line, int *i, char **result, char quote)
 /* ************************************************************************** */
 /*                                                                            */
 /*   Word extraction function                                                 */
-/*                                                                            */
+/*                             \n  und ander sachen handeln                                               */
 /* ************************************************************************** */
 
 static int	extract_word(char *line, int *i, char **word)
 {
 	char	*temp;
+	char	quote_char;
 
 	*word = ft_strdup("");
 	if (!*word)
@@ -175,30 +176,34 @@ static int	extract_word(char *line, int *i, char **word)
 	{
 		if (line[*i] == '"' || line[*i] == '\'')
 		{
-			(*i)++;
-			if (!handle_quoted_content(line, i, word, line[*i - 1]))
+			quote_char = line[*i];  // Store the quote character
+			(*i)++;                 // Skip the opening quote
+			if (!handle_quoted_content(line, i, word, quote_char))
 			{
 				free(*word);
 				return (0);
 			}
+			// Note: handle_quoted_content already advances past the closing quote
 		}
 		else if (line[*i] == '\\' && line[*i + 1])
 		{
-			(*i)++;
+			(*i)++;  // Skip the backslash
 			temp = *word;
 			*word = ft_strjoin_char(*word, line[*i]);
 			free(temp);
-			(*i)++;
+			if (!*word)
+				return (0);
+			(*i)++;  // Move past the escaped character
 		}
 		else
 		{
 			temp = *word;
 			*word = ft_strjoin_char(*word, line[*i]);
 			free(temp);
-			(*i)++;
+			if (!*word)
+				return (0);
+			(*i)++;  // Move to next character
 		}
-		if (!*word)
-			return (0);
 	}
 	return (1);
 }
@@ -245,8 +250,7 @@ static int	handle_operator(char *line, int *i, t_token **head)
 			if (!add_token(head, TOKEN_REDIR_IN, "<"))
 				return (0);
 			(*i)++;
-		}Token: 'helllo', Type: 0
-Token: 'world', Type: 0
+		}
 	}
 	return (1);
 }

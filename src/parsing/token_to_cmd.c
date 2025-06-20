@@ -335,7 +335,7 @@ t_cmd_list *parse_tokens(t_token *tokens)
             is_pipe = false;
         }
     }
-	print_cmd_list(cmd_list);
+	//print_cmd_list(cmd_list);
     return cmd_list;
 }
 
