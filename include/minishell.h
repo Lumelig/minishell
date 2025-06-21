@@ -29,99 +29,121 @@
 #include <readline/readline.h>      // readline, rl_on_new_line, rl_replace_line, rl_redisplay
 #include <readline/history.h>       // add_history, rl_clear_history
 
-typedef enum {
-    TOKEN_WORD,        // e.g., echo, hello
-    TOKEN_PIPE,        // |
-    TOKEN_REDIR_IN,    // <
-    TOKEN_REDIR_OUT,   // >
-    TOKEN_REDIR_APPEND,// >>
-    TOKEN_HEREDOC,     // <<
-    TOKEN_EOF
-} t_token_type;
+	typedef enum {
+		TOKEN_WORD,         // e.g., echo, hello
+		TOKEN_PIPE,         // |
+		TOKEN_REDIR_IN,     // <
+		TOKEN_REDIR_OUT,    // >
+		TOKEN_REDIR_APPEND, // >>
+		TOKEN_HEREDOC,      // <<
+		TOKEN_EOF
+	} t_token_type;
 
-typedef struct s_token {
-    t_token_type type;
-    char *value;
-    struct s_token *next;
-} t_token;
+typedef struct s_token
+{
+	t_token_type			type;
+	char					*value;
+	struct s_token			*next;
+}							t_token;
 
-
-typedef struct s_file_node t_file_node;
-typedef struct s_cmd_node t_cmd_node;
-typedef __sig_atomic_t sig_atomic_t;
+typedef struct s_file_node	t_file_node;
+typedef struct s_cmd_node	t_cmd_node;
+typedef __sig_atomic_t		sig_atomic_t;
 
 typedef struct s_file_list
 {
-	t_file_node	*head;
-	t_file_node	*tail;
-	ssize_t		  size;
-}	t_file_list;
+	t_file_node				*head;
+	t_file_node				*tail;
+	ssize_t					size;
+}							t_file_list;
 
 typedef struct s_cmd_list
 {
-	t_cmd_node	*head;
-	t_cmd_node	*tail;
-	ssize_t		  size;
-}	t_cmd_list;
+	t_cmd_node				*head;
+	t_cmd_node				*tail;
+	ssize_t					size;
+}							t_cmd_list;
 
 typedef struct s_file_node
 {
-	char				        *filename;
-	int					        redir_type;
-	struct s_file_node	*next;
-}	t_file_node;
+	char					*filename;
+	int						redir_type;
+	struct s_file_node		*next;
+}							t_file_node;
 
 typedef struct s_cmd_node
 {
-	int					      cmd_type;
-	char				      **cmd;
-	t_file_list			  *files;
-	struct s_cmd_node	*next;
-}	t_cmd_node;
+	int						cmd_type;
+	char					**cmd;
+	t_file_list				*files;
+	struct s_cmd_node		*next;
+}							t_cmd_node;
 
-typedef struct s_quote_state {
-    int in_single;
-    int in_double;
-    int continuation;
-} t_quote_state;
+typedef struct s_quote_state
+{
+	int						in_single;
+	int						in_double;
+	int						continuation;
+}							t_quote_state;
 
 typedef struct s_envlist // char **env into a list
 {
-	char				*key;
-	char				delimiter;
-	char				*value;
-	struct s_envlist	*next;
-}	t_envlist;
+	char *key;
+	char delimiter;
+	char *value;
+	struct s_envlist *next;
+}							t_envlist;
 
 typedef struct s_env // Controling struct for env
 {
-	pid_t		pid; // extra information put here for easy access
-	int			size;
-	int			shlvl; // help to handle an edge case
-	t_envlist	*head;
-	t_envlist	*tail;
-	int			exit_status; // same as for pid above
-}	t_env;
+	pid_t pid; // extra information put here for easy access
+	int size;
+	int shlvl; // help to handle an edge case
+	t_envlist *head;
+	t_envlist *tail;
+	int exit_status; // same as for pid above
+}							t_env;
 
+t_cmd_list					*parse_tokens(t_token *tokens);
 
-t_cmd_list *parse_tokens(t_token *tokens);
+void						setup_signal_handlers(void);
 
-void	setup_signal_handlers(void);
+bool						init_environment(t_env *my_env, char **env,
+								char **argv, int argc);
 
-bool	init_environment(t_env *my_env,char **env,char **argv,int argc);
+t_token						*tokenize(char *line);
 
-t_token *tokenize(char *line);
+char						*get_complete_input(void);
 
-char *get_complete_input(void);
+t_quote_state				check_line_completion(char *line);
 
-t_quote_state check_line_completion(char *line);
+int							check_quotes_balanced_enhanced(char *line);
 
-int check_quotes_balanced_enhanced(char *line);
+int							check_quotes_balanced(char *line);
 
-int check_quotes_balanced(char *line);
+void						expand_tokens(t_token *token, t_envlist *envlist,
+								t_env *env);
 
-void expand_tokens(t_token *token, t_envlist *envlist, t_env *env);
+void						copy_special_var(char *result, int *j, char *str,
+								int *i, t_env *env);
 
-void	free_environment(t_env *my_env);
+void						copy_variable(char *result, int *j, char *str,
+								int *i, t_envlist *envlist);
+
+int							get_special_var_skip(char *str, int i);
+
+int					is_special_var(char *str, int pos);
+
+int							is_special_expansion(char *str, int i);
+
+int							calculate_var_size(char *str, int i,
+								t_envlist *envlist, t_env *env);
+
+int							calculate_special_var_size(char *str, int i,
+								t_env *env);
+
+int							get_var_length(char *str, int start, int *end_pos);
+
+void						free_environment(t_env *my_env);
 
 #endif

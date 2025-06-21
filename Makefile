@@ -46,9 +46,12 @@ SRC_FILES = src/main.c \
             src/parsing/tokenizer.c \
             src/parsing/quote.c \
             src/parsing/expand.c \
+			src/parsing/expand_utils.c \
+			src/parsing/expand_utils_2.c \
             src/parsing/environment.c \
 			src/parsing/signals.c \
 			src/parsing/token_to_cmd.c \
+
 
 			
 
