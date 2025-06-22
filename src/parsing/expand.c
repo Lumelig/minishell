@@ -1,47 +1,54 @@
 #include "minishell.h"
 
-static int	calculate_expanded_size(char *original, t_envlist *envlist,
-		t_env *env)
-{
-	int	len;
-	int	result_size;
-	int	i;
-	int	var_end;
-	int	skip;
 
-	len = ft_strlen(original);
-	result_size = 0;
-	i = 0;
-	while (i < len)
-	{
-		if (original[i] == '$' && i + 1 < len)
-		{
-			skip = get_special_var_skip(original, i);
-			if (skip > 0)
-			{
-				result_size += calculate_special_var_size(original, i, env);
-				i += skip;
-			}
-			else if (ft_isalpha(original[i + 1]) || original[i + 1] == '_'
-				|| original[i + 1] == '{')
-			{
-				result_size += calculate_var_size(original, i, envlist, env);
-				get_var_length(original, i + 1, &var_end);
-				i = var_end;
-			}
-			else
-			{
-				result_size++;
-				i++;
-			}
-		}
-		else
-		{
-			result_size++;
-			i++;
-		}
-	}
-	return (result_size + 1);
+static int handle_variable_size(char *original, int *i, t_env *env, t_envlist *envlist)
+{
+    int skip;
+    int var_end;
+    int size;
+    int len;
+    
+    len = ft_strlen(original);
+    if (*i + 1 >= len)
+        return (1);  // Just count the $
+        
+    skip = get_special_var_skip(original, *i);
+    if (skip > 0)
+    {
+        size = calculate_special_var_size(original, *i, env);
+        *i += skip - 1;  // -1 because main loop will increment
+        return (size);
+    }
+    else if (ft_isalpha(original[*i + 1]) || original[*i + 1] == '_' 
+             || original[*i + 1] == '{')
+    {
+        size = calculate_var_size(original, *i, envlist, env);
+        get_var_length(original, *i + 1, &var_end);
+        *i = var_end - 1;  // -1 because main loop will increment
+        return (size);
+    }
+    return (1);  // Just the $ character
+}
+
+int calculate_expanded_size(char *original, t_env *env, t_envlist *envlist)
+{
+    int i;
+    int len;
+    int result_size;
+    
+    i = 0;
+    len = ft_strlen(original);
+    result_size = 0;
+    
+    while (i < len)
+    {
+        if (original[i] == '$')
+            result_size += handle_variable_size(original, &i, env, envlist);
+        else
+            result_size++;
+        i++;
+    }
+    return (result_size + 1);
 }
 
 static void	process_expansion(char *result, char *original, t_envlist *envlist,
@@ -79,7 +86,7 @@ char	*expand_token_value(char *original, t_envlist *envlist, t_env *env)
 
 	if (!original || !ft_strchr(original, '$'))
 		return (ft_strdup(original));
-	result_size = calculate_expanded_size(original, envlist, env);
+	result_size = calculate_expanded_size(original, env, envlist);
 	result = malloc(result_size);
 	if (!result)
 		return (NULL);

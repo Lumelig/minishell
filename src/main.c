@@ -132,7 +132,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 			free(input);
 			continue ;
 		}
-		if (is_interactive)
+		if (is_interactive)//debug
 			print_history();
 		token = tokenize(input);
 		expand_tokens(token, my_env->head, my_env);

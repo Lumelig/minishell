@@ -4,38 +4,41 @@
 
 int	is_special_expansion(char *str, int i)
 {
-	if (str[i + 1] == '$' || str[i + 1] == '?')
+	if (str[i + 1] == '$' || str[i + 1] == '?' || str[i + 1] == '0')
 		return (1);
-	if (str[i + 1] == '{' && str[i + 2] 
-		&& (str[i + 2] == '$' || str[i + 2] == '?') && str[i + 3] == '}')
+	if (str[i + 1] == '{' && str[i + 2]
+		&& (str[i + 2] == '$' || str[i + 2] == '?' || str[i + 2] == '0')
+		&& str[i + 3] == '}')
 		return (1);
 	return (0);
 }
 
+
 void	copy_special_var(char *result, int *j, char *str, int *i, t_env *env)
 {
-	char	*tmp;
-	int		check_pos;
+	char	*tmp = NULL;
+	int		check_pos = *i + 1;
 
-	check_pos = *i + 1;
 	if (str[check_pos] == '{')
 		check_pos++;
+
 	if (str[check_pos] == '$')
-	{
 		tmp = ft_itoa(env->pid);
-		ft_strcpy(result + *j, tmp);
-		*j += ft_strlen(tmp);
-		free(tmp);
-	}
 	else if (str[check_pos] == '?')
-	{
 		tmp = ft_itoa(env->exit_status);
+	else if (str[check_pos] == '0')
+		tmp = ft_strdup("Minishell");
+
+	if (tmp)
+	{
 		ft_strcpy(result + *j, tmp);
 		*j += ft_strlen(tmp);
 		free(tmp);
 	}
+
 	*i += get_special_var_skip(str, *i);
 }
+
 static char	*get_var_value(char *str, int start, int len, t_envlist *envlist)
 {
 	char		*var_name;

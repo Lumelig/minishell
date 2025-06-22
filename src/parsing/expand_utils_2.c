@@ -2,10 +2,10 @@
 
 int	get_special_var_skip(char *str, int i)
 {
-	if (str[i + 1] == '$' || str[i + 1] == '?')
+	if (str[i + 1] == '$' || str[i + 1] == '?' || str[i + 1] == '0')
 		return (2);
 	if (str[i + 1] == '{' && str[i + 2] 
-		&& (str[i + 2] == '$' || str[i + 2] == '?') && str[i + 3] == '}')
+		&& (str[i + 2] == '$' || str[i + 2] == '?'  || str[i + 2] == '0') && str[i + 3] == '}')
 		return (4);
 	return (0);
 }
@@ -95,10 +95,7 @@ int	calculate_var_size(char *str, int i, t_envlist *envlist, t_env *env)
 	while (current)
 	{
 		if (ft_strcmp(current->key, var_name) == 0)
-		{
-			free(var_name);
-			return (ft_strlen(current->value));
-		}
+			return (free(var_name),ft_strlen(current->value));
 		current = current->next;
 	}
 	free(var_name);
