@@ -113,4 +113,5 @@ void	expand_tokens(t_token *token, t_envlist *envlist, t_env *env)
 		}
 		current = current->next;
 	}
+	token_to_cmd(token);
 }

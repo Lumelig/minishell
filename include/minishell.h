@@ -106,6 +106,7 @@ typedef struct s_env // Controling struct for env
 
 t_cmd_list					*parse_tokens(t_token *tokens);
 
+t_cmd_list					*init_cmd_list(void);
 void						setup_signal_handlers(void);
 
 bool						init_environment(t_env *my_env, char **env,
@@ -145,5 +146,7 @@ int							calculate_special_var_size(char *str, int i,
 int							get_var_length(char *str, int start, int *end_pos);
 
 void						free_environment(t_env *my_env);
+
+void    token_to_cmd(t_token *token);
 
 #endif
