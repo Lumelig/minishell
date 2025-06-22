@@ -154,8 +154,21 @@ int	main(int argc, char **argv, char **env)
 	int		is_interactive;
 
 	init_environment(&my_env, env, argv, argc);
-	//debug
-	//print_env_list(my_env.head);
+	// if (argc > 1)
+	// {
+	// 	if (strcmp(argv[1], "-c") == 0 && argc > 2)
+	// 	{
+	// 		execute_command_string(&my_env, argv[2]);
+	// 		free_environment(&my_env);
+	// 		return (my_env.last_exit_status);
+	// 	}
+	// 	else
+	// 	{
+	// 		execute_script_file(&my_env, argv[1]);
+	// 		free_environment(&my_env);
+	// 		return (my_env.last_exit_status);
+	// 	}
+	// }
 	is_interactive = isatty(STDIN_FILENO);
 	if (is_interactive)
 		setup_signal_handlers();
