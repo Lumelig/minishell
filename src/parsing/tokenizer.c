@@ -287,14 +287,17 @@ t_token	*tokenize(char *line)
 		if (!extract_word(line, &i, &word))
 			return (cleanup_tokens(head));
 		if (ft_strlen(word) > 0)
-		{
-			ret = add_token(&head, TOKEN_WORD, word);
-			free(word);
-			if (!ret)
-				return (cleanup_tokens(head));
-		}
-		else
-			free(word);
+{
+    	ret = add_token(&head, TOKEN_WORD, word);
+    	if (!ret)
+    	{
+      		free(word);
+       		return (cleanup_tokens(head));
+   		}
+}
+	free(word);
 	}
+	if (!add_token(&head, TOKEN_EOF, ""))
+        return (cleanup_tokens(head));
 	return (head);
 }

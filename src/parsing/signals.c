@@ -5,6 +5,9 @@
  */
 volatile sig_atomic_t	g_sigint_received = 0;
 
+// rl_on_new_line();       Tell readline we're on new line
+// rl_replace_line("", 0); Clear current input line
+// rl_redisplay();         Refresh prompt display
 void	set_siginit(int signum)
 {
 	(void)signum;

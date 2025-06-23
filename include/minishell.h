@@ -57,12 +57,6 @@ typedef struct s_file_list
 	ssize_t					size;
 }							t_file_list;
 
-typedef struct s_cmd_list
-{
-	t_cmd_node				*head;
-	t_cmd_node				*tail;
-	ssize_t					size;
-}							t_cmd_list;
 
 typedef struct s_file_node
 {
@@ -71,6 +65,12 @@ typedef struct s_file_node
 	struct s_file_node		*next;
 }							t_file_node;
 
+typedef struct s_cmd_list
+{
+	t_cmd_node				*head;
+	t_cmd_node				*tail;
+	ssize_t					size;
+}							t_cmd_list;
 typedef struct s_cmd_node
 {
 	int						cmd_type;
@@ -104,9 +104,9 @@ typedef struct s_env // Controling struct for env
 	int exit_status; // same as for pid above
 }							t_env;
 
-t_cmd_list					*parse_tokens(t_token *tokens);
+t_cmd_list *parsing(t_env *my_env, t_token *token);
 
-t_cmd_list					*init_cmd_list(void);
+
 void						setup_signal_handlers(void);
 
 bool						init_environment(t_env *my_env, char **env,
@@ -147,6 +147,6 @@ int							get_var_length(char *str, int start, int *end_pos);
 
 void						free_environment(t_env *my_env);
 
-void    token_to_cmd(t_token *token);
+void    token_to_cmd(t_token *token, t_cmd_list *cmd_list);
 
 #endif
