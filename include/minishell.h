@@ -48,7 +48,7 @@ typedef struct s_token
 
 typedef struct s_file_node	t_file_node;
 typedef struct s_cmd_node	t_cmd_node;
-typedef __sig_atomic_t		sig_atomic_t;
+typedef sig_atomic_t		sig_atomic_t;
 
 typedef struct s_file_list
 {

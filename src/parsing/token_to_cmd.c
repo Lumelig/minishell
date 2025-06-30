@@ -56,5 +56,9 @@ t_cmd_list	*token_to_cmd(t_token *token)
 		return ;
 	cmd_list = init_cmd_list;
 	current = token;
-	
+	while (current->type != TOKEN_EOF)
+	{
+		
+	}
+	return(cmd_list);
 }
