@@ -39,7 +39,7 @@ t_cmd_list *parsing(t_env *my_env, t_token *token)
 	expand_tokens(token, my_env->head, my_env);
     my_env->exit_status = syntax_validation(token);
     printf("value: %s Key: %d\n", token->value, token->type);
-    cmd_list = token_to_cmd(token, cmd_list);
+    cmd_list = token_to_cmd(token);
 
     return(cmd_list);
 }
