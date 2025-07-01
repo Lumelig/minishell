@@ -51,7 +51,7 @@ SRC_FILES = src/main.c \
 			src/parsing/expand_utils.c \
 			src/parsing/expand_utils_2.c \
             src/parsing/environment.c \
-			src/parsing/token_to_cmd.c \
+			#src/parsing/token_to_cmd.c \
 
 
 			

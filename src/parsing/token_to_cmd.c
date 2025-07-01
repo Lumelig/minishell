@@ -58,6 +58,11 @@ t_cmd_list	*token_to_cmd(t_token *token)
 	current = token;
 	while (current->type != TOKEN_EOF)
 	{
+		while (current->type == TOKEN_WORD)
+		{
+			//add cmd;
+			current = current->next;
+		}
 		
 	}
 	return(cmd_list);
