@@ -114,9 +114,9 @@ static char	*get_input(int is_interactive)
 
 static void	shell_loop(t_env *my_env, int is_interactive)
 {
-	t_token *token;
-	t_cmd_list *cmd_list;
-	char	*input;
+	t_token		*token;
+	t_cmd_list	*cmd_list;
+	char		*input;
 
 	while (1)
 	{
@@ -132,7 +132,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 			free(input);
 			continue ;
 		}
-		if (is_interactive)//debug
+		if (is_interactive) // debug
 			print_history();
 		token = tokenize(input);
 		if (check_exit_command(token))
@@ -141,6 +141,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 			exit(0);
 		}
 		cmd_list = parsing(my_env, token);
+		executor(cmd_list, my_env);
 		(void)cmd_list;
 		free_tokens(token);
 		free(input);
