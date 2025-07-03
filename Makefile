@@ -44,13 +44,13 @@ TARGET		= $(BIN_DIR)/$(NAME)
 SRC_FILES = src/main.c \
 			src/utils.c \
 			src/signals.c \
-			src/parsing.c \
             src/parsing/tokenizer.c \
             src/parsing/quote.c \
             src/parsing/expand.c \
 			src/parsing/expand_utils.c \
 			src/parsing/expand_utils_2.c \
             src/parsing/environment.c \
+			#src/parsing.c \
 			#src/parsing/token_to_cmd.c \
 
 
