@@ -115,7 +115,7 @@ static char	*get_input(int is_interactive)
 static void	shell_loop(t_env *my_env, int is_interactive)
 {
 	t_token *token;
-	//t_cmd_list *cmd_list;
+	t_cmd_list *cmd_list;
 	char	*input;
 
 	while (1)
@@ -141,7 +141,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 			cleanup_and_exit(token, input, my_env);
 			exit(0);
 		}
-		//cmd_list = parsing(my_env, token);
+		cmd_list = parsing(my_env, token);
 		//(void)cmd_list;
 		free_tokens(token);
 		free(input);

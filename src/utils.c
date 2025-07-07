@@ -18,3 +18,4 @@ void	free_environment(t_env *env)
 	env->tail = NULL;
 	env->size = 0;
 }
+

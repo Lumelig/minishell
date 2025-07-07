@@ -1,7 +1,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "execution.h"
+//# include "execution.h"
 # include "libft.h"
 # include <dirent.h> // opendir, readdir, closedir
 # include <fcntl.h>  // open
@@ -63,12 +63,6 @@ typedef struct s_file_node
 	struct s_file_node		*next;
 }							t_file_node;
 
-typedef struct s_cmd_list
-{
-	t_cmd_node				*head;
-	t_cmd_node				*tail;
-	ssize_t					size;
-}							t_cmd_list;
 typedef struct s_cmd_node
 {
 	int						cmd_type;
@@ -76,6 +70,13 @@ typedef struct s_cmd_node
 	t_file_list				*files;
 	struct s_cmd_node		*next;
 }							t_cmd_node;
+typedef struct s_cmd_list
+{
+	t_cmd_node				*head;
+	t_cmd_node				*tail;
+	ssize_t					size;
+}							t_cmd_list;
+
 
 typedef struct s_quote_state
 {
