@@ -95,6 +95,7 @@ static int	check_exit_command(t_token *token)
 // 	}
 // }
 
+
 static char	*get_input(int is_interactive)
 {
 	char	*input;
@@ -142,7 +143,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 			exit(0);
 		}
 		cmd_list = parsing(my_env, token);
-		//(void)cmd_list;
+		print_cmd_list(cmd_list);
 		free_tokens(token);
 		free(input);
 	}

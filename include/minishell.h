@@ -146,5 +146,6 @@ int							get_var_length(char *str, int start, int *end_pos);
 void						free_environment(t_env *my_env);
 
 t_cmd_list					*token_to_cmd(t_token *token);
+void print_cmd_list(t_cmd_list *cmd_list);
 
 #endif
