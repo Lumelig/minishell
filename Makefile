@@ -53,7 +53,15 @@ SRC_FILES = src/main.c \
             src/parsing/environment.c \
 			src/parsing/token_to_cmd.c \
 			src/execution/execution.c \
-
+			src/execution/builtin/builtin.c \
+			src/execution/debug.c \
+			src/execution/builtin/cd.c \
+			src/execution/builtin/echo.c \
+			src/execution/builtin/env.c \
+			src/execution/builtin/exit.c \
+			src/execution/builtin/export.c \
+			src/execution/builtin/pwd.c \
+			src/execution/builtin/unset.c \
 
 			
 
