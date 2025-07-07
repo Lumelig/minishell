@@ -142,7 +142,6 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		}
 		cmd_list = parsing(my_env, token);
 		executor(cmd_list, my_env);
-		(void)cmd_list;
 		free_tokens(token);
 		free(input);
 	}
