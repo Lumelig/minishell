@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-static char	*ft_strjoin_char(char const *s1, char c);
-
 static t_token	*cleanup_tokens(t_token *head)
 {
 	t_token	*current;
@@ -34,6 +32,7 @@ static int	add_token(t_token **head, t_token_type type, const char *value)
 {
 	t_token	*new_token;
 	t_token	*current;
+
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
 		return (0);
@@ -90,7 +89,7 @@ static char	*handle_escape_char(char c)
 	return (result);
 }
 
-static char	*ft_strjoin_char(char const *s1, char c)
+char	*ft_strjoin_char(char const *s1, char c)
 {
 	char	*result;
 	size_t	len;
@@ -175,8 +174,8 @@ static int	extract_word(char *line, int *i, char **word)
 	{
 		if (line[*i] == '"' || line[*i] == '\'')
 		{
-			quote_char = line[*i];  // Store the quote character
-			(*i)++;                 // Skip the opening quote
+			quote_char = line[*i]; // Store the quote character
+			(*i)++;                // Skip the opening quote
 			if (!handle_quoted_content(line, i, word, quote_char))
 			{
 				free(*word);
@@ -186,13 +185,13 @@ static int	extract_word(char *line, int *i, char **word)
 		}
 		else if (line[*i] == '\\' && line[*i + 1])
 		{
-			(*i)++;  // Skip the backslash
+			(*i)++; // Skip the backslash
 			temp = *word;
 			*word = ft_strjoin_char(*word, line[*i]);
 			free(temp);
 			if (!*word)
 				return (0);
-			(*i)++;  // Move past the escaped character
+			(*i)++; // Move past the escaped character
 		}
 		else
 		{
@@ -201,7 +200,7 @@ static int	extract_word(char *line, int *i, char **word)
 			free(temp);
 			if (!*word)
 				return (0);
-			(*i)++;  // Move to next character
+			(*i)++; // Move to next character
 		}
 	}
 	return (1);
@@ -287,17 +286,17 @@ t_token	*tokenize(char *line)
 		if (!extract_word(line, &i, &word))
 			return (cleanup_tokens(head));
 		if (ft_strlen(word) > 0)
-{
-    	ret = add_token(&head, TOKEN_WORD, word);
-    	if (!ret)
-    	{
-      		free(word);
-       		return (cleanup_tokens(head));
-   		}
-}
-	free(word);
+		{
+			ret = add_token(&head, TOKEN_WORD, word);
+			if (!ret)
+			{
+				free(word);
+				return (cleanup_tokens(head));
+			}
+		}
+		free(word);
 	}
 	if (!add_token(&head, TOKEN_EOF, ""))
-        return (cleanup_tokens(head));
+		return (cleanup_tokens(head));
 	return (head);
 }

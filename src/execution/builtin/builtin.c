@@ -46,11 +46,11 @@ void	run_builtin(int id, t_cmd_node *curr, t_env *env)
 	(void)env;
 	printf("debug03: run builtin\n");
 	if (id == 1)
-		pwd_builtin();
+		pwd_builtin(); // done
 	else if (id == 2)
-		env_builtin();
+		env_builtin(env); // done
 	else if (id == 3)
-		echo_builtin();
+		echo_builtin(); //
 	else if (id == 4)
 		exit_builtin();
 	else if (id == 5)

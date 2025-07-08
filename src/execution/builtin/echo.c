@@ -2,5 +2,5 @@
 
 void	echo_builtin(void)
 {
-	printf("echo\n");
+	printf("echo echoe choe choe cho\n");
 }
