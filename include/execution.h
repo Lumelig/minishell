@@ -22,12 +22,12 @@ int								executor(t_cmd_list *cmd_list, t_env *env);
 int								builtin_check(t_cmd_node *cmd);
 void							run_builtin(int id, t_cmd_node *curr,
 									t_env *env);
-void							cd_builtin(void);
+void							pwd_builtin(void);
+void							env_builtin(t_env *env);
 void							echo_builtin(void);
 void							exit_builtin(void);
-void							env_builtin(void);
 void							export_builtin(void);
+void							cd_builtin(void);
 void							unset_builtin(void);
-void							pwd_builtin(void);
 
 #endif

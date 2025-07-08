@@ -2,5 +2,11 @@
 
 void	pwd_builtin(void)
 {
-	printf("pwd\n");
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+		printf("getcwd failed\n");
+	printf("%s\n", cwd);
+	free(cwd);
 }
