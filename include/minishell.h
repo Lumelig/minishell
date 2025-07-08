@@ -102,6 +102,7 @@ typedef struct s_env // Controling struct for env
 	t_envlist *tail;
 	int exit_status; // same as for pid above
 }							t_env;
+void	process_quote_state(char *line, int *i, t_quote_state *state);
 
 char	*get_continuation_prompt(int quote_type);
 
