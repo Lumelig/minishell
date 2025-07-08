@@ -52,7 +52,8 @@ SRC_FILES = src/main.c \
             src/parsing/environment.c \
 			src/parsing.c \
 			src/parsing/token_to_cmd.c \
-			src/DEBUGFUNKTIONS.c
+			src/DEBUGFUNKTIONS.c \
+			src/parsing/get_input.c
 
 
 			
