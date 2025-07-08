@@ -14,19 +14,19 @@ int	builtin_check(t_cmd_node *cmd)
 	printf("debug02: builtin_check %s\n", cmd->cmd[0]);
 	if (!cmd || !cmd->cmd[0] || !cmd->cmd)
 		return (0);
-	if (strcmp(cmd->cmd[0], "pwd") == 0)
+	if (ft_strncmp(cmd->cmd[0], "pwd", 4) == 0)
 		return (1);
-	else if (strcmp(cmd->cmd[0], "env") == 0)
+	else if (ft_strncmp(cmd->cmd[0], "env", 4) == 0)
 		return (2);
-	else if (strcmp(cmd->cmd[0], "echo") == 0) // echo with -n
+	else if (ft_strncmp(cmd->cmd[0], "echo", 5) == 0)
 		return (3);
-	else if (strcmp(cmd->cmd[0], "exit") == 0) // rest without options
+	else if (ft_strncmp(cmd->cmd[0], "exit", 5) == 0) // rest without options
 		return (4);
-	else if (strcmp(cmd->cmd[0], "export") == 0)
+	else if (ft_strncmp(cmd->cmd[0], "export", 7) == 0)
 		return (5);
-	else if (strcmp(cmd->cmd[0], "cd") == 0) // only relative or absolute path
+	else if (ft_strncmp(cmd->cmd[0], "cd", 3) == 0)
 		return (6);
-	else if (strcmp(cmd->cmd[0], "unset") == 0)
+	else if (ft_strncmp(cmd->cmd[0], "unset", 6) == 0)
 		return (7);
 	else
 		return (0);
@@ -50,9 +50,9 @@ void	run_builtin(int id, t_cmd_node *curr, t_env *env)
 	else if (id == 2)
 		env_builtin(env); // done
 	else if (id == 3)
-		echo_builtin(curr); //
+		echo_builtin(curr); // done
 	else if (id == 4)
-		exit_builtin();
+		exit_builtin(curr); // done
 	else if (id == 5)
 		export_builtin();
 	else if (id == 6)
