@@ -79,7 +79,7 @@ static int	check_exit_command(t_token *token)
 {
 	if (token && !ft_strncmp("exit", token->value, 5)
 		&& ft_strlen(token->value) == 4)
-		return (1);
+		return (0);
 	return (0);
 }
 
