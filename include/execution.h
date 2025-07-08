@@ -24,7 +24,7 @@ void							run_builtin(int id, t_cmd_node *curr,
 									t_env *env);
 void							pwd_builtin(void);
 void							env_builtin(t_env *env);
-void							echo_builtin(void);
+void							echo_builtin(t_cmd_node *curr);
 void							exit_builtin(void);
 void							export_builtin(void);
 void							cd_builtin(void);

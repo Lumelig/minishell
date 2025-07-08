@@ -44,40 +44,40 @@ void	create_cmd(int cmd_type, char **args, t_cmd_list *cmd_list)
 
 void	debug_test(t_cmd_list *cmd_list, t_env *env)
 {
-	char *echo1[] = {"echo", "hello", "world", NULL};
-	char *echo2[] = {"echo", "-n", "no", "newline", NULL};
-	char *echo3[] = {"echo", NULL};
-	char *cd1[] = {"cd", "/", NULL};
-	char *cd2[] = {"cd", "..", NULL};
-	char *cd3[] = {"cd", "doesnotexist", NULL};
-	char *pwd1[] = {"pwd", NULL};
-	char *export1[] = {"export", "FOO=bar", NULL};
-	char *export2[] = {"export", "A=1", "B=2", NULL};
-	char *export3[] = {"export", "INVALID-NAME=value", NULL};
-	char *unset1[] = {"unset", "FOO", NULL};
-	char *unset2[] = {"unset", "A", "B", NULL};
-	char *unset3[] = {"unset", "INVALID-NAME", NULL};
-	char *env1[] = {"env", NULL};
+	// char *pwd1[] = {"pwd", NULL};
+	// char *env1[] = {"env", NULL};
+	// char *echo1[] = {"echo", "hello", "world", NULL};
+	// char *echo2[] = {"echo", "-n", "no", "newline", NULL};
+	// char *echo3[] = {"echo", NULL};
 	char *exit1[] = {"exit", NULL};
 	char *exit2[] = {"exit", "42", NULL};
 	char *exit3[] = {"exit", "invalid", NULL};
+	// char *export1[] = {"export", "FOO=bar", NULL};
+	// char *export2[] = {"export", "A=1", "B=2", NULL};
+	// char *export3[] = {"export", "INVALID-NAME=value", NULL};
+	// char *cd1[] = {"cd", "/", NULL};
+	// char *cd2[] = {"cd", "..", NULL};
+	// char *cd3[] = {"cd", "doesnotexist", NULL};
+	// char *unset1[] = {"unset", "FOO", NULL};
+	// char *unset2[] = {"unset", "A", "B", NULL};
+	// char *unset3[] = {"unset", "INVALID-NAME", NULL};
 
 	(void)env;
-	create_cmd(1, pwd1, cmd_list);
-	create_cmd(2, env1, cmd_list);
-	create_cmd(3, echo1, cmd_list);
-	create_cmd(3, echo2, cmd_list);
-	create_cmd(3, echo3, cmd_list);
+	// create_cmd(1, pwd1, cmd_list);
+	// create_cmd(2, env1, cmd_list);
+	// create_cmd(3, echo1, cmd_list);
+	// create_cmd(3, echo2, cmd_list);
+	// create_cmd(3, echo3, cmd_list);
 	create_cmd(4, exit1, cmd_list);
 	create_cmd(4, exit2, cmd_list);
 	create_cmd(4, exit3, cmd_list);
-	create_cmd(5, export1, cmd_list);
-	create_cmd(5, export2, cmd_list);
-	create_cmd(5, export3, cmd_list);
-	create_cmd(6, cd1, cmd_list);
-	create_cmd(6, cd2, cmd_list);
-	create_cmd(6, cd3, cmd_list);
-	create_cmd(7, unset1, cmd_list);
-	create_cmd(7, unset2, cmd_list);
-	create_cmd(7, unset3, cmd_list);
+	// create_cmd(5, export1, cmd_list);
+	// create_cmd(5, export2, cmd_list);
+	// create_cmd(5, export3, cmd_list);
+	// create_cmd(6, cd1, cmd_list);
+	// create_cmd(6, cd2, cmd_list);
+	// create_cmd(6, cd3, cmd_list);
+	// create_cmd(7, unset1, cmd_list);
+	// create_cmd(7, unset2, cmd_list);
+	// create_cmd(7, unset3, cmd_list);
 }
