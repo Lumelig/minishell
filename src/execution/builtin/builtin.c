@@ -44,7 +44,7 @@ void	run_builtin(int id, t_cmd_node *curr, t_env *env)
 	// unset   standalone but needed complementary to export
 	(void)curr;
 	(void)env;
-	printf("debug03: run builtin\n");
+	printf("debug 03: run builtin\n");
 	if (id == 1)
 		pwd_builtin(); // done
 	else if (id == 2)
@@ -54,9 +54,9 @@ void	run_builtin(int id, t_cmd_node *curr, t_env *env)
 	else if (id == 4)
 		exit_builtin(curr); // done
 	else if (id == 5)
-		export_builtin();
+		export_builtin(curr, env); //
 	else if (id == 6)
-		cd_builtin();
+		cd_builtin(curr, env); //
 	else if (id == 7)
-		unset_builtin();
+		unset_builtin(curr, env); //
 }
