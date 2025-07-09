@@ -49,7 +49,10 @@ SRC_FILES = src/main.c \
             src/parsing/expand.c \
 			src/parsing/expand_utils.c \
 			src/parsing/expand_utils_2.c \
-            src/parsing/environment.c \
+            src/parsing/env_init.c \
+			src/parsing/env_utils.c \
+			src/parsing/env_utils2.c \
+			src/parsing/env_validate.c \
 			src/parsing.c \
 			src/parsing/token_to_cmd.c \
 			src/DEBUGFUNKTIONS.c \

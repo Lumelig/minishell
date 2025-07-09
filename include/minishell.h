@@ -149,6 +149,31 @@ int							get_var_length(char *str, int start, int *end_pos);
 void						free_environment(t_env *my_env);
 
 t_cmd_list					*token_to_cmd(t_token *token);
+
 void print_cmd_list(t_cmd_list *cmd_list);
+
+
+void		init_empty_env(t_env *env, char **argv, int argc);
+void		set_environment(t_env *my_env, char **key, char **value, char *env);
+bool		init_default_env(t_env *my_env);
+bool		process_env_vars(t_env *my_env, char **env);
+bool		init_environment(t_env *my_env, char **env, char **argv, int argc);
+
+// env_manage.c functions
+bool		add_env_var(t_env *env, char *key, char *value);
+t_envlist	*find_env_var(t_env *env, const char *key);
+bool		update_or_add_env_var(t_env *env, char *key, char *value);
+char		*get_env_value(t_env *env, const char *key);
+void		cleanup_env(t_env *env);
+
+// env_validate.c functions
+bool		add_shlvl_if_missing(t_env *my_env);
+bool		add_pwd_if_missing(t_env *my_env);
+bool		check_required_vars(t_env *my_env);
+char		*create_env_string(t_envlist *current);
+void		free_env_array(char **env_array, int count);
+
+// env_convert.c functions
+char		**env_to_array(t_env *env);
 
 #endif
