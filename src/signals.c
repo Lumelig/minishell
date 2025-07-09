@@ -5,6 +5,9 @@
  */
 volatile sig_atomic_t	g_sigint_received = 0;
 
+// rl_on_new_line();       Tell readline we're on new line
+// rl_replace_line("", 0); Clear current input line
+// rl_redisplay();         Refresh prompt display
 void	set_siginit(int signum)
 {
 	(void)signum;
@@ -29,13 +32,29 @@ void	setup_signal_handlers(void)
 {
 	struct sigaction	sig_int;
 	struct sigaction	sig_quit;
+	struct sigaction	sig_tstp;
 
-	sig_quit.sa_handler = SIG_IGN;
-	sig_int.sa_handler = set_siginit;
 	sigemptyset(&sig_int.sa_mask);
-	sigaddset(&sig_int.sa_mask, SIGINT);
-	sig_int.sa_flags = 0;
+	sigemptyset(&sig_quit.sa_mask);
+	sigemptyset(&sig_tstp.sa_mask);
+
+	// Ignore SIGQUIT (Ctrl+\)
+	sig_quit.sa_handler = SIG_IGN;
+	sig_quit.sa_flags = SA_RESTART;
+
+	// Ignore SIGTSTP (Ctrl+Z)
+	sig_tstp.sa_handler = SIG_IGN;
+	sig_tstp.sa_flags = SA_RESTART;
+
+	// Handle SIGINT (Ctrl+C)
+	sig_int.sa_handler = set_siginit;
+	sig_int.sa_flags = SA_RESTART;
+
+	// Register signal handlers
 	sigaction(SIGQUIT, &sig_quit, NULL);
 	sigaction(SIGINT, &sig_int, NULL);
+	sigaction(SIGTSTP, &sig_tstp, NULL);  // ✅ Use SIGTSTP, not SIGSTOP
+
 	disable_ctrlc_print();
 }
+

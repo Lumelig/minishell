@@ -42,11 +42,33 @@ TARGET		= $(BIN_DIR)/$(NAME)
 
 # Source files
 SRC_FILES = src/main.c \
-            src/parsing/parsing.c \
+			src/utils.c \
+			src/signals.c \
+            src/parsing/tokenizer.c \
             src/parsing/quote.c \
             src/parsing/expand.c \
-            src/parsing/environment.c \
-			src/parsing/signals.c \
+			src/parsing/expand_utils.c \
+			src/parsing/expand_utils_2.c \
+            src/parsing/env_init.c \
+			src/parsing/env_utils.c \
+			src/parsing/env_utils2.c \
+			src/parsing/env_validate.c \
+			src/parsing.c \
+			src/parsing/token_to_cmd.c \
+			src/parsing/get_input.c \
+			src/DEBUGFUNKTIONS.c \
+			src/execution/execution.c \
+			src/execution/builtin/builtin.c \
+			src/execution/builtin/cd.c \
+			src/execution/builtin/echo.c \
+			src/execution/builtin/env.c \
+			src/execution/builtin/exit.c \
+			src/execution/builtin/export.c \
+			src/execution/builtin/pwd.c \
+			src/execution/builtin/unset.c \
+			src/execution/debug.c \
+
+
 			
 
 # Object files

@@ -1,55 +1,65 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: student <student@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/01 00:00:00 by student          #+#    #+#             */
+/*   Updated: 2024/01/01 00:00:00 by student         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-bool empty_input(char *input)
+bool	empty_input(char *input)
 {
-    int i;
+	int	i;
 
-    if (!input)
-        return (true);
-    
-    i = 0;
-    while (input[i] && ft_isspace(input[i]))
-        i++;
-    
-    // Don't free input here - let caller handle it
-    return (input[i] == '\0');
+	if (!input)
+		return (true);
+	i = 0;
+	while (input[i] && ft_isspace(input[i]))
+		i++;
+	return (input[i] == '\0');
 }
 
-//delet later
-void print_history(void)
+void	print_history(void)
 {
-    HIST_ENTRY **the_list;
-    int i = 0;
+	HIST_ENTRY	**the_list;
+	int			i;
 
-    the_list = history_list();
-    if (the_list)
-    {
-        while (the_list[i])
-        {
-            printf("%d: %s\n", i + history_base, the_list[i]->line);
-            i++;
-        }
-    }
+	i = 0;
+	the_list = history_list();
+	if (the_list)
+	{
+		while (the_list[i])
+		{
+			printf("%d: %s\n", i + history_base, the_list[i]->line);
+			i++;
+		}
+	}
 }
 
-// Function to free token list
-void free_tokens(t_token *token)
+void	free_tokens(t_token *token)
 {
-    t_token *temp;
-    
-    while (token)
-    {
-        temp = token->next;
-        free(token->value);
-        free(token);
-        token = temp;
-    }
+	t_token	*temp;
+
+	while (token)
+	{
+		temp = token->next;
+		if (token->value)
+			free(token->value);
+		free(token);
+		token = temp;
+	}
 }
 
 void	print_env_list(t_envlist *head)
 {
-	t_envlist *current = head;
+	t_envlist	*current;
 
+	current = head;
 	while (current)
 	{
 		printf("%s%c%s\n", current->key, current->delimiter, current->value);
@@ -57,176 +67,86 @@ void	print_env_list(t_envlist *head)
 	}
 }
 
-int main(int argc, char **argv, char **env)
+static void	cleanup_and_exit(t_token *token, char *input, t_env *my_env)
 {
-    t_token *token;
-    char *input;
-    char *cwd;
-	t_env	my_env;
-
-    // Initialize readline history
-    using_history();
-	init_environment(&my_env, env, argv, argc);
-	print_env_list(my_env.head);
-	setup_signal_handlers();
-    while (1)
-    {
-        // Get current working directory for prompt
-        cwd = getcwd(NULL, 0);
-        if (cwd)
-        {
-            printf("%s ", cwd);
-            free(cwd);
-        }
-        else
-        {
-            printf("minihell$ ");
-        }
-
-        // Get input (this handles quote continuation)
-        input = get_complete_input();
-        
-        // Check if user pressed Ctrl+D
-        if (!input)
-        {
-            printf("exit\n");
-            break;
-        }
-
-        // Check if input is empty (only whitespace)
-        if (empty_input(input))
-        {
-            free(input);
-            continue;
-        }
-
-        // Add to history if not empty
-        add_history(input);
-
-        // Debug: print history (remove this in production)
-        print_history();
-
-        // Tokenize input
-        token = tokenize(input);
-		
-		token = expand_and_split_tokens(token);
-        
-        // Debug: print tokens (remove this in production)
-        t_token *current = token;
-        while (current)
-        {
-            printf("Token: '%s'\n", current->value);
-            current = current->next;
-        }
-
-        // Check for exit command
-        if (token && !ft_strncmp("exit", token->value, 5) && 
-            ft_strlen(token->value) == 4)
-        {
-            free_tokens(token);
-            free(input);
-            break;
-        }
-
-        // Here you would execute the command
-        // execute_command(token);
-
-        // Clean up
-        free_tokens(token);
-        free(input);
-    }
-
-    // Clean up history
-    clear_history();
-    return (0);
+	free_tokens(token);
+	free(input);
+	(void)my_env;
 }
 
-// Alternative version with better prompt handling
-// int main_alternative(int argc, char **argv, char **env)
-// {
-//     t_token *token;
-//     char *input;
-//     char prompt[1024];
-//     (void)argc;
-//     (void)argv;
-//     (void)env;
+static char	*get_input(int is_interactive)
+{
+	char	*input;
 
-//     using_history();
+	if (is_interactive)
+	{
+		input = get_complete_input();
+	}
+	else
+	{
+		input = get_next_line(STDIN_FILENO);
+		if (input && input[ft_strlen(input) - 1] == '\n')
+			input[ft_strlen(input) - 1] = '\0';
+	}
+	return (input);
+}
 
-//     while (1)
-//     {
-//         // Create a nice prompt with current directory
-//         char *cwd = getcwd(NULL, 0);
-//         if (cwd)
-//         {
-//             snprintf(prompt, sizeof(prompt), "\033[1;32m%s\033[0m$ ", basename(cwd));
-//             free(cwd);
-//         }
-//         else
-//         {
-//             strcpy(prompt, "minishell$ ");
-//         }
+static void	shell_loop(t_env *my_env, int is_interactive)
+{
+	t_token		*token;
+	t_cmd_list	*cmd_list;
+	char		*input;
 
-//         // Use readline with custom prompt
-//         input = readline(prompt);
-        
-//         if (!input)
-//         {
-//             printf("exit\n");
-//             break;
-//         }
+	while (1)
+	{
+		input = get_input(is_interactive);
+		if (!input)
+		{
+			if (is_interactive)
+				printf("exit\n");
+			break ;
+		}
+		if (empty_input(input))
+		{
+			free(input);
+			continue ;
+		}
+		// if (is_interactive) // debug
+		// 	print_history();
+		token = tokenize(input);
+		expand_tokens(token, my_env->head, my_env);
+		cmd_list = parsing(my_env, token);
+		executor(cmd_list, my_env);
+		cleanup_and_exit(token, input, my_env);
+	}
+}
 
-//         if (empty_input(input))
-//         {
-//             free(input);
-//             continue;
-//         }
+int	main(int argc, char **argv, char **env)
+{
+	t_env my_env;
+	int is_interactive;
 
-//         // Handle quote continuation
-//         int quote_status = check_quotes_balanced(input);
-//         char *complete_input = input;
-        
-//         while (quote_status != 0)
-//         {
-//             char *cont_prompt = get_continuation_prompt(quote_status);
-//             char *continuation = readline(cont_prompt);
-            
-//             if (!continuation)
-//                 break;
-                
-//             char *temp = malloc(strlen(complete_input) + strlen(continuation) + 2);
-//             sprintf(temp, "%s\n%s", complete_input, continuation);
-            
-//             if (complete_input != input)
-//                 free(complete_input);
-//             free(continuation);
-//             complete_input = temp;
-            
-//             quote_status = check_quotes_balanced(complete_input);
-//         }
-
-//         add_history(complete_input);
-        
-//         token = tokenize(complete_input);
-        
-//         if (token && !strcmp(token->value, "exit"))
-//         {
-//             free_tokens(token);
-//             if (complete_input != input)
-//                 free(complete_input);
-//             free(input);
-//             break;
-//         }
-
-//         // Execute command here
-//         // execute_command(token);
-
-//         free_tokens(token);
-//         if (complete_input != input)
-//             free(complete_input);
-//         free(input);
-//     }
-
-//     clear_history();
-//     return (0);
-// }
+	init_environment(&my_env, env, argv, argc);
+	// if (argc > 1) TODO: to consider for later
+	// {
+	// 	if (strcmp(argv[1], "-c") == 0 && argc > 2)
+	// 	{
+	// 		execute_command_string(&my_env, argv[2]);
+	// 		free_environment(&my_env);
+	// 		return (my_env.last_exit_status);
+	// 	}
+	// 	else
+	// 	{
+	// 		execute_script_file(&my_env, argv[1]);
+	// 		free_environment(&my_env);
+	// 		return (my_env.last_exit_status);
+	// 	}
+	// }
+	is_interactive = isatty(STDIN_FILENO);
+	if (is_interactive)
+		setup_signal_handlers();
+	shell_loop(&my_env, is_interactive);
+	free_environment(&my_env);
+	rl_clear_history();
+	return (0);
+}
