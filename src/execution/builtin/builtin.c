@@ -11,7 +11,7 @@
 
 int	builtin_check(t_cmd_node *cmd)
 {
-	printf("debug02: builtin_check %s\n", cmd->cmd[0]);
+	// printf("debug 02: builtin_check %s\n", cmd->cmd[0]);
 	if (!cmd || !cmd->cmd[0] || !cmd->cmd)
 		return (0);
 	if (ft_strncmp(cmd->cmd[0], "pwd", 4) == 0)
@@ -42,9 +42,10 @@ void	run_builtin(int id, t_cmd_node *curr, t_env *env)
 	// export needed for cd
 	// cd relies on pwd and export
 	// unset   standalone but needed complementary to export
-	(void)curr;
-	(void)env;
-	printf("debug 03: run builtin\n");
+	// (void)curr;
+	// (void)env;
+	// printf("debug 03: run builtin\n");
+	// printf("id: %i\n", id);
 	if (id == 1)
 		pwd_builtin(); // done
 	else if (id == 2)
@@ -52,7 +53,7 @@ void	run_builtin(int id, t_cmd_node *curr, t_env *env)
 	else if (id == 3)
 		echo_builtin(curr); // done
 	else if (id == 4)
-		exit_builtin(curr); // done
+		exit_builtin(curr, env); // done
 	else if (id == 5)
 		export_builtin(curr, env); //
 	else if (id == 6)

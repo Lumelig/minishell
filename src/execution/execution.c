@@ -15,13 +15,13 @@ int	executor(t_cmd_list *cmd_list, t_env *env)
 	pid_t pid;
 	int status;
 
-	debug_test(cmd_list, env);
+	// debug_test(cmd_list, env);
 	if (!cmd_list || !cmd_list->head)
 		return (printf("bad cmd_list or head\n"), 1);
 	t_cmd_node *curr = cmd_list->head;
 
-	printf("debug 00: entry\n");
-	printf("debug 01: %s\n", curr->cmd[0]);
+	// printf("debug 00: entry\n");
+	// printf("debug 01: %s\n", curr->cmd[0]);
 	if (!curr->cmd[0])
 		return (printf("debug 88: empty curr\n"), free(curr->cmd), 1);
 	while (curr)
@@ -32,8 +32,8 @@ int	executor(t_cmd_list *cmd_list, t_env *env)
 		else // execve // TODO: put it into a function
 		{
 			// TODO: function to get path
-			printf("debug 99\n");
-			continue ;
+			printf("debug 99: execve not implemented yet\n");
+			break ;
 			pid = fork();
 			if (pid == 0)
 			{

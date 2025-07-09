@@ -5,6 +5,7 @@ void	env_builtin(t_env *env)
 	t_envlist	*curr;
 
 	curr = env->head;
+	// printf("debug env\n");
 	while (curr)
 	{
 		if (curr->value)

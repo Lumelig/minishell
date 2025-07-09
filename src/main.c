@@ -71,29 +71,8 @@ static void	cleanup_and_exit(t_token *token, char *input, t_env *my_env)
 {
 	free_tokens(token);
 	free(input);
-	free_environment(my_env);
-	rl_clear_history();
+	(void)my_env;
 }
-
-static int	check_exit_command(t_token *token)
-{
-	if (token && !ft_strncmp("exit", token->value, 5)
-		&& ft_strlen(token->value) == 4)
-		return (0);
-	return (0);
-}
-
-// static void	process_tokens(t_token *token)
-// {
-// 	t_token	*current;
-
-// 	current = token;
-// 	while (current)
-// 	{
-// 		printf("Token: '%s', Type: %d\n", current->value, current->type);
-// 		current = current->next;
-// 	}
-// }
 
 static char	*get_input(int is_interactive)
 {
@@ -132,28 +111,23 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 			free(input);
 			continue ;
 		}
-		if (is_interactive) // debug
-			print_history();
+		// if (is_interactive) // debug
+		// 	print_history();
 		token = tokenize(input);
-		if (check_exit_command(token))
-		{
-			cleanup_and_exit(token, input, my_env);
-			exit(0);
-		}
+		expand_tokens(token, my_env->head, my_env);
 		cmd_list = parsing(my_env, token);
 		executor(cmd_list, my_env);
-		free_tokens(token);
-		free(input);
+		cleanup_and_exit(token, input, my_env);
 	}
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	t_env	my_env;
-	int		is_interactive;
+	t_env my_env;
+	int is_interactive;
 
 	init_environment(&my_env, env, argv, argc);
-	// if (argc > 1)
+	// if (argc > 1) TODO: to consider for later
 	// {
 	// 	if (strcmp(argv[1], "-c") == 0 && argc > 2)
 	// 	{
