@@ -1,144 +1,69 @@
 #include "minishell.h"
 
-int check_quotes_balanced_enhanced(char *line) 
+static int	handle_escape_sequence(char *line, int *i)
 {
-    int in_single = 0;
-    int in_double = 0;
-    int i = 0;
-    
-    while (line[i]) {
-        if (in_single) {
-            // Inside single quotes: NOTHING can be escaped, only look for closing single quote
-            if (line[i] == '\'') {
-                in_single = 0;
-            }
-        } else if (in_double) {
-            // Inside double quotes: handle specific escapes
-            if (line[i] == '\\' && line[i + 1]) {
-                // In double quotes, only these can be escaped: $ " \ newline
-                if (line[i + 1] == '$' || line[i + 1] == '"' || 
-                    line[i + 1] == '\\' || line[i + 1] == '\n') {
-                    i += 2; // Skip the escaped character
-                    continue;
-                }
-                // Other characters: backslash is literal, don't skip
-            } else if (line[i] == '"') {
-                in_double = 0;
-            }
-        } else {
-            // Outside all quotes
-            if (line[i] == '\\' && line[i + 1]) {
-                i += 2; // Skip escaped character
-                continue;
-            } else if (line[i] == '\'') {
-                in_single = 1;
-            } else if (line[i] == '"') {
-                in_double = 1;
-            }
-        }
-        i++;
-    }
-    
-    if (in_single)
-        return 1;  // Unclosed single quote
-    else if (in_double)
-        return 2;  // Unclosed double quote
-    else
-        return 0;  // All quotes balanced
+	if (line[*i] == '\\' && line[*i + 1])
+	{
+		if (line[*i + 1] == '$' || line[*i + 1] == '"' || line[*i + 1] == '\\'
+			|| line[*i + 1] == '\n')
+		{
+			*i += 2;
+			return (1);
+		}
+	}
+	return (0);
+}
+
+static int	process_quotes(char *line, int *i, int *in_single, int *in_double)
+{
+	if (*in_single && line[*i] == '\'')
+		*in_single = 0;
+	else if (*in_double && line[*i] == '"')
+		*in_double = 0;
+	else if (*in_double && handle_escape_sequence(line, i))
+		return (1);
+	else if (!*in_single && !*in_double)
+	{
+		if (line[*i] == '\\' && line[*i + 1])
+			*i += 2;
+		else if (line[*i] == '\'')
+			*in_single = 1;
+		else if (line[*i] == '"')
+			*in_double = 1;
+	}
+	return (0);
+}
+
+int	check_quotes_balanced_enhanced(char *line)
+{
+	int	in_single;
+	int	in_double;
+	int	i;
+
+	in_single = 0;
+	in_double = 0;
+	i = 0;
+	while (line[i])
+	{
+		if (process_quotes(line, &i, &in_single, &in_double))
+			continue ;
+		i++;
+	}
+	if (in_single)
+		return (1);
+	else if (in_double)
+		return (2);
+	else
+		return (0);
 }
 
 // Get the appropriate prompt for continuation
-char *get_continuation_prompt(int quote_type) {
-    if (quote_type == 1)
-        return "quote> ";     // Single quote continuation (like bash)
-    else if (quote_type == 2)
-        return "dquote> ";    // Double quote continuation (like bash)
-    else
-        return "minishell$ "; // Default prompt
-}
-
-t_quote_state check_line_completion(char *line) 
+char	*get_continuation_prompt(int quote_type)
 {
-    t_quote_state state = {0, 0, 0};
-    int i = 0;
-    
-    while (line[i]) {
-        if (state.in_single) {
-            // Inside single quotes: NOTHING can be escaped
-            if (line[i] == '\'') {
-                state.in_single = 0;
-            }
-        } else if (state.in_double) {
-            // Inside double quotes: handle specific escapes
-            if (line[i] == '\\' && line[i + 1]) {
-                // In double quotes, only these can be escaped: $ " \ newline
-                if (line[i + 1] == '$' || line[i + 1] == '"' || 
-                    line[i + 1] == '\\' || line[i + 1] == '\n') {
-                    i += 2; // Skip the escaped character
-                    continue;
-                }
-            } else if (line[i] == '"') {
-                state.in_double = 0;
-            }
-        } else {
-            // Outside all quotes
-            if (line[i] == '\\' && line[i + 1]) {
-                i += 2; // Skip escaped character
-                continue;
-            } else if (line[i] == '\'') {
-                state.in_single = 1;
-            } else if (line[i] == '"') {
-                state.in_double = 1;
-            }
-        }
-        i++;
-    }
-    
-    state.continuation = state.in_single || state.in_double;
-    return state;
-}
-
-char *get_complete_input(void) {
-    char *line = NULL;
-    char *complete_input = NULL;
-    char *temp = NULL;
-    int quote_status;
-    
-    line = readline(">");  // Default prompt
-    if (!line)
-        return NULL;
-    
-    // Check if quotes are balanced
-    quote_status = check_quotes_balanced_enhanced(line);
-    
-    if (quote_status == 0) {
-        return line;
-    }
-    
-    // Quotes are unbalanced, need continuation
-    complete_input = ft_strdup(line);
-    free(line);
-    
-    while (quote_status != 0) {
-        line = readline(get_continuation_prompt(quote_status));
-        
-        if (!line) {
-            // User pressed Ctrl+D, return what we have
-            break;
-        }
-        
-        // Proper string concatenation with newline
-        temp = malloc(strlen(complete_input) + strlen(line) + 2); // +2 for \n and \0
-        if (!temp) {
-            free(complete_input);
-            free(line);
-            return NULL;
-        }
-        complete_input = ft_strjoin(complete_input, line);
-        
-        // Check if quotes are now balanced
-        quote_status = check_quotes_balanced_enhanced(complete_input);
-    }
-    
-    return complete_input;
+	if (quote_type == 1)
+		return ("quote> ");
+	else if (quote_type == 2)
+		return ("dquote> ");
+	else
+		return ("minishell$ ");
 }
