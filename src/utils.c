@@ -1,11 +1,12 @@
 #include "minishell.h"
 
-//maybe change funktion to int for error checks.
+// maybe change funktion to int for error checks.
 void	free_environment(t_env *env)
 {
 	t_envlist	*tmp;
-	t_envlist	*current = env->head;
+	t_envlist	*current;
 
+	current = env->head;
 	while (current)
 	{
 		tmp = current->next;
