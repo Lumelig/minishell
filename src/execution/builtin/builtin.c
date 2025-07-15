@@ -32,7 +32,7 @@ int	builtin_check(t_cmd_node *cmd)
 		return (0);
 }
 
-void	run_builtin(int id, t_cmd_node *curr, t_env *env)
+void	run_builtin(int id, t_cmd_node *curr, t_env *ms_env)
 {
 	// standalone easy to implement:
 	// pwd
@@ -49,15 +49,15 @@ void	run_builtin(int id, t_cmd_node *curr, t_env *env)
 	if (id == 1)
 		pwd_builtin(); // done
 	else if (id == 2)
-		env_builtin(env); // done
+		env_builtin(ms_env); // done
 	else if (id == 3)
 		echo_builtin(curr); // done
 	else if (id == 4)
-		exit_builtin(curr, env); // done
+		exit_builtin(curr, ms_env); // TODO: Garbage Collector, Cleanup
 	else if (id == 5)
-		export_builtin(curr, env); //
+		export_builtin(curr, ms_env); //
 	else if (id == 6)
-		cd_builtin(curr, env); //
+		cd_builtin(curr, ms_env); //
 	else if (id == 7)
-		unset_builtin(curr, env); //
+		unset_builtin(curr, ms_env); //
 }
