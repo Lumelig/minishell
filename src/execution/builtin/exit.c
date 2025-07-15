@@ -2,7 +2,7 @@
 
 void	exit_builtin(t_cmd_node *curr, t_env *env)
 {
-	// TODO: garbage collector, cleanup.
+	// TODO: garbage collector, cleanup
 	printf("builtin: exit\n");
 	if (curr->cmd[1])
 	{
