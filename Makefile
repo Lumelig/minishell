@@ -45,6 +45,9 @@ SRC_FILES = src/main.c \
 			src/utils.c \
 			src/signals.c \
             src/parsing/tokenizer.c \
+			src/parsing/tokenizer_utils.c \
+			src/parsing/tokenizer_escape.c \
+			src/parsing/tokenizer_word.c \
             src/parsing/quote.c \
             src/parsing/expand.c \
 			src/parsing/expand_utils.c \
