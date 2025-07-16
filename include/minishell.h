@@ -156,4 +156,23 @@ void						free_env_array(char **env_array, int count);
 // env_convert.c functions
 char						**env_to_array(t_env *env);
 
+t_token	*cleanup_tokens(t_token *head);
+t_token	*create_new_token(t_token_type type, const char *value);
+t_token	*find_last_token(t_token *head);
+int		add_token(t_token **head, t_token_type type, const char *value);
+int		is_operator_char(char c);
+
+/* tokenizer_escape.c */
+char	*handle_escape_char(char c);
+int		append_escaped_char(char *line, int *i, char **result);
+int		append_regular_char(char *line, int *i, char **result);
+int		handle_quoted_content(char *line, int *i, char **result, char quote);
+int		handle_quote_in_word(char *line, int *i, char **word);
+
+/* tokenizer_word.c */
+int		handle_escape_in_word(char *line, int *i, char **word);
+int		handle_regular_char_in_word(char *line, int *i, char **word);
+int		extract_word(char *line, int *i, char **word);
+int		process_word_token(char *line, int *i, t_token **head);
+
 #endif
