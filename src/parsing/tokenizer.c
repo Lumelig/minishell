@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/16 16:07:45 by jenne             #+#    #+#             */
+/*   Updated: 2025/07/16 16:17:13 by jenne            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -53,15 +64,16 @@ int	handle_operator(char *line, int *i, t_token **head)
 		return (handle_input_redirect(line, i, head));
 	return (1);
 }
+
 t_token	*tokenize(char *line)
 {
 	t_token	*head;
 	int		i;
 
+	head = NULL;
+	i = 0;
 	if (!line)
 		return (NULL);
-	i = 0;
-	head = NULL;
 	while (line[i])
 	{
 		if (ft_isspace(line[i]))
@@ -69,13 +81,10 @@ t_token	*tokenize(char *line)
 			i++;
 			continue ;
 		}
-		if (is_operator_char(line[i]))
-		{
-			if (!handle_operator(line, &i, &head))
-				return (cleanup_tokens(head));
-			continue ;
-		}
-		if (!process_word_token(line, &i, &head))
+		if (is_operator_char(line[i]) && !handle_operator(line, &i, &head))
+			return (cleanup_tokens(head));
+		else if (!is_operator_char(line[i])
+			&& !process_word_token(line, &i, &head))
 			return (cleanup_tokens(head));
 	}
 	if (!add_token(&head, TOKEN_EOF, ""))

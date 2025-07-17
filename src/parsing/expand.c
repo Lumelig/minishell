@@ -1,54 +1,64 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/18 01:23:20 by jenne             #+#    #+#             */
+/*   Updated: 2025/07/18 01:24:27 by jenne            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-
-static int handle_variable_size(char *original, int *i, t_env *env, t_envlist *envlist)
+static int	handle_variable_size(char *original, int *i, t_env *env,
+		t_envlist *envlist)
 {
-    int skip;
-    int var_end;
-    int size;
-    int len;
-    
-    len = ft_strlen(original);
-    if (*i + 1 >= len)
-        return (1);  // Just count the $
-        
-    skip = get_special_var_skip(original, *i);
-    if (skip > 0)
-    {
-        size = calculate_special_var_size(original, *i, env);
-        *i += skip - 1;  // -1 because main loop will increment
-        return (size);
-    }
-    else if (ft_isalpha(original[*i + 1]) || original[*i + 1] == '_' 
-             || original[*i + 1] == '{')
-    {
-        size = calculate_var_size(original, *i, envlist, env);
-        get_var_length(original, *i + 1, &var_end);
-        *i = var_end - 1;  // -1 because main loop will increment
-        return (size);
-    }
-    return (1);  // Just the $ character
+	int	skip;
+	int	var_end;
+	int	size;
+	int	len;
+
+	len = ft_strlen(original);
+	if (*i + 1 >= len)
+		return (1);
+	skip = get_special_var_skip(original, *i);
+	if (skip > 0)
+	{
+		size = calculate_special_var_size(original, *i, env);
+		*i += skip - 1;
+		return (size);
+	}
+	else if (ft_isalpha(original[*i + 1]) || original[*i + 1] == '_'
+		|| original[*i + 1] == '{')
+	{
+		size = calculate_var_size(original, *i, envlist, env);
+		get_var_length(original, *i + 1, &var_end);
+		*i = var_end - 1;
+		return (size);
+	}
+	return (1);
 }
 
-int calculate_expanded_size(char *original, t_env *env, t_envlist *envlist)
+int	calculate_expanded_size(char *original, t_env *env, t_envlist *envlist)
 {
-    int i;
-    int len;
-    int result_size;
-    
-    i = 0;
-    len = ft_strlen(original);
-    result_size = 0;
-    
-    while (i < len)
-    {
-        if (original[i] == '$')
-            result_size += handle_variable_size(original, &i, env, envlist);
-        else
-            result_size++;
-        i++;
-    }
-    return (result_size + 1);
+	int	i;
+	int	len;
+	int	result_size;
+
+	i = 0;
+	len = ft_strlen(original);
+	result_size = 0;
+	while (i < len)
+	{
+		if (original[i] == '$')
+			result_size += handle_variable_size(original, &i, env, envlist);
+		else
+			result_size++;
+		i++;
+	}
+	return (result_size + 1);
 }
 
 static void	process_expansion(char *result, char *original, t_envlist *envlist,
@@ -66,10 +76,10 @@ static void	process_expansion(char *result, char *original, t_envlist *envlist,
 		if (original[i] == '$' && i + 1 < len)
 		{
 			if (is_special_expansion(original, i))
-				copy_special_var(result, &j, original, &i, env);
+				j += copy_special_var(result + j, original, &i, env);
 			else if (ft_isalpha(original[i + 1]) || original[i + 1] == '_'
 				|| original[i + 1] == '{')
-				copy_variable(result, &j, original, &i, envlist);
+				j += copy_variable(result + j, original, &i, envlist);
 			else
 				result[j++] = original[i++];
 		}
