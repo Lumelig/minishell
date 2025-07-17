@@ -114,8 +114,7 @@ t_quote_state				check_line_completion(char *line);
 int							check_quotes_balanced_enhanced(char *line);
 void						expand_tokens(t_token *token, t_envlist *envlist,
 								t_env *env);
-void						copy_special_var(char *result, int *j, char *str,
-								int *i, t_env *env);
+int copy_special_var(char *result, char *str, int *i, t_env *env);
 void						copy_variable(char *result, int *j, char *str,
 								int *i, t_envlist *envlist);
 int							get_special_var_skip(char *str, int i);
@@ -156,6 +155,7 @@ void						free_env_array(char **env_array, int count);
 // env_convert.c functions
 char						**env_to_array(t_env *env);
 
+/* tokenizer_utils.c */
 t_token	*cleanup_tokens(t_token *head);
 t_token	*create_new_token(t_token_type type, const char *value);
 t_token	*find_last_token(t_token *head);
@@ -174,5 +174,14 @@ int		handle_escape_in_word(char *line, int *i, char **word);
 int		handle_regular_char_in_word(char *line, int *i, char **word);
 int		extract_word(char *line, int *i, char **word);
 int		process_word_token(char *line, int *i, t_token **head);
+
+/* tokenizer_operators.c */
+int		handle_pipe_operator(int *i, t_token **head);
+int		handle_output_redirect(char *line, int *i, t_token **head);
+int		handle_input_redirect(char *line, int *i, t_token **head);
+int		handle_operator(char *line, int *i, t_token **head);
+
+/* tokenizer.c */
+t_token	*tokenize(char *line);
 
 #endif
