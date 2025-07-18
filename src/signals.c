@@ -57,4 +57,3 @@ void	setup_signal_handlers(void)
 
 	disable_ctrlc_print();
 }
-

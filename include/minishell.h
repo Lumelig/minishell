@@ -115,8 +115,7 @@ int							check_quotes_balanced_enhanced(char *line);
 void						expand_tokens(t_token *token, t_envlist *envlist,
 								t_env *env);
 int copy_special_var(char *result, char *str, int *i, t_env *env);
-void						copy_variable(char *result, int *j, char *str,
-								int *i, t_envlist *envlist);
+int	copy_variable(char *result, char *str, int *i, t_envlist *envlist);
 int							get_special_var_skip(char *str, int i);
 int							is_special_var(char *str, int pos);
 int							is_special_expansion(char *str, int i);
