@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/18 01:30:11 by jenne             #+#    #+#             */
+/*   Updated: 2025/07/18 01:31:04 by jenne            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -31,11 +42,10 @@ int	syntax_validation(t_token *token)
 
 t_cmd_list	*parsing(t_env *my_env, t_token *token)
 {
-	t_cmd_list *cmd_list;
+	t_cmd_list	*cmd_list;
 
 	expand_tokens(token, my_env->head, my_env);
 	my_env->exit_status = syntax_validation(token);
-	// printf("value: %s Key: %d\n", token->value, token->type);
 	cmd_list = token_to_cmd(token);
 	return (cmd_list);
 }
