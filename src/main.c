@@ -62,7 +62,7 @@ void	print_env_list(t_envlist *head)
 	current = head;
 	while (current)
 	{
-		printf("%s%c%s\n", current->key, current->delimiter, current->value);
+		printf("%s%c%s\n", current->key, '=', current->value);
 		current = current->next;
 	}
 }
@@ -123,8 +123,8 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_env my_env;
-	int is_interactive;
+	t_env	my_env;
+	int		is_interactive;
 
 	init_environment(&my_env, env, argv, argc);
 	// if (argc > 1) TODO: to consider for later

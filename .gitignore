@@ -1,0 +1,5 @@
+libft/
+bin/
+.vscode
+*.pdf
+obj
