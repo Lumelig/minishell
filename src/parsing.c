@@ -6,50 +6,78 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:30:11 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/22 13:05:41 by jenne            ###   ########.fr       */
+/*   Updated: 2025/07/22 14:30:43 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_operator(t_token *token)
+static bool	is_redirection(t_token_type type)
 {
-	if (!token)
-		return (0);
-	return (token->type == TOKEN_PIPE || token->type == TOKEN_REDIR_APPEND
-		|| token->type == TOKEN_REDIR_OUT || token->type == TOKEN_REDIR_IN);
+	return (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
+		|| type == TOKEN_REDIR_APPEND || type == TOKEN_HEREDOC);
+}
+static char	*get_token(t_token_type type)
+{
+	if (type == TOKEN_PIPE)
+		return ("`|'");
+	else if (type == TOKEN_REDIR_IN)
+		return ("`<'");
+	else if (type == TOKEN_REDIR_OUT)
+		return ("`>'");
+	else if (type == TOKEN_REDIR_APPEND)
+		return ("`>>'");
+	else if (type == TOKEN_HEREDOC)
+		return ("`<<'");
+	else
+		return ("unexpected token");
 }
 
-int	syntax_validation(t_token *token)
+static void	print_syntax_error(char *token_str)
+{
+	printf("minishell: syntax error near unexpected token %s\n", token_str);
+}
+
+bool	syntax_validation(t_token *token)
 {
 	t_token	*current;
-	t_token	*preveious;
+	t_token	*previous;
 
 	current = token;
-	preveious = NULL;
+	previous = NULL;
 	while (current && current->type != TOKEN_EOF)
 	{
-		if (!preveious && current->type == TOKEN_PIPE)
+		if ((!previous && current->type == TOKEN_PIPE) ||
+			(previous && previous->type == TOKEN_PIPE && 
+			(current->type == TOKEN_PIPE || current->type == TOKEN_EOF)))
+			return (print_syntax_error("`|'"), false);
+		if (is_redirection(current->type))
 		{
-			printf("minishell: syntax error near unexpected token '|'\n");
-			return (2);
+   			 if (!current->next)
+       			 return (print_syntax_error("`newline'"), false);
+    		if (current->next->type != TOKEN_WORD)
+        		return (print_syntax_error(get_token(current->next->type)), false);
 		}
-		preveious = current;
+		previous = current;
 		current = current->next;
 	}
-	return (0);
+	if (previous && previous->type == TOKEN_PIPE)
+		return (print_syntax_error("`|'"), false);
+	return (true);
 }
 
 t_cmd_list	*parsing(t_env *my_env, t_token *token)
 {
 	t_cmd_list	*cmd_list;
-	static int exit;
 
+	cmd_list = NULL;
 	expand_tokens(token, my_env->head, my_env);
-	exit = syntax_validation(token);
-	if (exit > 0)
+	if (!syntax_validation(token))
 		*exit_code() = 2;
 	else
+	{
+		*exit_code() = 0;
 		cmd_list = token_to_cmd(token);
+	}
 	return (cmd_list);
 }

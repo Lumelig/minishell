@@ -111,10 +111,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 			free(input);
 			continue ;
 		}
-		// if (is_interactive) // debug
-		// 	print_history();
 		token = tokenize(input);
-		expand_tokens(token, my_env->head, my_env);
 		cmd_list = parsing(my_env, token);
 		if (*exit_code() == 0)
 			executor(cmd_list, my_env);
