@@ -116,7 +116,8 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		token = tokenize(input);
 		expand_tokens(token, my_env->head, my_env);
 		cmd_list = parsing(my_env, token);
-		executor(cmd_list, my_env);
+		if (*exit_code() == 0)
+			executor(cmd_list, my_env);
 		cleanup_and_exit(token, input, my_env);
 	}
 }
