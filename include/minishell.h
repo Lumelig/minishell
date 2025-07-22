@@ -96,10 +96,10 @@ typedef struct s_env // Controling struct for env
 	int size;
 	int shlvl; // help to handle an edge case
 	t_envlist *head;
-	t_envlist *tail;
-	int exit_status; // same as for pid above
+	t_envlist *tail;// same as for pid above
 }							t_env;
 
+int 						*exit_code(void);
 void						process_quote_state(char *line, int *i,
 								t_quote_state *state);
 char						*get_continuation_prompt(int quote_type);

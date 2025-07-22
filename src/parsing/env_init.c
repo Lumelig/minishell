@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:18:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/16 16:19:01 by jenne            ###   ########.fr       */
+/*   Updated: 2025/07/22 12:50:37 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	init_empty_env(t_env *env, char **argv, int argc)
 	env->head = NULL;
 	env->tail = NULL;
 	env->pid = getpid();
-	env->exit_status = 0;
 }
 
 void	set_environment(t_env *my_env, char **key, char **value, char *env)

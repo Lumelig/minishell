@@ -44,6 +44,7 @@ TARGET		= $(BIN_DIR)/$(NAME)
 SRC_FILES = src/main.c \
 			src/utils.c \
 			src/signals.c \
+			src/exit_code.c \
             src/parsing/tokenizer.c \
 			src/parsing/tokenizer_utils.c \
 			src/parsing/tokenizer_escape.c \
