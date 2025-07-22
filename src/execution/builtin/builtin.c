@@ -47,7 +47,7 @@ void	run_builtin(int id, t_cmd_node *curr, t_env *ms_env)
 	// printf("debug 03: run builtin\n");
 	// printf("id: %i\n", id);
 	if (id == 1)
-		pwd_builtin(); // done
+		pwd_builtin(); // need to add old_pwd
 	else if (id == 2)
 		env_builtin(ms_env); // done
 	else if (id == 3)

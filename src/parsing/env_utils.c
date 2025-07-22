@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:19:32 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/16 16:19:34 by jenne            ###   ########.fr       */
+/*   Updated: 2025/07/21 13:50:25 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ bool	add_env_var(t_env *env, char *key, char *value)
 	if (!new_node)
 		return (false);
 	new_node->key = key;
-	new_node->delimiter = '=';
 	new_node->value = value;
 	new_node->next = NULL;
 	if (!env->head)
