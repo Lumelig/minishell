@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:19:58 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/18 01:16:00 by jenne            ###   ########.fr       */
+/*   Updated: 2025/07/22 12:58:25 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	calculate_special_var_size(char *str, int i, t_env *env)
 	}
 	else if (str[check_pos] == '?')
 	{
-		tmp = ft_itoa(env->exit_status);
+		tmp = ft_itoa(*exit_code());
 		size = ft_strlen(tmp);
 		free(tmp);
 	}

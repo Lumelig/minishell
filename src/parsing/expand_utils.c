@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:37:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/18 01:22:14 by jenne            ###   ########.fr       */
+/*   Updated: 2025/07/22 12:57:15 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	copy_special_var(char *result, char *str, int *i, t_env *env)
 	if (str[check_pos] == '$')
 		tmp = ft_itoa(env->pid);
 	else if (str[check_pos] == '?')
-		tmp = ft_itoa(env->exit_status);
+		tmp = ft_itoa(*exit_code());
 	else if (str[check_pos] == '0')
 		tmp = ft_strdup("Minishell");
 	if (tmp)

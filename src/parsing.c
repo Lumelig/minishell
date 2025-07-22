@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:30:11 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/18 01:31:04 by jenne            ###   ########.fr       */
+/*   Updated: 2025/07/22 13:00:42 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,12 @@ int	syntax_validation(t_token *token)
 t_cmd_list	*parsing(t_env *my_env, t_token *token)
 {
 	t_cmd_list	*cmd_list;
+	static int exit;
 
 	expand_tokens(token, my_env->head, my_env);
-	my_env->exit_status = syntax_validation(token);
+	exit = syntax_validation(token);
+	if (exit > 0)
+		*exit_code() = 2;
 	cmd_list = token_to_cmd(token);
 	return (cmd_list);
 }
