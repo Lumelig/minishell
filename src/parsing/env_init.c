@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:18:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/22 12:50:37 by jenne            ###   ########.fr       */
+/*   Updated: 2025/07/23 14:23:50 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ bool	init_default_env(t_env *my_env)
 	return (add_env_var(my_env, ft_strdup("PWD"), ft_strdup(getcwd(NULL, 0)))
 		&& add_env_var(my_env, ft_strdup("SHLVL"), ft_strdup("1"))
 		&& add_env_var(my_env, ft_strdup("_"),
-			ft_strdup("/usr/bin/minishell")));
+			ft_strdup("MiniShell")));
 }
 
 bool	process_env_vars(t_env *my_env, char **env)

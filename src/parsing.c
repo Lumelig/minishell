@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:30:11 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/22 14:30:43 by jenne            ###   ########.fr       */
+/*   Updated: 2025/07/23 14:39:30 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static bool	is_redirection(t_token_type type)
 	return (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
 		|| type == TOKEN_REDIR_APPEND || type == TOKEN_HEREDOC);
 }
+
 static char	*get_token(t_token_type type)
 {
 	if (type == TOKEN_PIPE)
@@ -47,16 +48,17 @@ bool	syntax_validation(t_token *token)
 	previous = NULL;
 	while (current && current->type != TOKEN_EOF)
 	{
-		if ((!previous && current->type == TOKEN_PIPE) ||
-			(previous && previous->type == TOKEN_PIPE && 
-			(current->type == TOKEN_PIPE || current->type == TOKEN_EOF)))
+		if ((!previous && current->type == TOKEN_PIPE) || (previous
+				&& previous->type == TOKEN_PIPE && (current->type == TOKEN_PIPE
+					|| current->type == TOKEN_EOF)))
 			return (print_syntax_error("`|'"), false);
 		if (is_redirection(current->type))
 		{
-   			 if (!current->next)
-       			 return (print_syntax_error("`newline'"), false);
-    		if (current->next->type != TOKEN_WORD)
-        		return (print_syntax_error(get_token(current->next->type)), false);
+			if (!current->next)
+				return (print_syntax_error("`newline'"), false);
+			if (current->next->type != TOKEN_WORD)
+				return (print_syntax_error(get_token(current->next->type)),
+					false);
 		}
 		previous = current;
 		current = current->next;
