@@ -49,13 +49,13 @@ void	run_builtin(int id, t_cmd_node *curr, t_env *ms_env)
 	if (id == 1)
 		pwd_builtin(); // need to add old_pwd
 	else if (id == 2)
-		env_builtin(ms_env); // done
+		env_builtin(curr, ms_env); // done
 	else if (id == 3)
 		echo_builtin(curr); // done
 	else if (id == 4)
 		exit_builtin(curr, ms_env); // TODO: Garbage Collector, Cleanup
 	else if (id == 5)
-		export_builtin(curr, ms_env); //
+		export_builtin(curr, ms_env); // done?
 	else if (id == 6)
 		cd_builtin(curr, ms_env); //
 	else if (id == 7)
