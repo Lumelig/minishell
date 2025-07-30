@@ -6,14 +6,15 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 12:48:06 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/22 13:02:50 by jenne            ###   ########.fr       */
+/*   Updated: 2025/07/23 13:41:24 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int *exit_code(void)
+int	*exit_code(void)
 {
-    static int code;
-    return (&code);
+	static int	code;
+
+	return (&code);
 }

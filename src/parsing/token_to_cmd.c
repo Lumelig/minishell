@@ -6,55 +6,11 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:25:46 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/18 01:26:57 by jenne            ###   ########.fr       */
+/*   Updated: 2025/07/23 14:47:29 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_cmd_list	*init_cmd_list(void)
-{
-	t_cmd_list	*cmd_list;
-
-	cmd_list = malloc(sizeof(t_cmd_list));
-	if (!cmd_list)
-		return (NULL);
-	cmd_list->head = NULL;
-	cmd_list->tail = NULL;
-	cmd_list->size = 0;
-	return (cmd_list);
-}
-
-t_file_list	*init_file_list(void)
-{
-	t_file_list	*file_list;
-
-	file_list = malloc(sizeof(t_file_list));
-	if (!file_list)
-		return (NULL);
-	file_list->head = NULL;
-	file_list->size = 0;
-	file_list->tail = NULL;
-	return (file_list);
-}
-
-t_file_node	*create_file_node(char *filename, t_token_type redir_type)
-{
-	t_file_node	*node;
-
-	node = malloc(sizeof(t_file_node));
-	if (!node)
-		return (NULL);
-	node->filename = strdup(filename);
-	if (!node->filename)
-	{
-		free(node);
-		return (NULL);
-	}
-	node->redir_type = redir_type;
-	node->next = NULL;
-	return (node);
-}
 
 t_cmd_node	*create_cmd_node(t_cmd_list *cmd_list)
 {
@@ -132,11 +88,12 @@ t_token	*process_command(t_token *current, t_cmd_node *cmd_node)
 {
 	if (current && current->type == TOKEN_WORD)
 		current = add_cmd(current, cmd_node);
-	while (current && current->type != TOKEN_PIPE && current->type != TOKEN_EOF)
+	while (current && current->type != TOKEN_EOF)
 	{
 		if (current->type == TOKEN_REDIR_IN || current->type == TOKEN_REDIR_OUT
 			|| current->type == TOKEN_REDIR_APPEND
-			|| current->type == TOKEN_HEREDOC)
+			|| current->type == TOKEN_HEREDOC
+			|| current->type == TOKEN_PIPE)
 		{
 			current = add_file_to_node(current, cmd_node);
 		}
@@ -162,7 +119,7 @@ t_cmd_list	*token_to_cmd(t_token *token)
 	{
 		cmd_node = create_cmd_node(cmd_list);
 		if (!cmd_node)
-			return (NULL); // Should free cmd_list here  ?
+			return (NULL);
 		current = process_command(current, cmd_node);
 		if (current && current->type == TOKEN_PIPE)
 			current = current->next;

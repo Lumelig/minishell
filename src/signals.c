@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/23 13:41:52 by jenne             #+#    #+#             */
+/*   Updated: 2025/07/23 13:43:27 by jenne            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /*
@@ -18,7 +30,9 @@ void	set_siginit(int signum)
 	rl_redisplay();
 	*exit_code() = 130;
 }
-/// @brief disable_ctrlc_print is a function that changes terminal settings so that pressing Ctrl+C does not show ^C on the screen.
+
+/// @brief disable_ctrlc_print is a function that changes terminal settings
+/// so that pressing Ctrl+C does not show ^C on the screen.
 /// It does this by turning off the echoing of control characters.
 static void	disable_ctrlc_print(void)
 {

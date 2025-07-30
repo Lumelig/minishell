@@ -67,11 +67,10 @@ void	print_env_list(t_envlist *head)
 	}
 }
 
-static void	cleanup_and_exit(t_token *token, char *input, t_env *my_env)
+static void	cleanup_and_exit(t_token *token, char *input)
 {
 	free_tokens(token);
 	free(input);
-	(void)my_env;
 }
 
 static char	*get_input(int is_interactive)
@@ -115,7 +114,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		cmd_list = parsing(my_env, token);
 		if (*exit_code() == 0)
 			executor(cmd_list, my_env);
-		cleanup_and_exit(token, input, my_env);
+		cleanup_and_exit(token, input);
 	}
 }
 
