@@ -10,23 +10,24 @@
 // }
 
 int	executor(t_cmd_list *cmd_list, t_env *ms_env)
-// start of the entire execution chain
+// start of the entire execution chain (change to void)
 {
-	pid_t pid;
-	int status;
+	pid_t		pid;
+	int			status;
+	t_cmd_node	*curr;
+	int			id;
 
 	// debug_test(cmd_list, ms_env);
 	if (!cmd_list || !cmd_list->head)
 		return (printf("bad cmd_list or head\n"), 1);
-	t_cmd_node *curr = cmd_list->head;
-
+	curr = cmd_list->head;
 	// printf("debug 00: entry\n");
 	// printf("debug 01: %s\n", curr->cmd[0]);
 	if (!curr->cmd[0])
 		return (printf("debug 88: empty curr\n"), free(curr->cmd), 1);
 	while (curr)
 	{
-		int id = builtin_check(curr);
+		id = builtin_check(curr);
 		if (id <= 7 && id >= 1)
 			run_builtin(id, curr, ms_env);
 		else // execve // TODO: put it into a function
