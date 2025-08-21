@@ -134,3 +134,75 @@ void print_standalone_file_list(t_file_list *file_list)
     print_file_list(file_list);
     printf("=== END FILE LIST ===\n");
 }
+
+static char	**get_input(int is_interactive)
+{
+	char	*input;
+	char 	**input_arry;
+
+	if (is_interactive)
+	{
+		//
+		input = get_complete_input();
+		input_arry = ft_split(input, '\n');
+		free(input);
+	}
+	else
+	{
+		input = get_next_line(STDIN_FILENO);
+		if (input && input[ft_strlen(input) - 1] == '\n')
+			input[ft_strlen(input) - 1] = '\0';
+		input_arry = malloc(sizeof(char *) * 2);
+		input_arry[0] = input;
+		input_arry[1] = NULL;
+	}
+	return (input_arry);
+}
+
+static void	shell_loop(t_env *my_env, int is_interactive)
+{
+	t_token		*token;
+	t_cmd_list	*cmd_list;
+	char		**input;
+	int			i;
+
+	while (1)
+	{
+		input = get_input(is_interactive);
+		if (!input)
+		{
+			if (is_interactive)
+				printf("exit\n");
+			break;
+		}
+
+		i = 0;
+		while (input[i])
+		{
+			if (empty_input(input[i]))
+			{
+				i++;
+				continue;
+			}
+
+			token = tokenize(input[i]);
+			add_history(input[i]);
+			cmd_list = parsing(my_env, token);
+
+			if (*exit_code() == 0)
+				executor(cmd_list, my_env);
+
+			cleanup_and_exit(token, NULL);  // free token, keep input for now
+			i++;
+		}
+
+		// free the entire input array
+		i = 0;
+		while (input[i])
+		{
+			free(input[i]);
+			i++;
+		}
+		free(input);
+	}
+}

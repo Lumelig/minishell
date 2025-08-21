@@ -24,22 +24,6 @@ bool	empty_input(char *input)
 	return (input[i] == '\0');
 }
 
-void	print_history(void)
-{
-	HIST_ENTRY	**the_list;
-	int			i;
-
-	i = 0;
-	the_list = history_list();
-	if (the_list)
-	{
-		while (the_list[i])
-		{
-			printf("%d: %s\n", i + history_base, the_list[i]->line);
-			i++;
-		}
-	}
-}
 
 void	free_tokens(t_token *token)
 {
@@ -87,6 +71,7 @@ static char	*get_input(int is_interactive)
 		if (input && input[ft_strlen(input) - 1] == '\n')
 			input[ft_strlen(input) - 1] = '\0';
 	}
+	add_history(input);
 	return (input);
 }
 
