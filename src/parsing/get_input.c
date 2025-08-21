@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_input.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/07/08 11:00:54 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:42:45 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,26 @@ static char	*process_multiline_input(char *complete_input)
 	return (complete_input);
 }
 
+void	custom_add_history(char *input)
+{
+	char	**input_arry;
+	int		i;
+
+	i = 0;
+	input_arry = ft_split(input, '\n');
+	if (!input_arry)
+		return ;
+	while (input_arry[i])
+	{
+		add_history(input_arry[i]);
+		i++;
+	}
+	i = 0;
+	while (input_arry[i])
+		free(input_arry[i++]);
+	free(input_arry);
+}
+
 char	*get_complete_input(void)
 {
 	char	*line;
@@ -81,7 +101,7 @@ char	*get_complete_input(void)
 	if (quote_status == 0)
 	{
 		if (*line)
-			add_history(line);
+			custom_add_history(line);
 		return (line);
 	}
 	complete_input = ft_strdup(line);
