@@ -71,7 +71,6 @@ static char	*get_input(int is_interactive)
 		if (input && input[ft_strlen(input) - 1] == '\n')
 			input[ft_strlen(input) - 1] = '\0';
 	}
-	add_history(input);
 	return (input);
 }
 
