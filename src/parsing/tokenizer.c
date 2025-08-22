@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:07:45 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/22 14:42:08 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/22 15:55:17 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,6 @@ int	handle_operator(char *line, int *i, t_token **head)
 		return (handle_other_operator(i, head, TOKEN_END_CMD, '\n'));
 	else if (line[*i] == ';')
 		return (handle_other_operator(i, head, TOKEN_END_CMD, ';'));
-	else if (line[*i] == '&')
-		return (handle_other_operator(i, head, TOKEN_END_CMD, '&'));
 	else if (line[*i] == '>')
 		return (handle_output_redirect(line, i, head));
 	else if (line[*i] == '<')

@@ -214,7 +214,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		token = tokenize(input);
 		//print_tokens(token);
 		cmd_list = parsing(my_env, token);
-		print_cmd_list(cmd_list);
+		//print_cmd_list(cmd_list);
 		if (*exit_code() == 0)
 			executor(cmd_list, my_env);
 		cleanup_and_exit(token, input);
