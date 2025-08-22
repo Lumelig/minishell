@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:25:46 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/21 18:13:16 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/22 15:17:29 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,12 @@ t_token	*process_command(t_token *current, t_cmd_node *cmd_node)
 		{
 			current = add_file_to_node(current, cmd_node);
 		}
-		else if (current->type == TOKEN_PIPE)
+		else if (current->type == TOKEN_PIPE || current->type == TOKEN_END_CMD)
 		{
-			current = add_file_to_node(current, cmd_node);
+			if (current->type == TOKEN_PIPE)
+				current = add_file_to_node(current, cmd_node);
+			else
+				current = current->next;
 			break ;
 		}
 		else
