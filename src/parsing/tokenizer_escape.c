@@ -6,50 +6,32 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:17:51 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/16 16:18:01 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/22 16:54:18 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*handle_escape_char(char c)
-{
-	char	*result;
-
-	result = malloc(2);
-	if (!result)
-		return (NULL);
-	if (c == 'n')
-		result[0] = '\n';
-	else if (c == 't')
-		result[0] = '\t';
-	else if (c == 'r')
-		result[0] = '\r';
-	else if (c == 'b')
-		result[0] = '\b';
-	else if (c == 'f')
-		result[0] = '\f';
-	else if (c == 'v')
-		result[0] = '\v';
-	else
-		result[0] = c;
-	result[1] = '\0';
-	return (result);
-}
-
 int	append_escaped_char(char *line, int *i, char **result)
 {
 	char	*temp;
-	char	*escaped;
+	char	char_to_add[3];
 
 	(*i)++;
-	escaped = handle_escape_char(line[*i]);
-	if (!escaped)
-		return (0);
+	if (line[*i] == '"' || line[*i] == '\\' || line[*i] == '$')
+	{
+		char_to_add[0] = line[*i];
+		char_to_add[1] = '\0';
+	}
+	else
+	{
+		char_to_add[0] = '\\';
+		char_to_add[1] = line[*i];
+		char_to_add[2] = '\0';
+	}
 	temp = *result;
-	*result = ft_strjoin(*result, escaped);
+	*result = ft_strjoin(*result, char_to_add);
 	free(temp);
-	free(escaped);
 	return (*result != NULL);
 }
 
