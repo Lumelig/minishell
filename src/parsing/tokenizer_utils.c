@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:18:08 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/16 16:18:10 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/22 13:57:52 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,5 @@ int	add_token(t_token **head, t_token_type type, const char *value)
 
 int	is_operator_char(char c)
 {
-	return (c == '|' || c == '<' || c == '>');
+	return (c == '|' || c == '<' || c == '>' || c == '\n' || c == ';');
 }
