@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:46:17 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/23 14:32:56 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/23 14:47:39 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,8 @@ int							append_escaped_char(char *line, int *i,
 								char **result);
 int							append_regular_char(char *line, int *i,
 								char **result);
-int							extract_word(char *line, int *i, char **word, t_quote *quote);
+int							extract_word(char *line, int *i, char **word,
+								t_quote *quote);
 int							handle_escape_in_word(char *line, int *i,
 								char **word);
 int							handle_input_redirect(char *line, int *i,
@@ -171,7 +172,8 @@ t_token						*find_last_token(t_token *head);
 /* Token  to cmd*/
 t_cmd_list					*init_cmd_list(void);
 t_file_list					*init_file_list(void);
-t_file_node					*create_file_node(char *filename, t_token_type redir_type);
+t_file_node					*create_file_node(char *filename,
+								t_token_type redir_type);
 /* Debug functions */
 void						print_cmd_list(t_cmd_list *cmd_list);
 
