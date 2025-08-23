@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:18:25 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/21 17:31:06 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/23 14:39:40 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,29 @@ int	handle_regular_char_in_word(char *line, int *i, char **word)
 	return (1);
 }
 
-int	extract_word(char *line, int *i, char **word)
+int	extract_word(char *line, int *i, char **word, t_quote *quote)
 {
 	*word = ft_strdup("");
+	*quote = QUOTE_NONE;
 	if (!*word)
 		return (0);
 	while (line[*i] && !ft_isspace(line[*i]) && !is_operator_char(line[*i]))
 	{
 		if (line[*i] == '"' || line[*i] == '\'')
 		{
+			if (*quote == QUOTE_NONE)
+			{
+				if (line[*i] == '\'')
+					*quote = QUOTE_SINGLE;
+				else
+					*quote = QUOTE_DOUBLE;
+			}
+			else if (*quote != QUOTE_NONE && 
+					((line[*i] == '\'' && *quote == QUOTE_DOUBLE) ||
+					 (line[*i] == '"' && *quote == QUOTE_SINGLE)))
+			{
+				*quote = QUOTE_MIXED;  // Mixed quotes in same token
+			}
 			if (!handle_quote_in_word(line, i, word))
 			{
 				free(*word);
@@ -72,12 +86,13 @@ int	process_word_token(char *line, int *i, t_token **head)
 {
 	char	*word;
 	int		ret;
+	t_quote	quote;
 
-	if (!extract_word(line, i, &word))
+	if (!extract_word(line, i, &word, &quote))
 		return (0);
 	if (ft_strlen(word) > 0)
 	{
-		ret = add_token(head, TOKEN_WORD, word);
+		ret = add_token(head, TOKEN_WORD, word, quote);
 		if (!ret)
 		{
 			free(word);

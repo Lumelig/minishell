@@ -12,6 +12,53 @@
 
 #include "minishell.h"
 
+static const char	*get_token_name(t_token_type type)
+{
+	static const char *token_names[] = {
+		"WORD",
+		"PIPE",
+		"REDIR_IN",
+		"REDIR_OUT", 
+		"REDIR_APPEND",
+		"HEREDOC",
+		"END_CMD",
+		"EOF",
+		"UNKNOWN"
+	};
+	
+	// Assuming your token types are sequential starting from 0
+	if (type >= 0 && type < (sizeof(token_names) / sizeof(token_names[0]) - 1))
+		return (token_names[type]);
+	return (token_names[sizeof(token_names) / sizeof(token_names[0]) - 1]); // "UNKNOWN"
+}
+
+void	print_tokens(t_token *head)
+{
+	t_token	*current;
+	int		index;
+
+	if (!head)
+	{
+		printf("No tokens found.\n");
+		return ;
+	}
+	
+	printf("=== TOKENS ===\n");
+	current = head;
+	index = 0;
+	
+	while (current)
+	{
+		printf("[%d] Type: %-12s | Value: '%s'\n qoute: %d", 
+			index, 
+			get_token_name(current->type), 
+			current->value ? current->value : "(null)", current->qoute);
+		current = current->next;
+		index++;
+	}
+	printf("==============\n");
+}
+
 const char *redir_type_to_string(int redir_type)
 {
     switch (redir_type)

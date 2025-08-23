@@ -92,9 +92,7 @@ char			**env_to_array(t_env *env);
 
 /* tokenizer_utils.c */
 t_token			*cleanup_tokens(t_token *head);
-t_token			*create_new_token(t_token_type type, const char *value);
 t_token			*find_last_token(t_token *head);
-int				add_token(t_token **head, t_token_type type, const char *value);
 int				is_operator_char(char c);
 
 /* tokenizer_escape.c */
@@ -108,7 +106,6 @@ int				handle_quote_in_word(char *line, int *i, char **word);
 /* tokenizer_word.c */
 int				handle_escape_in_word(char *line, int *i, char **word);
 int				handle_regular_char_in_word(char *line, int *i, char **word);
-int				extract_word(char *line, int *i, char **word);
 int				process_word_token(char *line, int *i, t_token **head);
 
 /* tokenizer_operators.c */
