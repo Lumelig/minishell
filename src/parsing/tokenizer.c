@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:07:45 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/22 15:55:17 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/23 14:32:33 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	handle_other_operator(int *i, t_token **head, t_token_type type, char c)
 	
 	str[0] = c;
 	str[1] = '\0';
-	if (!add_token(head, type, str))
+	if (!add_token(head, type, str, QUOTE_NONE))
 		return (0);
 	(*i)++;
 	return (1);
@@ -28,13 +28,13 @@ int	handle_output_redirect(char *line, int *i, t_token **head)
 {
 	if (line[*i + 1] == '>')
 	{
-		if (!add_token(head, TOKEN_REDIR_APPEND, ">>"))
+		if (!add_token(head, TOKEN_REDIR_APPEND, ">>", QUOTE_NONE))
 			return (0);
 		(*i) += 2;
 	}
 	else
 	{
-		if (!add_token(head, TOKEN_REDIR_OUT, ">"))
+		if (!add_token(head, TOKEN_REDIR_OUT, ">", QUOTE_NONE))
 			return (0);
 		(*i)++;
 	}
@@ -45,13 +45,13 @@ int	handle_input_redirect(char *line, int *i, t_token **head)
 {
 	if (line[*i + 1] == '<')
 	{
-		if (!add_token(head, TOKEN_HEREDOC, "<<"))
+		if (!add_token(head, TOKEN_HEREDOC, "<<", QUOTE_NONE))
 			return (0);
 		(*i) += 2;
 	}
 	else
 	{
-		if (!add_token(head, TOKEN_REDIR_IN, "<"))
+		if (!add_token(head, TOKEN_REDIR_IN, "<", QUOTE_NONE))
 			return (0);
 		(*i)++;
 	}
@@ -100,7 +100,7 @@ t_token	*tokenize(char *line)
 			&& !process_word_token(line, &i, &head))
 			return (cleanup_tokens(head));
 	}
-	if (!add_token(&head, TOKEN_EOF, ""))
+	if (!add_token(&head, TOKEN_EOF, "", QUOTE_NONE))
 		return (cleanup_tokens(head));
 	return (head);
 }
