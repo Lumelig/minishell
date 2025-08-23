@@ -6,46 +6,28 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/08/21 18:42:45 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/23 13:38:39 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*allocate_and_join(char *complete_input, char *line)
-{
-	char	*temp;
-	size_t	complete_len;
-	size_t	line_len;
-
-	complete_len = strlen(complete_input);
-	line_len = strlen(line);
-	temp = malloc(complete_len + line_len + 2);
-	if (!temp)
-		return (NULL);
-	ft_strcpy(temp, complete_input);
-	temp[complete_len] = '\n';
-	ft_strcpy(temp + complete_len + 1, line);
-	return (temp);
-}
-
 static char	*handle_continuation_line(char *complete_input, int quote_status)
 {
 	char	*line;
 	char	*temp;
+	char	*input_temp;
 
 	line = readline(get_continuation_prompt(quote_status));
 	if (!line)
 		return (complete_input);
-	temp = allocate_and_join(complete_input, line);
-	if (!temp)
-	{
-		free(complete_input);
-		free(line);
-		return (NULL);
-	}
+	input_temp = ft_strjoin_char(complete_input, '\n');
+	temp = ft_strjoin(input_temp, line);
+	free(input_temp);
 	free(complete_input);
 	free(line);
+	if (!temp)
+		return (NULL);
 	return (temp);
 }
 
