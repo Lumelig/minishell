@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:07:45 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/23 14:32:33 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/25 16:50:07 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int	handle_other_operator(int *i, t_token **head, t_token_type type, char c)
 {
 	char	str[2];
-	
 	str[0] = c;
 	str[1] = '\0';
 	if (!add_token(head, type, str, QUOTE_NONE))

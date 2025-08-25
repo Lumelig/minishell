@@ -4,3 +4,4 @@ bin/
 *.pdf
 obj
 *workspace
+sub.sub
