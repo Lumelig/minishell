@@ -9,6 +9,7 @@ void	exit_builtin(t_cmd_node *curr, t_env *ms_env)
 	}
 	else
 	{
+		// cleanup_and_exit - double check for double free
 		free_environment(ms_env);
 		rl_clear_history();
 		exit(0);

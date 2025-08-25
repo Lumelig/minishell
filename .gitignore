@@ -4,3 +4,5 @@ bin/
 *.pdf
 obj
 *workspace
+*sub
+.github

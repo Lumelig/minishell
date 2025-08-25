@@ -61,8 +61,8 @@ SRC_FILES = src/main.c \
 			src/parsing/token_to_cmd.c \
 			src/parsing/cmd_utils.c \
 			src/parsing/get_input.c \
-			src/DEBUGFUNKTIONS.c \
 			src/execution/execution.c \
+			src/execution/execution_utils.c \
 			src/execution/builtin/builtin.c \
 			src/execution/builtin/cd.c \
 			src/execution/builtin/echo.c \
@@ -71,7 +71,6 @@ SRC_FILES = src/main.c \
 			src/execution/builtin/export.c \
 			src/execution/builtin/pwd.c \
 			src/execution/builtin/unset.c \
-			src/execution/debug.c \
 
 
 			
