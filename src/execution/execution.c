@@ -1,70 +1,78 @@
 #include "minishell.h"
 
-// static void	execution(t_token *token)
-// {
-// int for sdtin and stdout
-// execution loop
-// std function
-// reset redir
-// close files
-// }
-
-int	executor(t_cmd_list *cmd_list, t_env *ms_env)
-// start of the entire execution chain (change to void)
+void	run_process(t_cmd_node *curr, t_env *ms_env)
 {
-	pid_t		pid;
-	int			status;
+	pid_t	pid;
+	char	**envp;
+	int		status;
+
+	pid = fork();
+	if (pid == 0) // child
+	{
+		envp = env_convert(ms_env);
+		if (!envp)
+		{
+			printf("Failed to convert environment\n");
+			exit(1);
+		}
+		execve(get_exec_path(ms_env), curr->cmd, envp);
+		free_envp(envp);
+		perror("execve failed");
+		exit(127);
+	}
+	else if (pid < 0)
+	{
+		perror("fork failed");
+		*exit_code() = 1;
+		return ;
+	}
+	else // parent
+	{
+		waitpid(pid, &status, 0);
+	}
+}
+
+void	executor(t_cmd_list *cmd_list, t_env *ms_env)
+{
 	t_cmd_node	*curr;
 	int			id;
 
-	// debug_test(cmd_list, ms_env);
-	if (!cmd_list || !cmd_list->head)
-		return (printf("bad cmd_list or head\n"), 1);
+	if (!cmd_list || !cmd_list->head || !cmd_list->head->cmd
+		|| !cmd_list->head->cmd[0])
+	{
+		*exit_code() = 1;
+		return ;
+	}
 	curr = cmd_list->head;
-	// printf("debug 00: entry\n");
-	// printf("debug 01: %s\n", curr->cmd[0]);
-	if (!curr->cmd[0])
-		return (printf("debug 88: empty curr\n"), free(curr->cmd), 1);
 	while (curr)
 	{
 		id = builtin_check(curr);
 		if (id <= 7 && id >= 1)
-			run_builtin(id, curr, ms_env);
-		else // execve // TODO: put it into a function
 		{
-			// TODO: function to get path
-			printf("debug 99: execve not implemented yet\n");
-			break ;
-			pid = fork();
-			if (pid == 0)
-			{
-				// execve(path, curr, ms_env);
-				perror("execve failed");
-				exit(1);
-			}
-			else if (pid < 0)
-				perror("fork failed");
-			else
-				waitpid(pid, &status, 0);
+			run_builtin(id, curr, ms_env);
+		}
+		else // execve
+		{
+			run_process(curr, ms_env);
 		}
 		curr = curr->next;
 	}
-	return (0);
-	/*
-Decisions executor makes:
-	Nothing to execute? Return cleanly.
-	One command only, and it's a builtin that must affect the parent?
-		No fork() → Call builtin directly
-	Anything else (multiple commands or external command)?
-		Pass to the main execution loop:
-			Set up pipes
-			Fork each command
-			Setup redirections
-			Wait for all children
-			Collect status
-	*/
+	return ;
 }
 
+/*
+Decisions executor makes:
+Nothing to execute? Return cleanly.
+One command only, and it's a builtin that must affect the parent?
+	No fork() → Call builtin directly
+Anything else (multiple commands or external command)?
+	Pass to the main execution loop:
+		Set up pipes
+		Fork each command
+		Setup redirections
+		Wait for all children
+		Collect status
+*/
 /*
 Execution	logic = loop over command nodes, and for each:
 
