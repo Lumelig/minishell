@@ -16,18 +16,22 @@ void							create_cmd(int cmd_type, char **args,
 void							debug_test(t_cmd_list *cmd_list, t_env *env);
 
 // exec
-int								executor(t_cmd_list *cmd_list, t_env *env);
+int								executor(t_cmd_list *cmd_list, t_env *ms_env);
 
 // builtin
 int								builtin_check(t_cmd_node *cmd);
 void							run_builtin(int id, t_cmd_node *curr,
-									t_env *env);
+									t_env *ms_env);
 void							pwd_builtin(void);
-void							env_builtin(t_cmd_node *curr, t_env *env);
+void							env_builtin(t_cmd_node *curr, t_env *ms_env);
+bool							env_key_update(t_env *ms_env, char *key,
+									char *new_value);
+bool							insert_env_node(char *key, char *value,
+									t_env *ms_env);
 void							echo_builtin(t_cmd_node *curr);
-void							exit_builtin(t_cmd_node *curr, t_env *env);
-void							export_builtin(t_cmd_node *curr, t_env *env);
-void							cd_builtin(t_cmd_node *curr, t_env *env);
-void							unset_builtin(t_cmd_node *curr, t_env *env);
+void							exit_builtin(t_cmd_node *curr, t_env *ms_env);
+void							export_builtin(t_cmd_node *curr, t_env *ms_env);
+void							cd_builtin(t_cmd_node *curr, t_env *ms_env);
+void							unset_builtin(t_cmd_node *curr, t_env *ms_env);
 
 #endif

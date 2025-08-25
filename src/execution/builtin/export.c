@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/05 12:45:26 by mring             #+#    #+#             */
+/*   Updated: 2025/08/12 11:06:31 by mring            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static bool	insert_env_node(char *key, char *value, t_env *ms_env)
+bool	insert_env_node(char *key, char *value, t_env *ms_env)
 {
 	t_envlist	*new_node;
 
@@ -10,7 +22,6 @@ static bool	insert_env_node(char *key, char *value, t_env *ms_env)
 	new_node->key = key;
 	new_node->value = value;
 	new_node->next = NULL;
-	// free during env cleanup on exit
 	if (ms_env->head)
 	{
 		ms_env->tail->next = new_node;
@@ -25,7 +36,7 @@ static bool	insert_env_node(char *key, char *value, t_env *ms_env)
 	return (true);
 }
 
-static bool	env_key_update(t_env *ms_env, char *key, char *new_value)
+bool	env_key_update(t_env *ms_env, char *key, char *new_value)
 {
 	t_envlist	*current;
 
