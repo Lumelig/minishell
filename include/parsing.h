@@ -6,7 +6,11 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:46:17 by jenne             #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/08/25 19:00:35 by mring            ###   ########.fr       */
+=======
+/*   Updated: 2025/08/25 19:00:39 by jenne            ###   ########.fr       */
+>>>>>>> jp
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +31,22 @@ typedef enum e_token_type
 	TOKEN_REDIR_OUT,
 	TOKEN_REDIR_APPEND,
 	TOKEN_HEREDOC,
+	TOKEN_END_CMD,
 	TOKEN_EOF
 }						t_token_type;
 
+typedef enum e_qoute
+{
+	QUOTE_NONE,
+	QUOTE_SINGLE,
+	QUOTE_DOUBLE,
+	QUOTE_MIXED
+}						t_quote;
 typedef struct s_token
 {
 	t_token_type		type;
 	char				*value;
+	t_quote				qoute;
 	struct s_token		*next;
 }						t_token;
 
@@ -129,10 +142,11 @@ void					set_environment(t_env *my_env, char **key, char **value,
 /* Tokenizer functions */
 char					*handle_escape_char(char c);
 int						add_token(t_token **head, t_token_type type,
-							const char *value);
+							char *value, t_quote qoute);
 int						append_escaped_char(char *line, int *i, char **result);
 int						append_regular_char(char *line, int *i, char **result);
-int						extract_word(char *line, int *i, char **word);
+int						extract_word(char *line, int *i, char **word,
+							t_quote *quote);
 int						handle_escape_in_word(char *line, int *i, char **word);
 int						handle_input_redirect(char *line, int *i,
 							t_token **head);
@@ -148,7 +162,8 @@ int						handle_regular_char_in_word(char *line, int *i,
 int						is_operator_char(char c);
 int						process_word_token(char *line, int *i, t_token **head);
 t_token					*cleanup_tokens(t_token *head);
-t_token					*create_new_token(t_token_type type, const char *value);
+t_token					*create_new_token(t_token_type type, const char *value,
+							t_quote qoute);
 t_token					*find_last_token(t_token *head);
 
 /* Token  to cmd*/

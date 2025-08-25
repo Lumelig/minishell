@@ -6,15 +6,18 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:07:45 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/16 16:17:13 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/25 16:50:07 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	handle_pipe_operator(int *i, t_token **head)
+int	handle_other_operator(int *i, t_token **head, t_token_type type, char c)
 {
-	if (!add_token(head, TOKEN_PIPE, "|"))
+	char	str[2];
+	str[0] = c;
+	str[1] = '\0';
+	if (!add_token(head, type, str, QUOTE_NONE))
 		return (0);
 	(*i)++;
 	return (1);
@@ -24,13 +27,13 @@ int	handle_output_redirect(char *line, int *i, t_token **head)
 {
 	if (line[*i + 1] == '>')
 	{
-		if (!add_token(head, TOKEN_REDIR_APPEND, ">>"))
+		if (!add_token(head, TOKEN_REDIR_APPEND, ">>", QUOTE_NONE))
 			return (0);
 		(*i) += 2;
 	}
 	else
 	{
-		if (!add_token(head, TOKEN_REDIR_OUT, ">"))
+		if (!add_token(head, TOKEN_REDIR_OUT, ">", QUOTE_NONE))
 			return (0);
 		(*i)++;
 	}
@@ -41,13 +44,13 @@ int	handle_input_redirect(char *line, int *i, t_token **head)
 {
 	if (line[*i + 1] == '<')
 	{
-		if (!add_token(head, TOKEN_HEREDOC, "<<"))
+		if (!add_token(head, TOKEN_HEREDOC, "<<", QUOTE_NONE))
 			return (0);
 		(*i) += 2;
 	}
 	else
 	{
-		if (!add_token(head, TOKEN_REDIR_IN, "<"))
+		if (!add_token(head, TOKEN_REDIR_IN, "<", QUOTE_NONE))
 			return (0);
 		(*i)++;
 	}
@@ -57,7 +60,11 @@ int	handle_input_redirect(char *line, int *i, t_token **head)
 int	handle_operator(char *line, int *i, t_token **head)
 {
 	if (line[*i] == '|')
-		return (handle_pipe_operator(i, head));
+		return (handle_other_operator(i, head, TOKEN_PIPE, '|'));
+	else if (line[*i] == '\n')
+		return (handle_other_operator(i, head, TOKEN_END_CMD, '\n'));
+	else if (line[*i] == ';')
+		return (handle_other_operator(i, head, TOKEN_END_CMD, ';'));
 	else if (line[*i] == '>')
 		return (handle_output_redirect(line, i, head));
 	else if (line[*i] == '<')
@@ -76,6 +83,11 @@ t_token	*tokenize(char *line)
 		return (NULL);
 	while (line[i])
 	{
+		if (line[i] == '\n')
+		{
+			if (!handle_operator(line, &i, &head))
+				return (cleanup_tokens(head));
+		}
 		if (ft_isspace(line[i]))
 		{
 			i++;
@@ -87,7 +99,7 @@ t_token	*tokenize(char *line)
 			&& !process_word_token(line, &i, &head))
 			return (cleanup_tokens(head));
 	}
-	if (!add_token(&head, TOKEN_EOF, ""))
+	if (!add_token(&head, TOKEN_EOF, "", QUOTE_NONE))
 		return (cleanup_tokens(head));
 	return (head);
 }

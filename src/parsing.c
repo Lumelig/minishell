@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:30:11 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/23 14:39:30 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/25 19:19:04 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,6 @@ t_cmd_list	*parsing(t_env *my_env, t_token *token)
 		*exit_code() = 0;
 		cmd_list = token_to_cmd(token);
 	}
+	//free tokens
 	return (cmd_list);
 }

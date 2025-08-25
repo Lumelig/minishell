@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:18:08 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/16 16:18:10 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/23 14:05:17 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_token	*cleanup_tokens(t_token *head)
 	return (NULL);
 }
 
-t_token	*create_new_token(t_token_type type, const char *value)
+t_token	*create_new_token(t_token_type type, const char *value, t_quote qoute)
 {
 	t_token	*new_token;
 
@@ -36,6 +36,7 @@ t_token	*create_new_token(t_token_type type, const char *value)
 	if (!new_token)
 		return (NULL);
 	new_token->type = type;
+	new_token->qoute = qoute;
 	new_token->value = ft_strdup(value);
 	if (!new_token->value)
 	{
@@ -56,12 +57,12 @@ t_token	*find_last_token(t_token *head)
 	return (current);
 }
 
-int	add_token(t_token **head, t_token_type type, const char *value)
+int	add_token(t_token **head, t_token_type type, char *value, t_quote qoute)
 {
 	t_token	*new_token;
 	t_token	*last;
 
-	new_token = create_new_token(type, value);
+	new_token = create_new_token(type, value, qoute);
 	if (!new_token)
 		return (0);
 	if (!*head)
@@ -76,5 +77,5 @@ int	add_token(t_token **head, t_token_type type, const char *value)
 
 int	is_operator_char(char c)
 {
-	return (c == '|' || c == '<' || c == '>');
+	return (c == '|' || c == '<' || c == '>' || c == '\n' || c == ';');
 }

@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:23:20 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/18 01:24:27 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/23 15:39:06 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	expand_tokens(t_token *token, t_envlist *envlist, t_env *env)
 	current = token;
 	while (current)
 	{
-		if (current->type == TOKEN_WORD)
+		if (current->type == TOKEN_WORD && current->qoute != QUOTE_SINGLE)
 		{
 			expanded = expand_token_value(current->value, envlist, env);
 			if (expanded)
