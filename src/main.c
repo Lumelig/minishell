@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: student <student@42.fr>                    +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/01 00:00:00 by student          #+#    #+#             */
-/*   Updated: 2024/01/01 00:00:00 by student         ###   ########.fr       */
+/*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
+/*   Updated: 2025/08/25 19:18:31 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -24,24 +25,7 @@ bool	empty_input(char *input)
 	return (input[i] == '\0');
 }
 
-void	print_history(void)
-{
-	HIST_ENTRY	**the_list;
-	int			i;
-
-	i = 0;
-	the_list = history_list();
-	if (the_list)
-	{
-		while (the_list[i])
-		{
-			printf("%d: %s\n", i + history_base, the_list[i]->line);
-			i++;
-		}
-	}
-}
-
-void	free_tokens(t_token *token)
+static void	cleanup_and_exit(t_token *token, char *input)
 {
 	t_token	*temp;
 
@@ -53,23 +37,6 @@ void	free_tokens(t_token *token)
 		free(token);
 		token = temp;
 	}
-}
-
-void	print_env_list(t_envlist *head)
-{
-	t_envlist	*current;
-
-	current = head;
-	while (current)
-	{
-		printf("%s%c%s\n", current->key, '=', current->value);
-		current = current->next;
-	}
-}
-
-static void	cleanup_and_exit(t_token *token, char *input)
-{
-	free_tokens(token);
 	free(input);
 }
 
@@ -114,7 +81,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		cmd_list = parsing(my_env, token);
 		if (*exit_code() == 0)
 			executor(cmd_list, my_env);
-		cleanup_and_exit(token, input);
+		cleanup_and_exit(token, input);// TODO add free cmd list
 	}
 }
 
@@ -124,21 +91,6 @@ int	main(int argc, char **argv, char **env)
 	int		is_interactive;
 
 	init_environment(&my_env, env, argv, argc);
-	// if (argc > 1) TODO: to consider for later
-	// {
-	// 	if (strcmp(argv[1], "-c") == 0 && argc > 2)
-	// 	{
-	// 		execute_command_string(&my_env, argv[2]);
-	// 		free_environment(&my_env);
-	// 		return (my_env.last_exit_status);
-	// 	}
-	// 	else
-	// 	{
-	// 		execute_script_file(&my_env, argv[1]);
-	// 		free_environment(&my_env);
-	// 		return (my_env.last_exit_status);
-	// 	}
-	// }
 	is_interactive = isatty(STDIN_FILENO);
 	if (is_interactive)
 		setup_signal_handlers();

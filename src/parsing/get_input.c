@@ -6,46 +6,28 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/07/08 11:00:54 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/25 19:19:41 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*allocate_and_join(char *complete_input, char *line)
-{
-	char	*temp;
-	size_t	complete_len;
-	size_t	line_len;
-
-	complete_len = strlen(complete_input);
-	line_len = strlen(line);
-	temp = malloc(complete_len + line_len + 2);
-	if (!temp)
-		return (NULL);
-	ft_strcpy(temp, complete_input);
-	temp[complete_len] = '\n';
-	ft_strcpy(temp + complete_len + 1, line);
-	return (temp);
-}
-
 static char	*handle_continuation_line(char *complete_input, int quote_status)
 {
 	char	*line;
 	char	*temp;
+	char	*input_temp;
 
 	line = readline(get_continuation_prompt(quote_status));
 	if (!line)
 		return (complete_input);
-	temp = allocate_and_join(complete_input, line);
-	if (!temp)
-	{
-		free(complete_input);
-		free(line);
-		return (NULL);
-	}
+	input_temp = ft_strjoin_char(complete_input, '\n');
+	temp = ft_strjoin(input_temp, line);
+	free(input_temp);
 	free(complete_input);
 	free(line);
+	if (!temp)
+		return (NULL);
 	return (temp);
 }
 
@@ -68,6 +50,26 @@ static char	*process_multiline_input(char *complete_input)
 	return (complete_input);
 }
 
+void	custom_add_history(char *input)
+{
+	char	**input_arry;
+	int		i;
+
+	i = 0;
+	input_arry = ft_split(input, '\n');
+	if (!input_arry)
+		return ;
+	while (input_arry[i])
+	{
+		add_history(input_arry[i]);
+		i++;
+	}
+	i = 0;
+	while (input_arry[i])
+		free(input_arry[i++]);
+	free(input_arry);
+}
+
 char	*get_complete_input(void)
 {
 	char	*line;
@@ -81,7 +83,7 @@ char	*get_complete_input(void)
 	if (quote_status == 0)
 	{
 		if (*line)
-			add_history(line);
+			custom_add_history(line);
 		return (line);
 	}
 	complete_input = ft_strdup(line);
