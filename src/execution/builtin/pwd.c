@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/05 12:44:38 by mring             #+#    #+#             */
+/*   Updated: 2025/08/12 12:47:20 by mring            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	pwd_builtin(void)
@@ -6,7 +18,10 @@ void	pwd_builtin(void)
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-		printf("getcwd failed\n");
+	{
+		perror("pwd");
+		return ;
+	}
 	printf("%s\n", cwd);
 	free(cwd);
 }

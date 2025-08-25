@@ -1,18 +1,46 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/05 12:45:11 by mring             #+#    #+#             */
+/*   Updated: 2025/08/12 08:47:42 by mring            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+static int	process_flags(t_cmd_node *curr, int *i)
+{
+	int	j;
+	int	newline_flag;
+
+	newline_flag = 1;
+	while (curr->cmd[*i] && curr->cmd[*i][0] == '-')
+	{
+		j = 1;
+		while (curr->cmd[*i][j] == 'n')
+			j++;
+		if (curr->cmd[*i][j] != '\0' || curr->cmd[*i][1] == '\0')
+			break ;
+		else
+		{
+			(*i)++;
+			newline_flag = 0;
+		}
+	}
+	return (newline_flag);
+}
 
 void	echo_builtin(t_cmd_node *curr)
 {
 	int	i;
 	int	newline_flag;
 
-	// -nnnn flag handling
 	i = 1;
-	newline_flag = 1;
-	if (curr->cmd[i] && ft_strncmp(curr->cmd[i], "-n", 3) == 0)
-	{
-		newline_flag = 0;
-		i++;
-	}
+	newline_flag = process_flags(curr, &i);
 	while (curr->cmd[i])
 	{
 		printf("%s", curr->cmd[i]);

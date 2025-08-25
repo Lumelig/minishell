@@ -79,7 +79,7 @@ SRC_FILES = src/main.c \
 OBJ			= $(patsubst src/%, $(OBJ_DIR)/%, $(SRC_FILES:.c=.o))
 
 # Header files for dependency tracking
-HEADERS		= $(wildcard $(INCLUDE_DIR)/*.h)
+HEADERS		= include/minishell.h include/parsing.h include/execution.h
 
 # Libraries
 LIBFT		= $(LIBFT_DIR)/libft.a
