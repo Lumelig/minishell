@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:46:17 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/23 14:47:39 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/25 19:00:39 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,12 @@ typedef struct s_token
 }							t_token;
 
 /* File and command structures */
-typedef struct s_file_node	t_file_node;
+typedef struct s_file_node
+{
+	char					*filename;
+	int						redir_type;
+	struct s_file_node		*next;
+}							t_file_node;
 
 typedef struct s_file_list
 {
@@ -56,12 +61,6 @@ typedef struct s_file_list
 	ssize_t					size;
 }							t_file_list;
 
-typedef struct s_file_node
-{
-	char					*filename;
-	int						redir_type;
-	struct s_file_node		*next;
-}							t_file_node;
 
 typedef struct s_cmd_node
 {
