@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:18:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/23 14:23:50 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/25 15:54:05 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,9 @@ bool	init_default_env(t_env *my_env)
 {
 	return (add_env_var(my_env, ft_strdup("PWD"), ft_strdup(getcwd(NULL, 0)))
 		&& add_env_var(my_env, ft_strdup("SHLVL"), ft_strdup("1"))
-		&& add_env_var(my_env, ft_strdup("_"),
-			ft_strdup("MiniShell")));
+		&& add_env_var(my_env, ft_strdup("PATH"),
+			ft_strdup("/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"))
+		&& add_env_var(my_env, ft_strdup("_"), ft_strdup("MiniShell")));
 }
 
 bool	process_env_vars(t_env *my_env, char **env)
@@ -63,10 +64,6 @@ bool	process_env_vars(t_env *my_env, char **env)
 	i = -1;
 	while (env[++i])
 	{
-		if (!ft_strncmp(env[i], "OLDPWD=", 7))
-		{
-			continue ;
-		}
 		key = NULL;
 		value = NULL;
 		set_environment(my_env, &key, &value, env[i]);
