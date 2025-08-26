@@ -87,5 +87,6 @@ t_envlist		*find_env_var(t_env *env, const char *key);
 void			cleanup_env(t_env *env);
 void			free_env_array(char **env_array, int count);
 char			**env_to_array(t_env *env);
+void			clean_cmd_list(t_cmd_list *cmd_list);
 
 #endif
