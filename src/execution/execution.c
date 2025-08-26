@@ -49,7 +49,7 @@ void	executor(t_cmd_list *cmd_list, t_env *ms_env)
 		id = builtin_check(curr);
 		if (id <= 7 && id >= 1)
 		{
-			run_builtin(id, curr, ms_env);
+			run_builtin(id, curr, ms_env, cmd_list);
 		}
 		else // execve
 		{

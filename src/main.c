@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/08/25 19:18:31 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/26 12:24:42 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,10 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		}
 		token = tokenize(input);
 		cmd_list = parsing(my_env, token);
+		cleanup_and_exit(token, input);
 		if (*exit_code() == 0)
 			executor(cmd_list, my_env);
-		cleanup_and_exit(token, input);// TODO add free cmd list
+		clean_cmd_list(cmd_list);
 	}
 }
 

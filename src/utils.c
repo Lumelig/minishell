@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:31:27 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/18 01:31:28 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/26 11:42:02 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,58 @@ void	free_environment(t_env *env)
 	env->head = NULL;
 	env->tail = NULL;
 	env->size = 0;
+}
+static void	free_file_list(t_file_list *file_list)
+{
+	if (!file_list)
+		return ;
+	t_file_node *file_node;
+	t_file_node *next_node;
+	
+	file_node = file_list->head;
+	while (file_node)
+	{
+		next_node = file_node->next;
+		free(file_node->filename);
+		free(file_node);
+		file_node = next_node;
+	}
+	free(file_list);
+}
+static void	free_cmd_node(t_cmd_node *cmd_node)
+{
+	if (!cmd_node)
+		return ;
+	int	i;
+
+	i = 0;
+	if (cmd_node->cmd)
+	{
+		while (cmd_node->cmd[i])
+		{
+			free(cmd_node->cmd[i]);
+			i++;
+		}
+		free(cmd_node->cmd);
+	}
+	free_file_list(cmd_node->files);
+	free(cmd_node);
+}
+
+void	clean_cmd_list(t_cmd_list *cmd_list)
+{
+	if (!cmd_list)
+		return ;
+	t_cmd_node	*cmd_node;
+	t_cmd_node	*cmd_next;
+
+	cmd_node = cmd_list->head;
+	while (cmd_node)
+	{
+		cmd_next = cmd_node->next;
+		free_cmd_node(cmd_node);
+		cmd_node = cmd_next;
+		
+	}
+	free(cmd_list);
 }

@@ -22,7 +22,8 @@ int	builtin_check(t_cmd_node *cmd)
 		return (0);
 }
 
-void	run_builtin(int id, t_cmd_node *curr, t_env *ms_env)
+void	run_builtin(int id, t_cmd_node *curr, t_env *ms_env,
+		t_cmd_list *cmd_list)
 {
 	if (id == 1)
 		pwd_builtin();
@@ -31,7 +32,7 @@ void	run_builtin(int id, t_cmd_node *curr, t_env *ms_env)
 	else if (id == 3)
 		echo_builtin(curr);
 	else if (id == 4)
-		exit_builtin(curr, ms_env);
+		exit_builtin(curr, ms_env, cmd_list);
 	else if (id == 5)
 		export_builtin(curr, ms_env);
 	else if (id == 6)
