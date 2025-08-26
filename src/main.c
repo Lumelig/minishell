@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/08/26 12:03:41 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/26 12:24:42 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	empty_input(char *input)
 	return (input[i] == '\0');
 }
 
-static void	cleanup_and_exit(t_token *token, char *input, t_cmd_list *cmd_list)
+static void	cleanup_and_exit(t_token *token, char *input)
 {
 	t_token	*temp;
 
@@ -38,7 +38,6 @@ static void	cleanup_and_exit(t_token *token, char *input, t_cmd_list *cmd_list)
 		token = temp;
 	}
 	free(input);
-	clean_cmd_list(cmd_list);
 }
 
 static char	*get_input(int is_interactive)
@@ -80,9 +79,10 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		}
 		token = tokenize(input);
 		cmd_list = parsing(my_env, token);
+		cleanup_and_exit(token, input);
 		if (*exit_code() == 0)
 			executor(cmd_list, my_env);
-		cleanup_and_exit(token, input, cmd_list);
+		clean_cmd_list(cmd_list);
 	}
 }
 
