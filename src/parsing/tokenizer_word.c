@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_word.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:18:25 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/23 14:39:40 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/28 15:26:04 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ int	extract_word(char *line, int *i, char **word, t_quote *quote)
 				else
 					*quote = QUOTE_DOUBLE;
 			}
-			else if (*quote != QUOTE_NONE && 
-					((line[*i] == '\'' && *quote == QUOTE_DOUBLE) ||
-					 (line[*i] == '"' && *quote == QUOTE_SINGLE)))
+			else if (*quote != QUOTE_NONE && ((line[*i] == '\''
+						&& *quote == QUOTE_DOUBLE) || (line[*i] == '"'
+						&& *quote == QUOTE_SINGLE)))
 			{
-				*quote = QUOTE_MIXED;  // Mixed quotes in same token
+				*quote = QUOTE_MIXED;
 			}
 			if (!handle_quote_in_word(line, i, word))
 			{
