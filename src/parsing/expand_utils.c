@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:37:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/22 12:57:15 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/28 15:14:50 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,8 @@ int	copy_variable(char *result, char *str, int *i, t_envlist *envlist)
 	var_len = get_var_length(str, *i + 1, &var_end);
 	if (var_len <= 0)
 	{
-		result[0] = str[*i];
-		*i += 1;
-		return (1);
+		*i = var_end - 1;
+		return (0);
 	}
 	var_value = get_var_value(str, var_start, var_len, envlist);
 	if (var_value)

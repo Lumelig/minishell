@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:23:20 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/25 20:04:42 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/28 15:15:33 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,7 @@ static int	handle_variable_size(char *original, int *i, t_env *env,
 	int	skip;
 	int	var_end;
 	int	size;
-	int	len;
 
-	len = ft_strlen(original);
-	if (*i + 1 >= len)
-		return (1);
 	skip = get_special_var_skip(original, *i);
 	if (skip > 0)
 	{
@@ -38,7 +34,7 @@ static int	handle_variable_size(char *original, int *i, t_env *env,
 		*i = var_end - 1;
 		return (size);
 	}
-	return (1);
+	return (0);
 }
 
 int	calculate_expanded_size(char *original, t_env *env, t_envlist *envlist)

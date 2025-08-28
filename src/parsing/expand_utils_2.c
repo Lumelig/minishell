@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:19:58 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/22 12:58:25 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/28 15:15:42 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,21 @@ int	get_var_length(char *str, int start, int *end_pos)
 		while (str[i] && str[i] != '}')
 		{
 			if (!ft_isalnum(str[i]) && str[i] != '_')
+			{
+				while (str[i] && str[i] != '}')
+					i++;
+				if (str[i] == '}')
+					i++;
+				*end_pos = i;
 				return (-1);
+			}
 			i++;
 		}
 		if (str[i] != '}')
+		{
+			*end_pos = i;
 			return (-1);
+		}
 		*end_pos = i + 1;
 		return (i - start - 1);
 	}
