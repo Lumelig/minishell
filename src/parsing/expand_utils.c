@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:37:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/29 14:47:18 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/29 15:15:53 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	copy_variable(char *result, char *str, int *i, t_envlist *envlist)
 	var_len = get_var_length(str, *i + 1, &var_end);
 	if (var_len <= 0)
 	{
-		*i = var_end - 1;
+		*i = var_end;
 		return (0);
 	}
 	var_value = get_var_value(str, var_start, var_len, envlist);
