@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:31:27 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/28 15:28:52 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/29 13:16:29 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ static void	free_file_list(t_file_list *file_list)
 	while (file_node)
 	{
 		next_node = file_node->next;
-		free(file_node->filename);
+		if (file_node->filename)
+			free(file_node->filename);
 		free(file_node);
 		file_node = next_node;
 	}

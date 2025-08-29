@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 14:43:36 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/23 14:43:54 by jenne            ###   ########.fr       */
+/*   Updated: 2025/08/29 13:43:07 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ t_file_node	*create_file_node(char *filename, t_token_type redir_type)
 	if (!node)
 		return (NULL);
 	if (redir_type == TOKEN_PIPE)
-		node->filename = "PIPE";
+		node->filename = ft_strdup("PIPE");
 	else
-		node->filename = strdup(filename);
+		node->filename = ft_strdup(filename);
 	if (!node->filename)
 	{
 		free(node);

@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:25:46 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/26 11:04:15 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/29 13:35:29 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,9 @@ t_token	*add_file_to_node(t_token *token, t_cmd_node *cmd_node)
 	char		*filename;
 	t_token		*n_token;
 
+	filename = NULL;
 	if (token->type == TOKEN_PIPE)
-	{
-		filename = NULL;
 		n_token = token->next;
-	}
 	else
 	{
 		if (!token->next || token->next->type != TOKEN_WORD)
