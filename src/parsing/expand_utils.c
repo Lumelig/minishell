@@ -6,11 +6,18 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:37:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/28 15:14:50 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:47:18 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_special_var(char *str, int pos)
+{
+	if (str[pos] == '$' || str[pos] == '?')
+		return (1);
+	return (0);
+}
 
 int	is_special_expansion(char *str, int i)
 {
