@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:07:45 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/28 15:33:53 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/28 15:36:44 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,23 +84,49 @@ t_token	*tokenize(char *line)
 		return (NULL);
 	while (line[i])
 	{
-		if (line[i] == '\n')
+		if (ft_isspace(line[i]))
+			i++;
+		else if (is_operator_char(line[i]))
 		{
 			if (!handle_operator(line, &i, &head))
 				return (cleanup_tokens(head));
 		}
-		if (ft_isspace(line[i]))
-		{
-			i++;
-			continue ;
-		}
-		if (is_operator_char(line[i]) && !handle_operator(line, &i, &head))
-			return (cleanup_tokens(head));
-		else if (!is_operator_char(line[i])
-			&& !process_word_token(line, &i, &head))
+		else if (!process_word_token(line, &i, &head))
 			return (cleanup_tokens(head));
 	}
 	if (!add_token(&head, TOKEN_EOF, "", QUOTE_NONE))
 		return (cleanup_tokens(head));
 	return (head);
 }
+
+// t_token	*tokenize(char *line)
+// {
+// 	t_token	*head;
+// 	int		i;
+//
+// 	head = NULL;
+// 	i = 0;
+// 	if (!line)
+// 		return (NULL);
+// 	while (line[i])
+// 	{
+// 		if (line[i] == '\n')
+// 		{
+// 			if (!handle_operator(line, &i, &head))
+// 				return (cleanup_tokens(head));
+// 		}
+// 		if (ft_isspace(line[i]))
+// 		{
+// 			i++;
+// 			continue ;
+// 		}
+// 		if (is_operator_char(line[i]) && !handle_operator(line, &i, &head))
+// 			return (cleanup_tokens(head));
+// 		else if (!is_operator_char(line[i])
+// 			&& !process_word_token(line, &i, &head))
+// 			return (cleanup_tokens(head));
+// 	}
+// 	if (!add_token(&head, TOKEN_EOF, "", QUOTE_NONE))
+// 		return (cleanup_tokens(head));
+// 	return (head);
+// }
