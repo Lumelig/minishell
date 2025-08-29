@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:07:45 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/28 15:36:44 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/29 15:53:44 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,14 @@ t_token	*tokenize(char *line)
 
 	head = NULL;
 	i = 0;
-	if (!line)
-		return (NULL);
 	while (line[i])
 	{
-		if (ft_isspace(line[i]))
+		if (line[i] == '\n')
+		{
+			if (!handle_operator(line, &i, &head))
+				return (cleanup_tokens(head));
+		}
+		else if (ft_isspace(line[i]))
 			i++;
 		else if (is_operator_char(line[i]))
 		{
