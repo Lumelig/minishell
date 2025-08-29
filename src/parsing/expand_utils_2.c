@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:19:58 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/29 14:47:03 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/29 15:21:32 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	calculate_var_size(char *str, int i, t_envlist *envlist, t_env *env)
 		var_start++;
 	var_len = get_var_length(str, i + 1, &var_end);
 	if (var_len <= 0)
-		return (1);
+		return (0);
 	var_name = ft_substr(str, var_start, var_len);
 	current = envlist;
 	while (current)
