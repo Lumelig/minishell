@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:18:25 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/29 14:53:35 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/30 15:07:49 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,6 @@ int	process_word_token(char *line, int *i, t_token **head)
 			return (0);
 		}
 	}
-	free(word);
-	return (1);
 	free(word);
 	return (1);
 }
