@@ -5,6 +5,7 @@ void	run_process(t_cmd_node *curr, t_env *ms_env)
 	pid_t	pid;
 	char	**envp;
 	int		status;
+	char	*exec_path;
 
 	pid = fork();
 	if (pid == 0) // child
@@ -12,13 +13,26 @@ void	run_process(t_cmd_node *curr, t_env *ms_env)
 		envp = env_convert(ms_env);
 		if (!envp)
 		{
-			printf("Failed to convert environment\n");
+			write(2, "minishell: Failed to convert environment\n", 42);
 			exit(1);
 		}
-		execve(get_exec_path(ms_env), curr->cmd, envp);
+		exec_path = get_exec_path(curr, ms_env);
+		if (!exec_path)
+		{
+			write(2, "minishell: ", 11);
+			write(2, curr->cmd[0], ft_strlen(curr->cmd[0]));
+			write(2, ": command not found\n", 20);
+			perror("");
+			free_envp(envp);
+			exit(127);
+		}
+		execve(exec_path, curr->cmd, envp);
+		write(2, "minishell: ", 11);
+		write(2, curr->cmd[0], ft_strlen(curr->cmd[0]));
+		write(2, ": ", 2);
+		perror("");
 		free_envp(envp);
-		perror("execve failed");
-		exit(127);
+		exit(126);
 	}
 	else if (pid < 0)
 	{
@@ -51,7 +65,7 @@ void	executor(t_cmd_list *cmd_list, t_env *ms_env)
 		{
 			run_builtin(id, curr, ms_env, cmd_list);
 		}
-		else // execve
+		else
 		{
 			run_process(curr, ms_env);
 		}
