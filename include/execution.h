@@ -14,7 +14,7 @@ typedef struct s_env			t_env;
 void							executor(t_cmd_list *cmd_list, t_env *ms_env);
 void							free_envp(char **envp);
 char							**env_convert(t_env *ms_env);
-char							*get_exec_path(t_env *ms_env);
+char							*get_exec_path(t_cmd_node *curr, t_env *ms_env);
 
 // builtin
 int								builtin_check(t_cmd_node *cmd);
