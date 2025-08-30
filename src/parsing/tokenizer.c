@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:07:45 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/30 15:07:47 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/30 17:48:39 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ t_token	*tokenize(char *line)
 	}
 	if (!add_token(&head, TOKEN_EOF, "", QUOTE_NONE))
 		return (cleanup_tokens(head));
+	printf("hwew");
 	return (head);
 }
 

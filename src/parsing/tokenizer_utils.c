@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:18:08 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/30 14:52:08 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/30 17:50:18 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +77,5 @@ int	add_token(t_token **head, t_token_type type, char *value, t_quote qoute)
 
 int	is_operator_char(char c)
 {
-	return (c == '|' || c == '<' || c == '>' || c == '\n' || c == ';');
+	return (c == '|' || c == '<' || c == '>');
 }
