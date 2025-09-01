@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:19:58 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/28 15:21:31 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/29 15:21:32 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,32 @@ int	get_special_var_skip(char *str, int i)
 	return (0);
 }
 
-int	is_special_var(char *str, int pos)
+static int	handle_braced_var(char *str, int start, int *end_pos)
 {
-	if (str[pos] == '$' || str[pos] == '?')
+	int	i;
+
+	i = start + 1;
+	if (is_special_var(str, i) && str[i + 1] == '}')
+	{
+		*end_pos = i + 2;
 		return (1);
-	return (0);
+	}
+	while (str[i] && str[i] != '}')
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+		{
+			while (str[i] && str[i] != '}')
+				i++;
+			if (str[i] == '}')
+				i++;
+			*end_pos = i;
+			return (-1);
+		}
+		i++;
+	}
+	if (str[i] != '}')
+		return (*end_pos = i, -1);
+	return (*end_pos = i + 1, i - start - 1);
 }
 
 int	get_var_length(char *str, int start, int *end_pos)
@@ -35,34 +56,7 @@ int	get_var_length(char *str, int start, int *end_pos)
 
 	i = start;
 	if (str[start] == '{')
-	{
-		i++;
-		if (is_special_var(str, i) && str[i + 1] == '}')
-		{
-			*end_pos = i + 2;
-			return (1);
-		}
-		while (str[i] && str[i] != '}')
-		{
-			if (!ft_isalnum(str[i]) && str[i] != '_')
-			{
-				while (str[i] && str[i] != '}')
-					i++;
-				if (str[i] == '}')
-					i++;
-				*end_pos = i;
-				return (-1);
-			}
-			i++;
-		}
-		if (str[i] != '}')
-		{
-			*end_pos = i;
-			return (-1);
-		}
-		*end_pos = i + 1;
-		return (i - start - 1);
-	}
+		return (handle_braced_var(str, start, end_pos));
 	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
 		i++;
 	return (*end_pos = i, i - start);
@@ -108,7 +102,7 @@ int	calculate_var_size(char *str, int i, t_envlist *envlist, t_env *env)
 		var_start++;
 	var_len = get_var_length(str, i + 1, &var_end);
 	if (var_len <= 0)
-		return (1);
+		return (0);
 	var_name = ft_substr(str, var_start, var_len);
 	current = envlist;
 	while (current)

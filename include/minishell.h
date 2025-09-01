@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/29 14:17:15 by jpflegha          #+#    #+#             */
+/*   Updated: 2025/08/29 14:17:34 by jpflegha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -29,18 +41,18 @@
 /* Environment structures */
 typedef struct s_envlist // char **env into a list
 {
-	char *key;
-	char *value;
-	struct s_envlist *next;
+	char				*key;
+	char				*value;
+	struct s_envlist	*next;
 }				t_envlist;
 
 typedef struct s_env // Controling struct for env
 {
-	pid_t pid; // extra information put here for easy access
-	int size;
-	int shlvl; // help to handle an edge case
-	t_envlist *head;
-	t_envlist *tail; // same as for pid above
+	pid_t		pid; // extra information put here for easy access
+	int			size;
+	int			shlvl; // help to handle an edge case
+	t_envlist	*head;
+	t_envlist	*tail; // same as for pid above
 }				t_env;
 
 /* Global functions */

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:46:17 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/26 12:28:13 by mring            ###   ########.fr       */
+/*   Updated: 2025/08/29 14:47:57 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,6 @@ t_cmd_list				*init_cmd_list(void);
 t_file_list				*init_file_list(void);
 t_file_node				*create_file_node(char *filename,
 							t_token_type redir_type);
-/* Debug functions */
-void					print_cmd_list(t_cmd_list *cmd_list);
+int						is_special_var(char *str, int pos);
 
 #endif
