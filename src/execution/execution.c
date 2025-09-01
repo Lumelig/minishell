@@ -7,6 +7,38 @@ void	run_process(t_cmd_node *curr, t_env *ms_env)
 	int		status;
 	char	*exec_path;
 
+	// need pipes before forks
+	// loop for pipe creation?
+	// N pipes need N pipe() pairs, 2 fds each pipe
+	// count pipes by counting | as redir_type
+	//
+	// child:
+	// if i > 0 dup2(pipes[i-1][0], STDIN_FILENO)
+	// if i < N dup2(pipes[i][1], STDOUT_FILENO)
+	//
+	// parent:
+	// close(pipes[i][1]) once the child that writes to it is forked
+	// close(pipes[i-1][0]) after the reader child has been forked (or close them as soon as safe
+	// collect child pids into an array and wait for them all after spawning
+	// don't wait inside run_process, so wait before it.
+	// always close every fd opened
+	// special cases:
+	// 0 pipes, skip pipe allocation, close fds necessary
+	// TODO: parent-only -> builtins -> no forking or piping in builtins
+	// redirections take priority: do pipe dup2 first,
+	// then apply redirects which replace the fds
+	// error handling: on pipe() failure free allocated memory and close any opened fds
+	/*
+	Quick tips
+	- Use index-based traversal (assign an index to each node) to decide which pipe fds to use.
+	- Always close fds in both branches (child and parent) even on error paths.
+	- If you currently wait inside run_process,
+	move waiting to after the spawn loop and return child pids from run_process or refactor runner to do spawn-only.
+	If you want, I can:
+	- show a minimal refactor of executor to create pipes,
+	spawn children and wait (not full execve details), or
+	- show safe helper functions for pipe allocation/cleanup and for closing
+	*/
 	pid = fork();
 	if (pid == 0) // child
 	{
@@ -74,39 +106,4 @@ void	executor(t_cmd_list *cmd_list, t_env *ms_env)
 	return ;
 }
 
-/*
-Decisions executor makes:
-Nothing to execute? Return cleanly.
-One command only, and it's a builtin that must affect the parent?
-	No fork() → Call builtin directly
-Anything else (multiple commands or external command)?
-	Pass to the main execution loop:
-		Set up pipes
-		Fork each command
-		Setup redirections
-		Wait for all children
-		Collect status
-*/
-/*
-Execution	logic = loop over command nodes, and for each:
-
-	Check if it's a builtin (in parent or child?) in parent duh. we didn't fork yet
-	Set up redirections (<, >, >>, <<)
-	Set up pipes if needed
-	Fork (unless parent-only builtin)
-	In child: handle redirs + execve or builtin
-	In parent: track child PID, wait later
-	After loop: wait for all child processes
-*/
-
-/*
-get_env() function? don't need to pass env around
-*/
-
-/*
-Warning for Signals:
-Be careful. This global variable cannot provide any other
-information or data access than the number of a received signal.
-Therefore, using "norm" type structures in the global scope is
-forbidden.
-*/
+// get_env() function? don't need to pass env around
