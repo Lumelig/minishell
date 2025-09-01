@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_input.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/08/31 13:15:27 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/01 20:53:57 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ char	*get_prompt_name(void)
 {
 	char	*pwd;
 	char	*result;
+	char	*res;
 	int		j;
 	int		i;
 
@@ -91,9 +92,8 @@ char	*get_prompt_name(void)
 		return (NULL);
 	}
 	ft_strcpy(result, pwd + i);
-	free(pwd);
-	result = ft_strjoin(result, " \033[1;32m>\033[0m ");
-	return (result);
+	res = ft_strjoin(result, " \033[1;32m>\033[0m ");
+	return (free(pwd), free(result), res);
 }
 
 char	*get_complete_input(void)
@@ -101,8 +101,11 @@ char	*get_complete_input(void)
 	char	*line;
 	char	*complete_input;
 	int		quote_status;
+	char	*name;
 
-	line = readline(get_prompt_name());
+	name = get_prompt_name();
+	line = readline(name);
+	free(name);
 	if (!line)
 		return (NULL);
 	quote_status = check_quotes_balanced_enhanced(line);
