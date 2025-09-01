@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/08/29 00:25:10 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/31 13:15:27 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,39 @@ void	custom_add_history(char *input)
 	free(input_arry);
 }
 
+char	*get_prompt_name(void)
+{
+	char	*pwd;
+	char	*result;
+	int		j;
+	int		i;
+
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		return (NULL);
+	j = ft_strlen(pwd);
+	i = j;
+	while (i > 0 && pwd[i - 1] != '/')
+		i--;
+	result = malloc(j - i + 1);
+	if (!result)
+	{
+		free(pwd);
+		return (NULL);
+	}
+	ft_strcpy(result, pwd + i);
+	free(pwd);
+	result = ft_strjoin(result, " \033[1;32m>\033[0m ");
+	return (result);
+}
+
 char	*get_complete_input(void)
 {
 	char	*line;
 	char	*complete_input;
 	int		quote_status;
 
-	line = readline("minishell$ ");
+	line = readline(get_prompt_name());
 	if (!line)
 		return (NULL);
 	quote_status = check_quotes_balanced_enhanced(line);

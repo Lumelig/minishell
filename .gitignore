@@ -2,7 +2,7 @@ libft/
 bin/
 .vscode
 *.pdf
-obj
+obj/
 *workspace
 *.sub
 vgcore*

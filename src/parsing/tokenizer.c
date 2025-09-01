@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:07:45 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/28 15:36:44 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/08/30 18:13:42 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	handle_other_operator(int *i, t_token **head, t_token_type type, char c)
 
 int	handle_output_redirect(char *line, int *i, t_token **head)
 {
-	if (line[*i + 1] == '>')
+	if (line[*i + 1] && line[*i + 1] == '>')
 	{
 		if (!add_token(head, TOKEN_REDIR_APPEND, ">>", QUOTE_NONE))
 			return (0);
@@ -43,7 +43,7 @@ int	handle_output_redirect(char *line, int *i, t_token **head)
 
 int	handle_input_redirect(char *line, int *i, t_token **head)
 {
-	if (line[*i + 1] == '<')
+	if (line[*i + 1] && line[*i + 1] == '<')
 	{
 		if (!add_token(head, TOKEN_HEREDOC, "<<", QUOTE_NONE))
 			return (0);
@@ -62,10 +62,6 @@ int	handle_operator(char *line, int *i, t_token **head)
 {
 	if (line[*i] == '|')
 		return (handle_other_operator(i, head, TOKEN_PIPE, '|'));
-	else if (line[*i] == '\n')
-		return (handle_other_operator(i, head, TOKEN_END_CMD, '\n'));
-	else if (line[*i] == ';')
-		return (handle_other_operator(i, head, TOKEN_END_CMD, ';'));
 	else if (line[*i] == '>')
 		return (handle_output_redirect(line, i, head));
 	else if (line[*i] == '<')
@@ -84,8 +80,10 @@ t_token	*tokenize(char *line)
 		return (NULL);
 	while (line[i])
 	{
-		if (ft_isspace(line[i]))
+		if (ft_isspace(line[i]) && line[i])
+		{
 			i++;
+		}
 		else if (is_operator_char(line[i]))
 		{
 			if (!handle_operator(line, &i, &head))
