@@ -51,7 +51,7 @@ void	cd_builtin(t_cmd_node *curr, t_env *ms_env)
 {
 	char	*target_dir;
 
-	if (curr->cmd[2])
+	if (curr->cmd[1] && curr->cmd[2])
 	{
 		printf("cd: too many arguments\n");
 		return ;
