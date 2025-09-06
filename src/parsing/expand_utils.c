@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:37:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/29 15:15:53 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/05 13:16:00 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ int	is_special_expansion(char *str, int i)
 {
 	if (str[i + 1] == '$' || str[i + 1] == '?' || str[i + 1] == '0')
 		return (1);
-	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$'
-			|| str[i + 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
+	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$' || str[i
+			+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
 		return (1);
 	return (0);
 }
@@ -45,7 +45,7 @@ int	copy_special_var(char *result, char *str, int *i, t_env *env)
 	else if (str[check_pos] == '?')
 		tmp = ft_itoa(*exit_code());
 	else if (str[check_pos] == '0')
-		tmp = ft_strdup("Minishell");
+		tmp = ft_strdup("minishell");
 	if (tmp)
 	{
 		ft_strcpy(result, tmp);

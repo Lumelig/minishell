@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	run_process(t_cmd_node *curr, t_env *ms_env)
+void	run_cmd(t_cmd_node *curr, t_env *ms_env, int p[2])
 {
 	pid_t	pid;
 	char	**envp;
@@ -39,30 +39,25 @@ void	run_process(t_cmd_node *curr, t_env *ms_env)
 	spawn children and wait (not full execve details), or
 	- show safe helper functions for pipe allocation/cleanup and for closing
 	*/
+	(void)p;
 	pid = fork();
 	if (pid == 0) // child
 	{
 		envp = env_convert(ms_env);
 		if (!envp)
 		{
-			write(2, "minishell: Failed to convert environment\n", 42);
+			perror("minishell: Failed to convert environment");
 			exit(1);
 		}
 		exec_path = get_exec_path(curr, ms_env);
 		if (!exec_path)
 		{
-			write(2, "minishell: ", 11);
-			write(2, curr->cmd[0], ft_strlen(curr->cmd[0]));
-			write(2, ": command not found\n", 20);
-			perror("");
+			perror(curr->cmd[0]);
 			free_envp(envp);
 			exit(127);
 		}
 		execve(exec_path, curr->cmd, envp);
-		write(2, "minishell: ", 11);
-		write(2, curr->cmd[0], ft_strlen(curr->cmd[0]));
-		write(2, ": ", 2);
-		perror("");
+		perror("execve: failure in execution");
 		free_envp(envp);
 		exit(126);
 	}
@@ -81,6 +76,7 @@ void	run_process(t_cmd_node *curr, t_env *ms_env)
 void	executor(t_cmd_list *cmd_list, t_env *ms_env)
 {
 	t_cmd_node	*curr;
+	int			p[2];
 	int			id;
 
 	if (!cmd_list || !cmd_list->head || !cmd_list->head->cmd
@@ -90,6 +86,8 @@ void	executor(t_cmd_list *cmd_list, t_env *ms_env)
 		return ;
 	}
 	curr = cmd_list->head;
+	if (pipe(p) == -1) // bytes written on p[1] can be read on p[0]
+		return (perror("pipe:"));
 	while (curr)
 	{
 		id = builtin_check(curr);
@@ -99,7 +97,7 @@ void	executor(t_cmd_list *cmd_list, t_env *ms_env)
 		}
 		else
 		{
-			run_process(curr, ms_env);
+			run_cmd(curr, ms_env, p);
 		}
 		curr = curr->next;
 	}
