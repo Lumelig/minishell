@@ -43,7 +43,7 @@ char	**env_convert(t_env *ms_env)
 	return (envp[i] = NULL, envp);
 }
 
-void	free_split_path(char **split_path)
+static void	free_split_path(char **split_path)
 {
 	int	i;
 
@@ -55,7 +55,7 @@ void	free_split_path(char **split_path)
 	return ;
 }
 
-char	*cmd_path_append(char *path, char *cmd)
+static char	*cmd_path_append(char *path, char *cmd)
 {
 	char	*joined;
 	int		len_1;
