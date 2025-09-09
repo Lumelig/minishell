@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:46:17 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/29 14:47:57 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:59:28 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSING_H
 # define PARSING_H
 
-# include "libft.h"
-# include <stdbool.h>
-# include <stdlib.h>
-# include <sys/types.h>
+// # include "libft.h"
+// # include <stdbool.h>
+// # include <stdlib.h>
+// # include <sys/types.h>
 
 /* Token definitions */
 typedef enum e_token_type
@@ -50,6 +50,7 @@ typedef struct s_token
 typedef struct s_file_node
 {
 	char				*filename;
+	// can remove PIPE_TOKEN
 	int					redir_type;
 	struct s_file_node	*next;
 }						t_file_node;
@@ -63,7 +64,7 @@ typedef struct s_file_list
 
 typedef struct s_cmd_node
 {
-	int					cmd_type;
+	int					p_fd[2];
 	char				**cmd;
 	t_file_list			*files;
 	struct s_cmd_node	*next;

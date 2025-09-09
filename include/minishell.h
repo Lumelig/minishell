@@ -3,19 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:17:15 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/08/29 14:17:34 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:59:23 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "execution.h"
 # include "libft.h"
-# include "parsing.h"
 # include <dirent.h> // opendir, readdir, closedir
 # include <stdio.h>  // printf, perror
 // ~~~
@@ -23,7 +21,7 @@
 # include <readline/history.h>  // add_history, rl_clear_history
 # include <readline/readline.h> // rl_on_new_line, rl_replace_line, rl_redisplay
 # include <signal.h>            // signal, sigaction, sigemptyset, sigaddset,
-								// kill
+// kill
 # include <stdbool.h>
 # include <stdlib.h>       // malloc, free, exit
 # include <string.h>       // strerror
@@ -37,22 +35,24 @@
 # include <termios.h>      // tcgetattr, tcsetattr
 # include <unistd.h>       // write, access, fork, getcwd, chdir, dup, dup2,
 // pipe, isatty, ttyname, ttyslot
+# include "execution.h"
+# include "parsing.h"
 
 /* Environment structures */
 typedef struct s_envlist // char **env into a list
 {
-	char				*key;
-	char				*value;
-	struct s_envlist	*next;
+	char *key;
+	char *value;
+	struct s_envlist *next;
 }				t_envlist;
 
 typedef struct s_env // Controling struct for env
 {
-	pid_t		pid; // extra information put here for easy access
-	int			size;
-	int			shlvl; // help to handle an edge case
-	t_envlist	*head;
-	t_envlist	*tail; // same as for pid above
+	pid_t pid; // extra information put here for easy access
+	int size;
+	int shlvl; // help to handle an edge case
+	t_envlist *head;
+	t_envlist *tail; // same as for pid above
 }				t_env;
 
 /* Global functions */

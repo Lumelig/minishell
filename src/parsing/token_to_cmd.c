@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_to_cmd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:25:46 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/30 15:59:51 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/09 08:51:39 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ t_cmd_node	*create_cmd_node(t_cmd_list *cmd_list)
 	node = malloc(sizeof(t_cmd_node));
 	if (!node)
 		return (NULL);
-	node->cmd_type = 0;
 	node->cmd = NULL;
 	node->files = init_file_list();
 	node->next = NULL;

@@ -10,16 +10,24 @@ typedef struct s_quote_state	t_quote_state;
 typedef struct s_envlist		t_envlist;
 typedef struct s_env			t_env;
 
-// exec
+// execution
 void							executor(t_cmd_list *cmd_list, t_env *ms_env);
-void							free_envp(char **envp);
-char							**env_convert(t_env *ms_env);
+void							exec_cmd(t_cmd_node *curr, t_env *ms_env);
 char							*get_exec_path(t_cmd_node *curr, t_env *ms_env);
+char							**env_convert(t_env *ms_env);
+void							free_envp(char **envp);
+
+// fork pipeline
+void							handle_parent(t_cmd_node *curr, t_env *ms_env);
+void							handle_child(t_cmd_node *curr, t_env *ms_env);
+void							wait_children(pid_t *pid, ssize_t count);
+
+// redirections
+//
 
 // builtin
-int								builtin_check(t_cmd_node *cmd);
-void							run_builtin(int id, t_cmd_node *curr,
-									t_env *ms_env, t_cmd_list *cmd_list);
+int								run_builtin(t_cmd_node *curr, t_env *ms_env,
+									t_cmd_list *cmd_list);
 void							pwd_builtin(void);
 void							env_builtin(t_cmd_node *curr, t_env *ms_env);
 bool							env_key_update(t_env *ms_env, char *key,
@@ -32,5 +40,8 @@ void							exit_builtin(t_cmd_node *curr, t_env *ms_env,
 void							export_builtin(t_cmd_node *curr, t_env *ms_env);
 void							cd_builtin(t_cmd_node *curr, t_env *ms_env);
 void							unset_builtin(t_cmd_node *curr, t_env *ms_env);
+
+// here_doc
+//
 
 #endif
