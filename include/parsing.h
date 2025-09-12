@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:46:17 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/09 15:59:28 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/12 17:02:39 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ typedef struct s_token
 typedef struct s_file_node
 {
 	char				*filename;
-	// can remove PIPE_TOKEN
 	int					redir_type;
 	struct s_file_node	*next;
 }						t_file_node;
@@ -62,9 +61,22 @@ typedef struct s_file_list
 	ssize_t				size;
 }						t_file_list;
 
+// typedef struct s_cmd_node
+// {
+//     int                 p_fd[2];
+//     int                 builtin_type;
+//     char                **cmd;
+//     t_file_list         *files;
+//     t_cmd_list          *parent_list;    // Just a pointer - 8 bytes
+//     pid_t               pid;             // 4 bytes
+//     bool                is_forked;       // 1 byte
+//     struct s_cmd_node   *next;
+// }                       t_cmd_node;
+
 typedef struct s_cmd_node
 {
 	int					p_fd[2];
+	int					builtin_type;
 	char				**cmd;
 	t_file_list			*files;
 	struct s_cmd_node	*next;

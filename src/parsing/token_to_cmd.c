@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:25:46 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/09 08:51:39 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/12 17:44:43 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ t_cmd_node	*create_cmd_node(t_cmd_list *cmd_list)
 	if (!node)
 		return (NULL);
 	node->cmd = NULL;
+	node->p_fd[0] = -1;
+	node->p_fd[1] = -1;
+	node->builtin_type = 0;
 	node->files = init_file_list();
 	node->next = NULL;
 	if (!node->files)
@@ -70,15 +73,15 @@ t_token	*add_file_to_node(t_token *token, t_cmd_node *cmd_node)
 	t_token		*n_token;
 
 	filename = NULL;
-	if (token->type == TOKEN_PIPE)
-		n_token = token->next;
-	else
-	{
-		if (!token->next || token->next->type != TOKEN_WORD)
-			return (NULL);
-		filename = token->next->value;
-		n_token = token->next->next;
-	}
+	// if (token->type == TOKEN_PIPE)
+	// 	n_token = token->next;
+	// else
+	// {
+	if (!token->next || token->next->type != TOKEN_WORD)
+		return (NULL);
+	filename = token->next->value;
+	n_token = token->next->next;
+	// }
 	f_node = create_file_node(filename, token->type);
 	if (!f_node)
 		return (NULL);
@@ -103,10 +106,10 @@ t_token	*process_command(t_token *current, t_cmd_node *cmd_node)
 		}
 		else if (current->type == TOKEN_PIPE || current->type == TOKEN_END_CMD)
 		{
-			if (current->type == TOKEN_PIPE)
-				current = add_file_to_node(current, cmd_node);
-			else
-				current = current->next;
+			// if (current->type == TOKEN_PIPE)
+			// 	current = add_file_to_node(current, cmd_node);
+			// else
+			current = current->next;
 			break ;
 		}
 		else

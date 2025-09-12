@@ -18,14 +18,21 @@ char							**env_convert(t_env *ms_env);
 void							free_envp(char **envp);
 
 // fork pipeline
-void							handle_parent(t_cmd_node *curr, t_env *ms_env);
-void							handle_child(t_cmd_node *curr, t_env *ms_env);
+void							handle_parent(t_cmd_node *curr,
+									t_cmd_node *prev);
+void							handle_child(t_cmd_node *curr, t_cmd_node *prev,
+									t_env *ms_env, t_cmd_list *cmd_list);
 void							wait_children(pid_t *pid, ssize_t count);
 
 // redirections
-//
+void							handle_input(char *infile);
+void							handle_output(char *outfile, bool append);
+void							handle_heredoc(char *filename);
+void							handle_redirections(t_cmd_node *curr);
 
 // builtin
+
+int								check_builtin(t_cmd_node *curr);
 int								run_builtin(t_cmd_node *curr, t_env *ms_env,
 									t_cmd_list *cmd_list);
 void							pwd_builtin(void);
