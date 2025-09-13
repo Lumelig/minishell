@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/13 17:51:00 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/13 20:20:41 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ bool	empty_input(char *input)
 {
 	int	i;
 
+	g_sigint_received = 0;
 	if (!input)
 		return (true);
 	i = 0;
@@ -44,7 +45,7 @@ static void	cleanup(t_token *token, char *input)
 static char	*get_input(int is_interactive)
 {
 	char	*input;
- 
+
 	if (is_interactive)
 	{
 		input = get_complete_input();
@@ -66,18 +67,17 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 
 	while (1)
 	{
-		g_sigint_received = 0;
 		input = get_input(is_interactive);
 		if (!input && g_sigint_received != 2)
 		{
 			if (is_interactive)
-			printf("exit\n");
+				printf("exit\n");
 			break ;
 		}
 		if (empty_input(input))
 		{
 			free(input);
-    		continue;
+			continue ;
 		}
 		token = tokenize(input);
 		cmd_list = parsing(my_env, token);

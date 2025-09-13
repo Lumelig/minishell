@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/09/13 17:56:43 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/13 20:18:55 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,16 @@ static char	*handle_continuation_line(char *complete_input, int quote_status)
 	{
 		free(complete_input);
 		free(line);
-		quote_status = 0;
 		return (NULL);
 	}
-	else 
-	{
-		input_temp = ft_strjoin_char(complete_input, '\n');
-		temp = ft_strjoin(input_temp, line);
-		free(input_temp);
-		free(complete_input);
-		free(line);
-		if (!temp)
-			return (NULL);
-		return (temp);
-	}
+	input_temp = ft_strjoin_char(complete_input, '\n');
+	temp = ft_strjoin(input_temp, line);
+	free(input_temp);
+	free(complete_input);
+	free(line);
+	if (!temp)
+		return (NULL);
+	return (temp);
 }
 
 static char	*process_multiline_input(char *complete_input)
