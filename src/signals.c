@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:41:52 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/23 13:43:27 by jenne            ###   ########.fr       */
+/*   Updated: 2025/09/13 17:58:11 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,28 @@ volatile sig_atomic_t	g_sigint_received = 0;
 // rl_redisplay();         Refresh prompt display
 void	set_siginit(int signum)
 {
+	char	*promt;
 	(void)signum;
-	g_sigint_received = 1;
-	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	if (g_sigint_received == 0)  // Main prompt mode
+	{
+		write(STDOUT_FILENO, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		g_sigint_received = 0;
+	}
+	else if (g_sigint_received == 1)  // Continuation prompt mode
+	{
+		promt = get_prompt_name();
+		g_sigint_received = 2;
+		while (*promt)
+		{
+			write(1, promt, 1);
+			promt++;
+		}
+		rl_done = 1;
+		ioctl(STDIN_FILENO, TIOCSTI, "\b");
+	}
 	*exit_code() = 130;
 }
 
