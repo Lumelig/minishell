@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:37:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/05 13:16:00 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/13 20:09:51 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	is_special_expansion(char *str, int i)
 	if (str[i + 1] == '$' || str[i + 1] == '?' || str[i + 1] == '0')
 		return (1);
 	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$' || str[i
-			+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
+				+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
 		return (1);
 	return (0);
 }

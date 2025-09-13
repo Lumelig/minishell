@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:41:52 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/13 17:58:11 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/13 20:15:57 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,16 @@ volatile sig_atomic_t	g_sigint_received = 0;
 void	set_siginit(int signum)
 {
 	char	*promt;
+
 	(void)signum;
-	if (g_sigint_received == 0)  // Main prompt mode
+	if (g_sigint_received == 0)
 	{
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
-		g_sigint_received = 0;
 	}
-	else if (g_sigint_received == 1)  // Continuation prompt mode
+	else if (g_sigint_received == 1)
 	{
 		promt = get_prompt_name();
 		g_sigint_received = 2;
@@ -42,7 +42,6 @@ void	set_siginit(int signum)
 			promt++;
 		}
 		rl_done = 1;
-		ioctl(STDIN_FILENO, TIOCSTI, "\b");
 	}
 	*exit_code() = 130;
 }
