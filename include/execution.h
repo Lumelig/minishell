@@ -27,7 +27,7 @@ void							wait_children(pid_t *pid, ssize_t count);
 // redirections
 void							handle_input(char *infile);
 void							handle_output(char *outfile, bool append);
-void							handle_heredoc(char *filename);
+void							handle_heredoc(t_file_node *filehead);
 void							handle_redirections(t_cmd_node *curr);
 
 // builtin
