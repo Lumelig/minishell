@@ -153,7 +153,7 @@ run: $(TARGET)
 # Run with valgrind
 valgrind: $(TARGET)
 	@printf "$(CYAN)Running $(NAME) with valgrind...$(RESET)\n"
-	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(TARGET)
+	@valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=sub.sub ./$(TARGET)
 
 # Clean object files
 clean:

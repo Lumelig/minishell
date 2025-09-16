@@ -12,7 +12,7 @@ void	handle_redirections(t_cmd_node *curr)
 			if (file->redir_type == TOKEN_REDIR_IN)
 				handle_input(file->filename);
 			else if (file->redir_type == TOKEN_HEREDOC)
-				handle_heredoc(file->filename);
+				handle_heredoc(curr->files->head); //
 			else if (file->redir_type == TOKEN_REDIR_OUT)
 				handle_output(file->filename, false);
 			else if (file->redir_type == TOKEN_REDIR_APPEND)
