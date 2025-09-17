@@ -27,11 +27,12 @@ void							wait_children(pid_t *pid, ssize_t count);
 // redirections
 void							handle_input(char *infile);
 void							handle_output(char *outfile, bool append);
-void							handle_heredoc(t_file_node *filehead);
+void							handle_heredoc(t_file_node *file);
 void							handle_redirections(t_cmd_node *curr);
 
 // builtin
-
+void							handle_single_builtin(t_cmd_node *curr,
+									t_env *ms_env, t_cmd_list *cmd_list);
 int								check_builtin(t_cmd_node *curr);
 int								run_builtin(t_cmd_node *curr, t_env *ms_env,
 									t_cmd_list *cmd_list);
