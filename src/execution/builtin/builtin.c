@@ -22,7 +22,7 @@ int	run_builtin(t_cmd_node *curr, t_env *ms_env, t_cmd_list *cmd_list)
 
 int	check_builtin(t_cmd_node *curr)
 {
-	if (!curr || !curr->cmd[0] || !curr->cmd)
+	if (!curr->cmd[0] || !curr->cmd)
 		curr->builtin_type = 0; // no cmd
 	if (ft_strncmp(curr->cmd[0], "pwd", 4) == 0)
 		curr->builtin_type = 1; // 1
@@ -41,4 +41,20 @@ int	check_builtin(t_cmd_node *curr)
 	else
 		curr->builtin_type = 0; // not builtin
 	return (curr->builtin_type);
+}
+
+void	handle_single_builtin(t_cmd_node *curr, t_env *ms_env,
+		t_cmd_list *cmd_list)
+{
+	int	stdin;
+	int	stdout;
+
+	stdin = dup(STDIN_FILENO);
+	stdout = dup(STDOUT_FILENO);
+	handle_redirections(curr);
+	run_builtin(curr, ms_env, cmd_list);
+	dup2(stdin, STDIN_FILENO);
+	dup2(stdout, STDOUT_FILENO);
+	close(stdin);
+	close(stdout);
 }

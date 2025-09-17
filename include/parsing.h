@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:46:17 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/12 17:02:39 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/17 15:47:40 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ typedef struct s_token
 typedef struct s_file_node
 {
 	char				*filename;
+	int					heredocs_total;
+	int					heredoc_index;
 	int					redir_type;
 	struct s_file_node	*next;
 }						t_file_node;
@@ -100,6 +102,8 @@ typedef struct s_quote_state
 /* Core parsing functions */
 t_cmd_list				*parsing(t_env *my_env, t_token *token);
 t_cmd_list				*token_to_cmd(t_token *token);
+void					set_heredoc_index(t_cmd_node *cmd_node,
+							int *heredoc_counter);
 t_token					*tokenize(char *line);
 
 /* Input processing */

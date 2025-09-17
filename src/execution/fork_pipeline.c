@@ -45,7 +45,8 @@ void	handle_child(t_cmd_node *curr, t_cmd_node *prev, t_env *ms_env,
 	// Handle file redirections (can override pipes)
 	// Can override pipe stdin
 	handle_redirections(curr);
-	// close leftover pipes, but which ones?
+	// need to move closing, could close pipes still in need
+	// broken pipes, sigpipes, deadlocks
 	if (prev && prev->p_fd[0] != -1)
 		close(prev->p_fd[0]);
 	if (prev && prev->p_fd[1] != -1)

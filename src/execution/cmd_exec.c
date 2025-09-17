@@ -21,5 +21,6 @@ void	exec_cmd(t_cmd_node *curr, t_env *ms_env)
 	execve(exec_path, curr->cmd, envp);
 	perror("execve: failure in execution");
 	free_envp(envp);
+	free(exec_path);
 	exit(126);
 }

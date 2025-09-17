@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 14:43:36 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/29 13:43:07 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/17 15:51:28 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,7 @@ t_file_node	*create_file_node(char *filename, t_token_type redir_type)
 	node = malloc(sizeof(t_file_node));
 	if (!node)
 		return (NULL);
-	if (redir_type == TOKEN_PIPE)
-		node->filename = ft_strdup("PIPE");
-	else
-		node->filename = ft_strdup(filename);
+	node->filename = ft_strdup(filename);
 	if (!node->filename)
 	{
 		free(node);
@@ -57,4 +54,16 @@ t_file_node	*create_file_node(char *filename, t_token_type redir_type)
 	node->redir_type = redir_type;
 	node->next = NULL;
 	return (node);
+}
+
+void	set_heredoc_index(t_cmd_node *cmd_node, int *heredoc_counter)
+{
+	t_file_node	*file;
+
+	file = cmd_node->files->head;
+	while (file)
+	{
+		file->heredocs_total = (*heredoc_counter);
+		file = file->next;
+	}
 }

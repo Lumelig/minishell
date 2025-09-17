@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:25:46 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/12 17:44:43 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/17 15:51:11 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,22 +66,18 @@ t_token	*add_cmd(t_token *token, t_cmd_node *cmd_node)
 	return (token);
 }
 
-t_token	*add_file_to_node(t_token *token, t_cmd_node *cmd_node)
+t_token	*add_file_to_node(t_token *token, t_cmd_node *cmd_node,
+		int *heredoc_counter)
 {
 	t_file_node	*f_node;
 	char		*filename;
 	t_token		*n_token;
 
 	filename = NULL;
-	// if (token->type == TOKEN_PIPE)
-	// 	n_token = token->next;
-	// else
-	// {
 	if (!token->next || token->next->type != TOKEN_WORD)
 		return (NULL);
 	filename = token->next->value;
 	n_token = token->next->next;
-	// }
 	f_node = create_file_node(filename, token->type);
 	if (!f_node)
 		return (NULL);
@@ -89,32 +85,35 @@ t_token	*add_file_to_node(t_token *token, t_cmd_node *cmd_node)
 		cmd_node->files->head = f_node;
 	else
 		cmd_node->files->tail->next = f_node;
+	if (token->type == TOKEN_HEREDOC)
+		f_node->heredoc_index = ++(*heredoc_counter);
 	return (cmd_node->files->tail = f_node, cmd_node->files->size++, n_token);
 }
 
 t_token	*process_command(t_token *current, t_cmd_node *cmd_node)
 {
+	int	heredoc_counter;
+
 	if (current && current->type == TOKEN_WORD)
 		current = add_cmd(current, cmd_node);
+	heredoc_counter = 0;
 	while (current && current->type != TOKEN_EOF)
 	{
 		if (current->type == TOKEN_REDIR_IN || current->type == TOKEN_REDIR_OUT
 			|| current->type == TOKEN_REDIR_APPEND
 			|| current->type == TOKEN_HEREDOC)
 		{
-			current = add_file_to_node(current, cmd_node);
+			current = add_file_to_node(current, cmd_node, &heredoc_counter);
 		}
 		else if (current->type == TOKEN_PIPE || current->type == TOKEN_END_CMD)
 		{
-			// if (current->type == TOKEN_PIPE)
-			// 	current = add_file_to_node(current, cmd_node);
-			// else
 			current = current->next;
 			break ;
 		}
 		else
 			current = current->next;
 	}
+	set_heredoc_index(cmd_node, &heredoc_counter);
 	return (current);
 }
 
