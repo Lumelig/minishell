@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/18 16:46:02 by mring             #+#    #+#             */
+/*   Updated: 2025/09/18 19:02:39 by mring            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	update_oldpwd(t_env *ms_env)
@@ -8,11 +20,13 @@ static void	update_oldpwd(t_env *ms_env)
 	if (!old_pwd)
 		return ;
 	if (!env_key_update(ms_env, "OLDPWD", old_pwd))
+	{
 		if (!insert_env_node(ft_strdup("OLDPWD"), old_pwd, ms_env))
 		{
 			free(old_pwd);
 			printf("failed to insert oldpwd\n");
 		}
+	}
 }
 
 static void	update_pwd(t_env *ms_env)
@@ -23,11 +37,13 @@ static void	update_pwd(t_env *ms_env)
 	if (!new_pwd)
 		return ;
 	if (!env_key_update(ms_env, "PWD", new_pwd))
+	{
 		if (!insert_env_node(ft_strdup("PWD"), new_pwd, ms_env))
 		{
 			free(new_pwd);
 			printf("cd: failed to update PWD\n");
 		}
+	}
 }
 
 static char	*get_target_directory(t_cmd_node *curr, t_env *ms_env)
@@ -46,7 +62,6 @@ static char	*get_target_directory(t_cmd_node *curr, t_env *ms_env)
 	}
 	return (curr->cmd[1]);
 }
-
 
 void	cd_builtin(t_cmd_node *curr, t_env *ms_env)
 {

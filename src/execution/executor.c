@@ -1,17 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/18 16:47:11 by mring             #+#    #+#             */
+/*   Updated: 2025/09/18 21:51:55 by mring            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-// void		debug_print_cmd_list(t_cmd_list *cmd_list, const char *location);
+extern volatile sig_atomic_t	g_sigint_received;
 
 static void	forking(t_cmd_node *curr, t_cmd_node *prev, t_env *ms_env,
-		pid_t *pid, ssize_t *child_count, t_cmd_list *cmd_list)
+		t_cmd_list *cmd_list)
 {
-	pid[*child_count] = fork();
-	if (pid[*child_count] == 0)
+	cmd_list->pids[cmd_list->child_count] = fork();
+	if (cmd_list->pids[cmd_list->child_count] == 0)
 		handle_child(curr, prev, ms_env, cmd_list);
-	else if (pid[*child_count] > 0)
+	else if (cmd_list->pids[cmd_list->child_count] > 0)
 	{
 		handle_parent(curr, prev);
-		(*child_count)++;
+		cmd_list->child_count++;
 	}
 	else
 	{
@@ -20,6 +32,7 @@ static void	forking(t_cmd_node *curr, t_cmd_node *prev, t_env *ms_env,
 	}
 }
 
+// TODO: proper exit, returns but continues exec
 static void	create_pipes(t_cmd_node *curr)
 {
 	if (curr->next != NULL)
@@ -28,55 +41,46 @@ static void	create_pipes(t_cmd_node *curr)
 		{
 			perror("pipe failed");
 			*exit_code() = 1;
-			return ; // TODO: proper exit, returns but continues exec
+			return ;
 		}
 	}
 }
 
 static int	cmd_check(t_cmd_list *cmd_list)
 {
-	if (!cmd_list)
+	t_cmd_node	*curr;
+
+	if (!cmd_list || !cmd_list->head)
 	{
 		*exit_code() = 1;
 		printf("NULL cmd_list\n");
 		return (true);
 	}
-	if (!cmd_list->head)
+	curr = cmd_list->head;
+	while (curr)
 	{
-		*exit_code() = 1;
-		printf("no cmd_list\n");
-		return (true);
-	}
-	if (!cmd_list->head->cmd)
-	{
-		*exit_code() = 1;
-		printf("NULL cmd\n");
-		return (true);
-	}
-	if (!cmd_list->head->cmd[0])
-	{
-		*exit_code() = 1;
-		printf("empty cmd\n");
-		return (true);
+		if (!curr->cmd && curr->files && curr->files->size > 0)
+		{
+			curr = curr->next;
+			continue ;
+		}
+		if (!curr->cmd || !curr->cmd[0])
+		{
+			*exit_code() = 1;
+			printf("empty command\n");
+			return (true);
+		}
+		curr = curr->next;
 	}
 	return (false);
 }
 
-// could add pid to cmd_node struct and adjust forking & wait_children.
-// same with child_count
-// or cmd_list into cmd_node for reference (cleanup and freeing in exit)
-void	executor(t_cmd_list *cmd_list, t_env *ms_env)
+static void	executor_loop(t_cmd_list *cmd_list, t_env *ms_env)
 {
 	t_cmd_node	*curr;
 	t_cmd_node	*prev;
-	pid_t		pid[cmd_list->size];
-	ssize_t		child_count;
 
-	if (cmd_check(cmd_list))
-		return ;
-	// debug_print_cmd_list(cmd_list, "executor");
 	curr = cmd_list->head;
-	child_count = 0;
 	prev = NULL;
 	while (curr)
 	{
@@ -84,125 +88,31 @@ void	executor(t_cmd_list *cmd_list, t_env *ms_env)
 		if (cmd_list->size == 1 && check_builtin(curr))
 			handle_single_builtin(curr, ms_env, cmd_list);
 		else
-			forking(curr, prev, ms_env, pid, &child_count, cmd_list);
+			forking(curr, prev, ms_env, cmd_list);
 		prev = curr;
 		curr = curr->next;
 	}
-	wait_children(pid, child_count);
-	return ;
 }
 
-// debug
-
-// void	debug_print_cmd_list(t_cmd_list *cmd_list, const char *location)
-// {
-// 	t_cmd_node *cmd;
-// 	t_file_node *file;
-// 	int cmd_index = 0;
-// 	int file_index;
-
-// 	printf("\n=== DEBUG: %s ===\n", location ? location : "UNKNOWN_LOCATION");
-
-// 	if (!cmd_list)
-// 	{
-// 		printf("ERROR: cmd_list is NULL\n=== END DEBUG ===\n\n");
-// 		return ;
-// 	}
-
-// 	printf("cmd_list->size: %ld\n", cmd_list->size);
-
-// 	if (!cmd_list->head)
-// 	{
-// 		printf("ERROR: cmd_list->head is NULL\n=== END DEBUG ===\n\n");
-// 		return ;
-// 	}
-
-// 	cmd = cmd_list->head;
-// 	while (cmd)
-// 	{
-// 		printf("Command %d:\n", cmd_index);
-
-// 		if (!cmd)
-// 		{
-// 			printf("ERROR: cmd node is NULL at index %d\n", cmd_index);
-// 			break ;
-// 		}
-
-// 		if (cmd->cmd)
-// 		{
-// 			printf("  cmd: [");
-// 			for (int i = 0; cmd->cmd[i]; i++)
-// 			{
-// 				if (cmd->cmd[i])
-// 				{
-// 					printf("\"%s\"", cmd->cmd[i]);
-// 					if (cmd->cmd[i + 1])
-// 						printf(", ");
-// 				}
-// 				else
-// 				{
-// 					printf("NULL_ARG");
-// 				}
-// 			}
-// 			printf("]\n");
-// 		}
-// 		else
-// 		{
-// 			printf("  cmd: NULL\n");
-// 		}
-
-// 		printf("  builtin_type: %d\n", cmd->builtin_type);
-
-// 		if (cmd->files)
-// 		{
-// 			printf("  files->size: %ld\n", cmd->files->size);
-
-// 			if (cmd->files->head)
-// 			{
-// 				file = cmd->files->head;
-// 				file_index = 0;
-// 				while (file)
-// 				{
-// 					if (!file)
-// 					{
-// 						printf("ERROR: file node is NULL at index %d\n",
-// 							file_index);
-// 						break ;
-// 					}
-// 					printf("    file[%d]: \"%s\" type=%d heredoc_idx=%d heredoc_total=%d\n",
-// 						file_index,
-// 						file->filename ? file->filename : "NULL_FILENAME",
-// 						file->redir_type, file->heredoc_index,
-// 						file->heredocs_total);
-// 					file = file->next;
-// 					file_index++;
-
-// 					if (file_index > 100)
-// 					{
-// 						printf("ERROR: Infinite loop detected in file list\n");
-// 						break ;
-// 					}
-// 				}
-// 			}
-// 			else
-// 			{
-// 				printf("  files->head: NULL\n");
-// 			}
-// 		}
-// 		else
-// 		{
-// 			printf("  files: NULL\n");
-// 		}
-
-// 		printf("\n");
-// 		cmd = cmd->next;
-// 		cmd_index++;
-
-// 		if (cmd_index > 100)
-// 		{
-// 			printf("ERROR: Infinite loop detected in cmd list\n");
-// 			break ;
-// 		}
-// 	}
-// 	printf("=== END DEBUG ===\n\n");
-// }
+void	executor(t_cmd_list *cmd_list, t_env *ms_env)
+{
+	if (cmd_check(cmd_list))
+		return ;
+	cmd_list->child_count = 0;
+	cmd_list->pids = malloc(sizeof(pid_t) * cmd_list->size);
+	if (!cmd_list->pids)
+	{
+		*exit_code() = 1;
+		return ;
+	}
+	preprocess_heredocs(cmd_list);
+	if (g_sigint_received)
+	{
+		g_sigint_received = 0;
+		*exit_code() = 130;
+		return ;
+	}
+	executor_loop(cmd_list, ms_env);
+	cleanup_unused_heredocs(cmd_list);
+	wait_children(cmd_list);
+}

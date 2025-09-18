@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:46:17 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/17 15:47:40 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/18 21:28:00 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,10 @@ typedef struct s_token
 typedef struct s_file_node
 {
 	char				*filename;
+
 	int					heredocs_total;
 	int					heredoc_index;
+	int					heredoc_fd;
 	int					redir_type;
 	struct s_file_node	*next;
 }						t_file_node;
@@ -79,6 +81,7 @@ typedef struct s_cmd_node
 {
 	int					p_fd[2];
 	int					builtin_type;
+
 	char				**cmd;
 	t_file_list			*files;
 	struct s_cmd_node	*next;
@@ -86,6 +89,8 @@ typedef struct s_cmd_node
 
 typedef struct s_cmd_list
 {
+	ssize_t				child_count;
+	pid_t				*pids;
 	t_cmd_node			*head;
 	t_cmd_node			*tail;
 	ssize_t				size;

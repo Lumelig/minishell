@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:41:52 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/17 19:44:25 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/18 20:59:42 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,19 @@ volatile sig_atomic_t	g_sigint_received = 0;
 // rl_on_new_line();       Tell readline we're on new line
 // rl_replace_line("", 0); Clear current input line
 // rl_redisplay();         Refresh prompt display
-void	set_siginit(int signum)
+// void	set_sigint(int signum)
+// {
+//     (void)signum;
+//     g_sigint_received++;
+//     write(STDOUT_FILENO, "\n", 1);
+//     rl_on_new_line();
+//     rl_replace_line("", 0);
+//     *exit_code() = 130;
+// }
+void	set_sigint(int signum)
 {
-
 	(void)signum;
-    write(STDOUT_FILENO, "\n", 1);
+	write(STDOUT_FILENO, "\n", 1);
 	if (g_sigint_received == 0)
 	{
 		rl_on_new_line();
@@ -34,9 +42,17 @@ void	set_siginit(int signum)
 	else if (g_sigint_received == 1)
 	{
 		g_sigint_received = 2;
-
 		rl_done = 1;
 	}
+	*exit_code() = 130;
+}
+
+void	set_sigint_heredoc(int signum)
+{
+	(void)signum;
+	g_sigint_received = 1;
+	rl_done = 1;
+	write(STDOUT_FILENO, "\n", 1);
 	*exit_code() = 130;
 }
 
@@ -70,10 +86,20 @@ void	setup_signal_handlers(void)
 	sig_quit.sa_flags = SA_RESTART;
 	sig_tstp.sa_handler = SIG_IGN;
 	sig_tstp.sa_flags = SA_RESTART;
-	sig_int.sa_handler = set_siginit;
+	sig_int.sa_handler = set_sigint;
 	sig_int.sa_flags = SA_RESTART;
 	sigaction(SIGQUIT, &sig_quit, NULL);
 	sigaction(SIGINT, &sig_int, NULL);
 	sigaction(SIGTSTP, &sig_tstp, NULL);
 	disable_ctrlc_print();
+}
+
+void	setup_heredoc_signals(void)
+{
+	struct sigaction	sig_int;
+
+	sigemptyset(&sig_int.sa_mask);
+	sig_int.sa_handler = set_sigint_heredoc;
+	sig_int.sa_flags = 0;
+	sigaction(SIGINT, &sig_int, NULL);
 }
