@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:41:52 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/23 13:43:27 by jenne            ###   ########.fr       */
+/*   Updated: 2025/09/17 19:44:25 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,21 @@ volatile sig_atomic_t	g_sigint_received = 0;
 // rl_redisplay();         Refresh prompt display
 void	set_siginit(int signum)
 {
+
 	(void)signum;
-	g_sigint_received = 1;
-	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+    write(STDOUT_FILENO, "\n", 1);
+	if (g_sigint_received == 0)
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	else if (g_sigint_received == 1)
+	{
+		g_sigint_received = 2;
+
+		rl_done = 1;
+	}
 	*exit_code() = 130;
 }
 

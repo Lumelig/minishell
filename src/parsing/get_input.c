@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_input.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/09/01 20:53:57 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/13 20:18:55 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern volatile sig_atomic_t	g_sigint_received;
 
 static char	*handle_continuation_line(char *complete_input, int quote_status)
 {
@@ -18,9 +20,19 @@ static char	*handle_continuation_line(char *complete_input, int quote_status)
 	char	*temp;
 	char	*input_temp;
 
+	g_sigint_received = 1;
 	line = readline(get_continuation_prompt(quote_status));
 	if (!line)
-		return (complete_input);
+	{
+		free(complete_input);
+		return (NULL);
+	}
+	if (g_sigint_received == 2)
+	{
+		free(complete_input);
+		free(line);
+		return (NULL);
+	}
 	input_temp = ft_strjoin_char(complete_input, '\n');
 	temp = ft_strjoin(input_temp, line);
 	free(input_temp);

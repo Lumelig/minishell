@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:17:15 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/09 15:59:23 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/13 16:58:43 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct s_env // Controling struct for env
 /* Global functions */
 int				*exit_code(void);
 void			setup_signal_handlers(void);
+char			*get_prompt_name(void);
 
 /* Environment management functions */
 bool			add_env_var(t_env *env, char *key, char *value);

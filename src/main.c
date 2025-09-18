@@ -6,16 +6,19 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/08/28 18:47:48 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/13 20:20:41 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+extern volatile sig_atomic_t	g_sigint_received;
+
 bool	empty_input(char *input)
 {
 	int	i;
 
+	g_sigint_received = 0;
 	if (!input)
 		return (true);
 	i = 0;
@@ -65,7 +68,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 	while (1)
 	{
 		input = get_input(is_interactive);
-		if (!input)
+		if (!input && g_sigint_received != 2)
 		{
 			if (is_interactive)
 				printf("exit\n");
