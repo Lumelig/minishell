@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/18 22:00:09 by mring             #+#    #+#             */
+/*   Updated: 2025/09/18 22:00:17 by mring            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef EXECUTION_H
 # define EXECUTION_H
 
@@ -14,7 +26,6 @@ typedef struct s_env			t_env;
 void							executor(t_cmd_list *cmd_list, t_env *ms_env);
 void							exec_cmd(t_cmd_node *curr, t_env *ms_env);
 char							*get_exec_path(t_cmd_node *curr, t_env *ms_env);
-char							**env_convert(t_env *ms_env);
 void							free_envp(char **envp);
 
 // fork pipeline
@@ -22,7 +33,7 @@ void							handle_parent(t_cmd_node *curr,
 									t_cmd_node *prev);
 void							handle_child(t_cmd_node *curr, t_cmd_node *prev,
 									t_env *ms_env, t_cmd_list *cmd_list);
-void							wait_children(pid_t *pid, ssize_t count);
+void							wait_children(t_cmd_list *cmd_list);
 
 // redirections
 void							handle_input(char *infile);
@@ -50,6 +61,8 @@ void							cd_builtin(t_cmd_node *curr, t_env *ms_env);
 void							unset_builtin(t_cmd_node *curr, t_env *ms_env);
 
 // here_doc
-//
+
+void							preprocess_heredocs(t_cmd_list *cmd_list);
+void							cleanup_unused_heredocs(t_cmd_list *cmd_list);
 
 #endif

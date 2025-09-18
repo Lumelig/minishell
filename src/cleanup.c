@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:31:27 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/29 13:16:29 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/18 21:56:39 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,5 +85,31 @@ void	clean_cmd_list(t_cmd_list *cmd_list)
 		free_cmd_node(cmd_node);
 		cmd_node = cmd_next;
 	}
+	free(cmd_list->pids);
 	free(cmd_list);
+}
+
+void	cleanup_unused_heredocs(t_cmd_list *cmd_list)
+{
+	t_cmd_node	*curr;
+	t_file_node	*file;
+
+	curr = cmd_list->head;
+	while (curr)
+	{
+		if (curr->files && curr->files->head)
+		{
+			file = curr->files->head;
+			while (file)
+			{
+				if (file->redir_type == TOKEN_HEREDOC && file->heredoc_fd != -1)
+				{
+					close(file->heredoc_fd);
+					file->heredoc_fd = -1;
+				}
+				file = file->next;
+			}
+		}
+		curr = curr->next;
+	}
 }
