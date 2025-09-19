@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:45:46 by mring             #+#    #+#             */
-/*   Updated: 2025/09/18 16:45:54 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/19 15:24:28 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	exit_builtin(t_cmd_node *curr, t_env *ms_env, t_cmd_list *cmd_list)
 {
 	if (curr->cmd[1])
 	{
+		// TODO: exit code handling
 		printf("exit: too many arguments\n");
 		return ;
 	}
