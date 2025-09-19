@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:46:02 by mring             #+#    #+#             */
-/*   Updated: 2025/09/18 19:02:39 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/19 15:22:40 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	cd_builtin(t_cmd_node *curr, t_env *ms_env)
 		return ;
 	if (chdir(target_dir) != 0)
 	{
+		// TODO: exit code
 		perror("cd");
 		return ;
 	}
