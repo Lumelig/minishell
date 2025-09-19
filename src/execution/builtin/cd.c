@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:46:02 by mring             #+#    #+#             */
-/*   Updated: 2025/09/19 16:04:06 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/19 18:45:27 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	update_oldpwd(t_env *ms_env)
 		if (!insert_env_node(ft_strdup("OLDPWD"), old_pwd, ms_env))
 		{
 			free(old_pwd);
-			printf("failed to insert oldpwd\n");
+			write(STDERR_FILENO, "failed to insert oldpwd\n", 24);
 		}
 	}
 }
@@ -41,7 +41,7 @@ static void	update_pwd(t_env *ms_env)
 		if (!insert_env_node(ft_strdup("PWD"), new_pwd, ms_env))
 		{
 			free(new_pwd);
-			printf("cd: failed to update PWD\n");
+			write(STDERR_FILENO, "cd: failed to update PWD\n", 25);
 		}
 	}
 }
@@ -55,7 +55,7 @@ static char	*get_target_directory(t_cmd_node *curr, t_env *ms_env)
 		dir = get_env_value(ms_env, "HOME");
 		if (!dir)
 		{
-			printf("cd: HOME not set\n");
+			write(STDERR_FILENO, "cd: HOME not set\n", 17);
 			return (NULL);
 		}
 		return (dir);

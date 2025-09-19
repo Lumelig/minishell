@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_input.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 10:00:00 by user              #+#    #+#             */
-/*   Updated: 2025/09/13 20:18:55 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/19 19:50:45 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char	*get_prompt_name(void)
 		return (NULL);
 	}
 	ft_strcpy(result, pwd + i);
-	res = ft_strjoin(result, " \033[1;32m>\033[0m ");
+	res = ft_strjoin(result, " \001\033[1;32m\002>\001\033[0m\002 ");
 	return (free(pwd), free(result), res);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:30:11 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/28 15:27:53 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/19 19:50:42 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ static char	*get_token(t_token_type type)
 
 static void	print_syntax_error(char *token_str)
 {
-	printf("minishell: syntax error near unexpected token %s\n", token_str);
+	write(STDERR_FILENO, "minishell: syntax error near unexpected token ", 46);
+	write(STDERR_FILENO, token_str, ft_strlen(token_str));
+	write(STDERR_FILENO, "\n", 1);
 }
 
 bool	syntax_validation(t_token *token)
