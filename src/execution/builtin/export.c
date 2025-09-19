@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 12:45:26 by mring             #+#    #+#             */
-/*   Updated: 2025/08/12 11:06:31 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/19 15:26:58 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,8 @@ void	export_builtin(t_cmd_node *curr, t_env *ms_env)
 	{
 		if (!parse_export_args(curr->cmd[i], ms_env))
 		{
-			printf("export: '%s': not a valid identifier\n", curr->cmd[i]);
+			*exit_code() = 1;
+			write(STDERR_FILENO, " not a valid identifier\n", 24);
 		}
 		i++;
 	}
