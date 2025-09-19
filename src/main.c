@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/19 16:54:34 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/19 17:19:39 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ static void	cleanup(t_token *token, char *input)
 static char	*get_input(int is_interactive)
 {
 	char	*input;
-	char *trimmed;
-	
+	char	*trimmed;
+
 	if (is_interactive)
 	{
 		input = get_complete_input();
@@ -60,7 +60,7 @@ static char	*get_input(int is_interactive)
 		free(input);
 		input = trimmed;
 		// if (input && input[ft_strlen(input) - 1] == '\n')
-			// input[ft_strlen(input) - 1] = '\0';
+		// input[ft_strlen(input) - 1] = '\0';
 	}
 	return (input);
 }
@@ -78,7 +78,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		if (!input && g_sigint_received != 2)
 		{
 			// if (is_interactive)
-				// printf("exit\n");
+			// printf("exit\n");
 			break ;
 		}
 		if (empty_input(input))
