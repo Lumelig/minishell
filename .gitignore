@@ -1,5 +1,5 @@
 libft/
-bin/
+minishell
 .vscode
 *.pdf
 obj/
@@ -7,4 +7,3 @@ obj/
 *.sub
 vgcore*
 *.txt
-minishell_tester

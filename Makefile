@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+         #
+#    By: jpflegha <jpflegha@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/07 19:22:52 by jpflegha          #+#    #+#              #
-#    Updated: 2025/09/17 17:45:46 by mring            ###   ########.fr        #
+#    Updated: 2025/09/19 17:14:26 by jpflegha         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,11 +33,10 @@ BOLD		= \033[1m
 # Directories
 SRC_DIR		= src
 OBJ_DIR		= obj
-BIN_DIR		= bin
 LIBFT_DIR	= libft
 
 # Target executable
-TARGET		= $(BIN_DIR)/$(NAME)
+TARGET		= $(NAME)
 
 # Source files
 SRC_FILES = main.c \
@@ -129,7 +128,6 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 # Link final executable
 $(TARGET): $(OBJ) $(LIBFT)
 	@printf "$(MAGENTA)Linking $(NAME)...$(RESET)\n"
-	@mkdir -p $(BIN_DIR)
 	@$(CC) $(CFLAGS) -o $@ $(OBJ) $(LIBFT) $(LIBS)
 	@printf "$(GREEN)$(BOLD)✓ $(NAME) built successfully!$(RESET)\n"
 
@@ -137,6 +135,19 @@ $(TARGET): $(OBJ) $(LIBFT)
 run: $(TARGET)
 	@printf "$(CYAN)Running $(NAME)...$(RESET)\n"
 	@./$(TARGET)
+
+# install the minishell tester
+tester:
+	@printf "$(CYAN)Installing minishell tester...$(RESET)\n"
+	@curl -fsSL https://raw.githubusercontent.com/zstenger93/42_minishell_tester/master/install.sh -o installer.sh
+	@if [ -f installer.sh ]; then \
+		printf "$(CYAN)Setting permissions and running installer...$(RESET)\n"; \
+		chmod +x installer.sh; \
+		echo "exit" | ./installer.sh; \
+		printf "$(CYAN)Sourcing ~/.zshrc...$(RESET)\n"; \
+		zsh -c "source ~/.zshrc"; \
+	fi
+	@printf "$(GREEN)Tester installation complete!$(RESET)\n"
 
 # Run with valgrind
 valgrind: $(TARGET)
@@ -153,7 +164,7 @@ clean:
 # Clean everything
 fclean:
 	@printf "$(YELLOW)Cleaning everything...$(RESET)\n"
-	@rm -rf $(OBJ_DIR) $(BIN_DIR)
+	@rm -rf $(OBJ_DIR)
 	@$(MAKE) -C $(LIBFT_DIR) fclean --no-print-directory
 	@printf "$(GREEN)Everything cleaned!$(RESET)\n"
 

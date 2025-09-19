@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/19 15:36:21 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/19 16:54:34 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,22 +42,28 @@ static void	cleanup(t_token *token, char *input)
 	free(input);
 }
 
-// static char	*get_input(int is_interactive)
-// {
-// 	char	*input;
-
-// 	if (is_interactive)
-// 	{
-// 		input = get_complete_input();
-// 	}
-// 	else
-// 	{
-// 		input = get_next_line(STDIN_FILENO);
-// 		if (input && input[ft_strlen(input) - 1] == '\n')
-// 			input[ft_strlen(input) - 1] = '\0';
-// 	}
-// 	return (input);
-// }
+static char	*get_input(int is_interactive)
+{
+	char	*input;
+	char *trimmed;
+	
+	if (is_interactive)
+	{
+		input = get_complete_input();
+	}
+	else
+	{
+		input = get_next_line(STDIN_FILENO);
+		if (!input)
+			return (NULL);
+		trimmed = ft_strtrim(input, "\n");
+		free(input);
+		input = trimmed;
+		// if (input && input[ft_strlen(input) - 1] == '\n')
+			// input[ft_strlen(input) - 1] = '\0';
+	}
+	return (input);
+}
 
 static void	shell_loop(t_env *my_env, int is_interactive)
 {
@@ -67,12 +73,12 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 
 	while (1)
 	{
-		// input = get_input(is_interactive);
-		input = get_complete_input();
+		input = get_input(is_interactive);
+		// input = get_complete_input();
 		if (!input && g_sigint_received != 2)
 		{
-			if (is_interactive)
-				printf("exit\n");
+			// if (is_interactive)
+				// printf("exit\n");
 			break ;
 		}
 		if (empty_input(input))
