@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 12:45:26 by mring             #+#    #+#             */
-/*   Updated: 2025/08/12 11:06:31 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/19 15:32:40 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ void	export_builtin(t_cmd_node *curr, t_env *ms_env)
 	{
 		if (!parse_export_args(curr->cmd[i], ms_env))
 		{
+			// TODO: exitcode to 1, stdout_error
 			printf("export: '%s': not a valid identifier\n", curr->cmd[i]);
 		}
 		i++;
