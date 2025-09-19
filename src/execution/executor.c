@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:47:11 by mring             #+#    #+#             */
-/*   Updated: 2025/09/18 21:51:55 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/19 18:06:54 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static int	cmd_check(t_cmd_list *cmd_list)
 	if (!cmd_list || !cmd_list->head)
 	{
 		*exit_code() = 1;
-		printf("NULL cmd_list\n");
+		write(STDERR_FILENO, "NULL cmd_list\n", 14);
 		return (true);
 	}
 	curr = cmd_list->head;
@@ -67,7 +67,7 @@ static int	cmd_check(t_cmd_list *cmd_list)
 		if (!curr->cmd || !curr->cmd[0])
 		{
 			*exit_code() = 1;
-			printf("empty command\n");
+			write(STDERR_FILENO, "empty command\n", 14);
 			return (true);
 		}
 		curr = curr->next;

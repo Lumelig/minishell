@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 12:44:38 by mring             #+#    #+#             */
-/*   Updated: 2025/08/12 12:47:20 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/19 18:24:35 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	pwd_builtin(void)
 		perror("pwd");
 		return ;
 	}
-	printf("%s\n", cwd);
+	write(STDOUT_FILENO, cwd, ft_strlen(cwd));
+	write(STDOUT_FILENO, "\n", 1);
 	free(cwd);
 }

@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/19 17:19:39 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/19 19:50:36 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		if (!input && g_sigint_received != 2)
 		{
 			// if (is_interactive)
-			// printf("exit\n");
+			// ft_printf("exit\n");
 			break ;
 		}
 		if (empty_input(input))
@@ -89,8 +89,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		token = tokenize(input);
 		cmd_list = parsing(my_env, token);
 		cleanup(token, input);
-		if (*exit_code() == 0)
-			executor(cmd_list, my_env);
+		executor(cmd_list, my_env);
 		clean_cmd_list(cmd_list);
 	}
 }
@@ -107,5 +106,5 @@ int	main(int argc, char **argv, char **env)
 	shell_loop(&my_env, is_interactive);
 	free_environment(&my_env);
 	rl_clear_history();
-	return (0);
+	return (*exit_code()); // need to find a fix for this
 }

@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:45:46 by mring             #+#    #+#             */
-/*   Updated: 2025/09/19 16:05:34 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/19 19:48:23 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,15 @@ static void	cleanup_and_exit(t_cmd_list *cmd_list, t_env *ms_env, int code)
 	exit(code);
 }
 
-// cleanup_and_exit - double check for double free
 void	exit_builtin(t_cmd_node *curr, t_env *ms_env, t_cmd_list *cmd_list)
 {
-	if (curr->cmd[2])
+	if (curr->cmd[1] && curr->cmd[2])
 	{
+		write(STDOUT_FILENO, "exit\n", 5);
 		write(STDERR_FILENO, "exit: too many arguments\n", 25);
 		*exit_code() = 1;
+		if (!isatty(STDIN_FILENO))
+			exit(1);
 		return ;
 	}
 	if (curr->cmd[1])
