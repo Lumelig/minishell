@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:47:43 by mring             #+#    #+#             */
-/*   Updated: 2025/09/18 21:56:11 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/19 19:50:33 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ static int	create_heredoc_tempfile(char *delimiter)
 	static int	hd_counter = 0;
 
 	conv_c = ft_itoa(hd_counter++);
-	printf("hd_name: %s\n", conv_c);
 	filename = ft_strjoin("/tmp/heredoc_", conv_c);
 	hd_fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0600);
 	check_fd(hd_fd);

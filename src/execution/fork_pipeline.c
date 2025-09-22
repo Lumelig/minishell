@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:44:21 by mring             #+#    #+#             */
-/*   Updated: 2025/09/18 21:56:22 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/19 19:50:24 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,17 @@ void	wait_children(t_cmd_list *cmd_list)
 {
 	int		status;
 	ssize_t	i;
-	int		last_exit_code;
 
 	i = 0;
-	last_exit_code = 0;
 	while (i < cmd_list->child_count)
 	{
 		waitpid(cmd_list->pids[i], &status, 0);
 		if (WIFEXITED(status))
-			last_exit_code = WEXITSTATUS(status);
+			*exit_code() = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-			last_exit_code = 128 + WTERMSIG(status);
+			*exit_code() = 128 + WTERMSIG(status);
 		i++;
 	}
-	*exit_code() = last_exit_code;
 }
 
 static void	child_helper(t_cmd_node *curr, t_cmd_node *prev)
