@@ -1,8 +1,9 @@
 minishell
 .vscode
 *.pdf
-obj/
+**/obj/
 *workspace
 *.sub
 vgcore*
 *.txt
+**/*.a

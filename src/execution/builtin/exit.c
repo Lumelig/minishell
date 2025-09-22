@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:45:46 by mring             #+#    #+#             */
-/*   Updated: 2025/09/19 19:48:23 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/20 17:35:25 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,14 @@ void	exit_builtin(t_cmd_node *curr, t_env *ms_env, t_cmd_list *cmd_list)
 {
 	if (curr->cmd[1] && curr->cmd[2])
 	{
-		write(STDOUT_FILENO, "exit\n", 5);
 		write(STDERR_FILENO, "exit: too many arguments\n", 25);
 		*exit_code() = 1;
 		if (!isatty(STDIN_FILENO))
+		{
+			if (!is_numeric(curr->cmd[1]))
+				exit(2);
 			exit(1);
+		}
 		return ;
 	}
 	if (curr->cmd[1])
