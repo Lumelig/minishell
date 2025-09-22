@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:30:11 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/28 15:27:53 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/22 13:55:46 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,11 @@ bool	syntax_validation(t_token *token)
 	return (true);
 }
 
-t_cmd_list	*parsing(t_env *my_env, t_token *token)
+t_cmd_list	*parsing(t_token *token)
 {
 	t_cmd_list	*cmd_list;
 
 	cmd_list = NULL;
-	expand_tokens(token, my_env->head, my_env);
 	if (!syntax_validation(token))
 		*exit_code() = 2;
 	else
