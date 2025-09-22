@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 12:45:11 by mring             #+#    #+#             */
-/*   Updated: 2025/08/12 08:47:42 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/19 18:28:09 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@ void	echo_builtin(t_cmd_node *curr)
 	newline_flag = process_flags(curr, &i);
 	while (curr->cmd[i])
 	{
-		printf("%s", curr->cmd[i]);
+		write(STDOUT_FILENO, curr->cmd[i], ft_strlen(curr->cmd[i]));
 		if (curr->cmd[i + 1])
-			printf(" ");
+			write(STDOUT_FILENO, " ", 1);
 		i++;
 	}
 	if (newline_flag == 1)
-		printf("\n");
+		write(STDOUT_FILENO, "\n", 1);
 }

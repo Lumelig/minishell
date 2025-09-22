@@ -5,9 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/18 01:30:11 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/22 13:55:46 by jenne            ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/09/22 14:40:24 by jenne            ###   ########.fr       */
 /*                                                                            */
+/* ************************************************************************** */
+
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -36,7 +38,9 @@ static char	*get_token(t_token_type type)
 
 static void	print_syntax_error(char *token_str)
 {
-	printf("minishell: syntax error near unexpected token %s\n", token_str);
+	write(STDERR_FILENO, "minishell: syntax error near unexpected token ", 46);
+	write(STDERR_FILENO, token_str, ft_strlen(token_str));
+	write(STDERR_FILENO, "\n", 1);
 }
 
 bool	syntax_validation(t_token *token)

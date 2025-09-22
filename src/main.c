@@ -6,7 +6,7 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/22 13:56:28 by jenne            ###   ########.fr       */
+/*   Updated: 2025/09/22 14:37:10 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ static void	cleanup(t_token *token, char *input)
 static char	*get_input(int is_interactive)
 {
 	char	*input;
-	char *trimmed;
-	
+	char	*trimmed;
+
 	if (is_interactive)
 	{
 		input = get_complete_input();
@@ -60,7 +60,7 @@ static char	*get_input(int is_interactive)
 		free(input);
 		input = trimmed;
 		// if (input && input[ft_strlen(input) - 1] == '\n')
-			// input[ft_strlen(input) - 1] = '\0';
+		// input[ft_strlen(input) - 1] = '\0';
 	}
 	return (input);
 }
@@ -78,7 +78,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		if (!input && g_sigint_received != 2)
 		{
 			// if (is_interactive)
-				// printf("exit\n");
+			// ft_printf("exit\n");
 			break ;
 		}
 		if (empty_input(input))
@@ -90,8 +90,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		token = tokenize(input);
 		cmd_list = parsing(token);
 		cleanup(token, input);
-		if (*exit_code() == 0)
-			executor(cmd_list, my_env);
+		executor(cmd_list, my_env);
 		clean_cmd_list(cmd_list);
 	}
 }
@@ -108,5 +107,5 @@ int	main(int argc, char **argv, char **env)
 	shell_loop(&my_env, is_interactive);
 	free_environment(&my_env);
 	rl_clear_history();
-	return (0);
+	return (*exit_code()); // need to find a fix for this
 }
