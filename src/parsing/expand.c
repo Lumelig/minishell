@@ -6,11 +6,40 @@
 /*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:23:20 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/22 13:52:06 by jenne            ###   ########.fr       */
+/*   Updated: 2025/09/22 14:33:03 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+bool	check_quoting(char *original)
+{
+	t_quote quote_state;
+	int		i;
+
+	i = 0;
+	quote_state = QUOTE_NONE;
+	while (original[i])
+	{
+		if (original[i] == '"')
+		{
+			if (quote_state == QUOTE_DOUBLE)
+				quote_state = QUOTE_NONE;
+			else if (quote_state == QUOTE_NONE)
+				quote_state = QUOTE_DOUBLE;
+		}
+		else if (original[i] == '\'')
+		{
+			if (quote_state == QUOTE_NONE)
+			{
+				if (i == 0 || original[i - 1] != '\\')
+					return true;
+			}
+		}
+		i++;
+	}
+	return false;
+}
 
 static int	handle_variable_size(char *original, int *i, t_env *env,
 		t_envlist *envlist)
@@ -91,6 +120,8 @@ char	*expand_string(char *original, t_envlist *envlist, t_env *env)
 	int		result_size;
 
 	if (!original || !ft_strchr(original, '$'))
+		return (ft_strdup(original));
+	else if (check_quoting(original))
 		return (ft_strdup(original));
 	result_size = calculate_expanded_size(original, env, envlist);
 	result = malloc(result_size);
