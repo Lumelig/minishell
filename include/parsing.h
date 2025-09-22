@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:46:17 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/18 21:28:00 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/22 13:55:25 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ typedef struct s_quote_state
 }						t_quote_state;
 
 /* Core parsing functions */
-t_cmd_list				*parsing(t_env *my_env, t_token *token);
+t_cmd_list				*parsing(t_token *token);
 t_cmd_list				*token_to_cmd(t_token *token);
 void					set_heredoc_index(t_cmd_node *cmd_node,
 							int *heredoc_counter);
@@ -120,8 +120,7 @@ void					process_quote_state(char *line, int *i,
 							t_quote_state *state);
 
 /* Token expansion */
-void					expand_tokens(t_token *token, t_envlist *envlist,
-							t_env *env);
+char					*expand_string(char *original, t_envlist *envlist, t_env *env);
 int						calculate_special_var_size(char *str, int i,
 							t_env *env);
 int						calculate_var_size(char *str, int i, t_envlist *envlist,

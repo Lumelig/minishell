@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:17:15 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/18 22:01:05 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/22 13:55:17 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ t_token					*tokenize(char *line);
 char					*get_complete_input(void);
 t_quote_state			check_line_completion(char *line);
 int						check_quotes_balanced_enhanced(char *line);
-void					expand_tokens(t_token *token, t_envlist *envlist,
-							t_env *env);
 int						copy_special_var(char *result, char *str, int *i,
 							t_env *env);
 int						copy_variable(char *result, char *str, int *i,

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:23:20 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/28 15:15:33 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/22 13:52:06 by jenne            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static void	process_expansion(char *result, char *original, t_envlist *envlist,
 	result[j] = '\0';
 }
 
-char	*expand_token_value(char *original, t_envlist *envlist, t_env *env)
+char	*expand_string(char *original, t_envlist *envlist, t_env *env)
 {
 	char	*result;
 	int		result_size;
@@ -98,25 +98,4 @@ char	*expand_token_value(char *original, t_envlist *envlist, t_env *env)
 		return (NULL);
 	process_expansion(result, original, envlist, env);
 	return (result);
-}
-
-void	expand_tokens(t_token *token, t_envlist *envlist, t_env *env)
-{
-	t_token	*current;
-	char	*expanded;
-
-	current = token;
-	while (current)
-	{
-		if (current->type == TOKEN_WORD && current->qoute != QUOTE_SINGLE)
-		{
-			expanded = expand_token_value(current->value, envlist, env);
-			if (expanded)
-			{
-				free(current->value);
-				current->value = expanded;
-			}
-		}
-		current = current->next;
-	}
 }
