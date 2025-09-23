@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/22 14:37:10 by jenne            ###   ########.fr       */
+/*   Updated: 2025/09/23 18:51:58 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,9 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 	t_cmd_list	*cmd_list;
 	char		*input;
 
+	t_cmd_node *debug_list; // debug
+	int i;                  // debug
+	t_token *debug;         // debug
 	while (1)
 	{
 		input = get_input(is_interactive);
@@ -86,9 +89,40 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 			free(input);
 			continue ;
 		}
-		input	= expand_string(input, my_env->head, my_env);
+		// debug
+		printf("00 debug input string: %s\n", input);
+		// expands if necessary
+		input = expand_string(input, my_env->head, my_env);
+		printf("10 debug input expand: %s\n", input);
+		// tokenize removes quotes
+		// if quote removal handled properly its good
 		token = tokenize(input);
+		// debug
+		debug = token;
+		while (debug)
+		{
+			if (debug->value && debug->value[0] == '\0')
+				printf("20 debug tokens: (space)\n");
+			else
+				printf("20 debug tokens: %s\n", debug->value);
+			debug = debug->next;
+		}
+		// quotes are already removed when moving into parsing
 		cmd_list = parsing(token);
+		// debug
+		// parsing() is expanding.
+		debug_list = cmd_list->head;
+		while (debug_list)
+		{
+			i = 0;
+			while (debug_list->cmd[i])
+			{
+				printf("30 debug list: %s\n", debug_list->cmd[i]);
+				i++;
+			}
+			debug_list = debug_list->next;
+		}
+		//
 		cleanup(token, input);
 		executor(cmd_list, my_env);
 		clean_cmd_list(cmd_list);

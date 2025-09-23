@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:37:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/13 20:09:51 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/23 19:28:40 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ int	is_special_expansion(char *str, int i)
 	if (str[i + 1] == '$' || str[i + 1] == '?' || str[i + 1] == '0')
 		return (1);
 	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$' || str[i
-				+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
+			+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
 		return (1);
 	return (0);
 }
 
-int	copy_special_var(char *result, char *str, int *i, t_env *env)
+char	*copy_special_var(char *result, char *original, int *i, t_env *env)
 {
 	char	*tmp;
 	int		check_pos;
@@ -38,13 +38,13 @@ int	copy_special_var(char *result, char *str, int *i, t_env *env)
 	check_pos = *i + 1;
 	chars_written = 0;
 	tmp = NULL;
-	if (str[check_pos] == '{')
+	if (original[check_pos] == '{')
 		check_pos++;
-	if (str[check_pos] == '$')
+	if (original[check_pos] == '$')
 		tmp = ft_itoa(env->pid);
-	else if (str[check_pos] == '?')
+	else if (original[check_pos] == '?')
 		tmp = ft_itoa(*exit_code());
-	else if (str[check_pos] == '0')
+	else if (original[check_pos] == '0')
 		tmp = ft_strdup("minishell");
 	if (tmp)
 	{
@@ -88,12 +88,14 @@ int	copy_variable(char *result, char *str, int *i, t_envlist *envlist)
 	var_start = *i + 1;
 	if (str[var_start] == '{')
 		var_start++;
+	// get the $variable length and var_end position
 	var_len = get_var_length(str, *i + 1, &var_end);
 	if (var_len <= 0)
 	{
 		*i = var_end;
 		return (0);
 	}
+	//
 	var_value = get_var_value(str, var_start, var_len, envlist);
 	if (var_value)
 	{
