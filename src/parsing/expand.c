@@ -6,11 +6,36 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:23:20 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/24 12:40:30 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/24 14:03:03 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+
+static int	count_preceding_backslashes(char *str, int pos)
+{
+	int count;
+	
+	count = 0;
+	pos--;  // Start from the character before the current position
+	while (pos >= 0 && str[pos] == '\\')
+	{
+		count++;
+		pos--;
+	}
+	return (count);
+}
+
+static int	is_escaped(char *str, int pos)
+{
+	int backslash_count;
+	
+	if (pos == 0)
+		return (0);
+	backslash_count = count_preceding_backslashes(str, pos);
+	return (backslash_count % 2 == 1);  // Odd number of backslashes means escaped
+}
 
 void	check_quoting(char *original, char **join, char **expand, int *i)
 {
@@ -25,7 +50,7 @@ void	check_quoting(char *original, char **join, char **expand, int *i)
 	
 	while (original[*i])
 	{
-		if (original[*i] == '"')
+		if (original[*i] == '"' && !is_escaped(original, *i))
 		{
 			if (quote_state == QUOTE_DOUBLE)
 			{
@@ -36,7 +61,7 @@ void	check_quoting(char *original, char **join, char **expand, int *i)
 				quote_state = QUOTE_DOUBLE;
 			}
 		}
-		else if (original[*i] == '\'')
+		else if (original[*i] == '\'' || is_escaped(original, *i))
 		{
 			if (quote_state == QUOTE_NONE)
 			{
