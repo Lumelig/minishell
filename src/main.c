@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/22 14:37:10 by jenne            ###   ########.fr       */
+/*   Updated: 2025/09/25 18:01:46 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,6 @@ static char	*get_input(int is_interactive)
 		trimmed = ft_strtrim(input, "\n");
 		free(input);
 		input = trimmed;
-		// if (input && input[ft_strlen(input) - 1] == '\n')
-		// input[ft_strlen(input) - 1] = '\0';
 	}
 	return (input);
 }
@@ -74,21 +72,47 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 	while (1)
 	{
 		input = get_input(is_interactive);
-		// input = get_complete_input();
 		if (!input && g_sigint_received != 2)
-		{
-			// if (is_interactive)
-			// ft_printf("exit\n");
 			break ;
-		}
 		if (empty_input(input))
 		{
 			free(input);
 			continue ;
 		}
-		input	= expand_string(input, my_env->head, my_env);
+		// debug
+		// printf("00 debug input string: %s\n", input);
+		// expands if necessary
+		input = expand_string(input, my_env);
+		// printf("10 debug input after expand: %s\n", input);
+		// tokenize removes quotes
+		// if quote removal handled properly its good
 		token = tokenize(input);
+		// debug
+		// debug = token;
+		// while (debug)
+		// {
+		// if (debug->value && debug->value[0] == '\0')
+		// printf("20 debug tokens: (space)\n");
+		// else
+		// printf("20 debug tokens: %s\n", debug->value);
+		// debug = debug->next;
+		// }
+		// quotes are already removed when moving into parsing
 		cmd_list = parsing(token);
+		// debug
+		// parsing() is expanding.
+		// debug_list = cmd_list->head;
+		// while (debug_list)
+		// {
+		// i = 0;
+		// while (debug_list->cmd[i])
+		// 	{
+		// 		printf("30 debug list: %s\n", debug_list->cmd[i]);
+		// 		i++;
+		// 	}
+		// 	debug_list = debug_list->next;
+		// }
+		//
 		cleanup(token, input);
 		executor(cmd_list, my_env);
 		clean_cmd_list(cmd_list);

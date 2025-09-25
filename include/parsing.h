@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:46:17 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/22 13:55:25 by jenne            ###   ########.fr       */
+/*   Updated: 2025/09/25 17:50:38 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,19 +120,18 @@ void					process_quote_state(char *line, int *i,
 							t_quote_state *state);
 
 /* Token expansion */
-char					*expand_string(char *original, t_envlist *envlist, t_env *env);
-int						calculate_special_var_size(char *str, int i,
-							t_env *env);
-int						calculate_var_size(char *str, int i, t_envlist *envlist,
-							t_env *env);
-int						copy_special_var(char *result, char *str, int *i,
-							t_env *env);
-int						copy_variable(char *result, char *str, int *i,
-							t_envlist *envlist);
+char					*expand_string(char *original, t_env *env);
+char					*cpy_str(char *original, char *result, int j, int i);
+char					*copy_special_var(char *old_result, char *original,
+							int *i, t_env *my_env);
+char					*copy_variable(char *old_result, char *original, int *i,
+							t_env *my_env);
 int						get_special_var_skip(char *str, int i);
-int						get_var_length(char *str, int start, int *end_pos);
 int						is_special_expansion(char *str, int i);
-int						is_special_var(char *str, int pos);
+bool					handle_dollar_expand(char *original, char **result,
+							int *i, t_env *my_env);
+void					handle_dollar_copy(char *original, char **result,
+							int *i, t_quote *quote_state);
 
 /* Environment management */
 bool					add_env_var(t_env *env, char *key, char *value);
@@ -157,7 +156,6 @@ void					set_environment(t_env *my_env, char **key, char **value,
 							char *env);
 
 /* Tokenizer functions */
-char					*handle_escape_char(char c);
 int						add_token(t_token **head, t_token_type type,
 							char *value, t_quote qoute);
 int						append_escaped_char(char *line, int *i, char **result);
@@ -170,7 +168,6 @@ int						handle_input_redirect(char *line, int *i,
 int						handle_operator(char *line, int *i, t_token **head);
 int						handle_output_redirect(char *line, int *i,
 							t_token **head);
-int						handle_pipe_operator(int *i, t_token **head);
 int						handle_quoted_content(char *line, int *i, char **result,
 							char quote);
 int						handle_quote_in_word(char *line, int *i, char **word);
@@ -188,6 +185,5 @@ t_cmd_list				*init_cmd_list(void);
 t_file_list				*init_file_list(void);
 t_file_node				*create_file_node(char *filename,
 							t_token_type redir_type);
-int						is_special_var(char *str, int pos);
 
 #endif
