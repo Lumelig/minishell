@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:17:15 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/24 14:29:24 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/25 17:50:36 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,8 @@ t_quote_state			check_line_completion(char *line);
 int						check_quotes_balanced_enhanced(char *line);
 int						get_special_var_skip(char *str, int i);
 int						is_special_expansion(char *str, int i);
-int						get_var_length(char *str, int start, int *end_pos);
 void					free_environment(t_env *my_env);
 t_cmd_list				*token_to_cmd(t_token *token);
-void					print_cmd_list(t_cmd_list *cmd_list);
 
 void					init_empty_env(t_env *env, char **argv, int argc);
 void					set_environment(t_env *my_env, char **key, char **value,

@@ -1,9 +1,9 @@
-minishell
-.vscode
-*.pdf
-**/obj/
-*workspace
-*.sub
-vgcore*
-*.txt
-**/*.a
+# ignore everything
+**/*
+
+# allow every .c and .h file
+!**/*.c
+!**/*.h
+
+# allow executable and .gitignore
+!.gitignore

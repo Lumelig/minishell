@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:46:17 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/25 16:46:57 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/25 17:50:38 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,11 @@ char					*copy_special_var(char *old_result, char *original,
 char					*copy_variable(char *old_result, char *original, int *i,
 							t_env *my_env);
 int						get_special_var_skip(char *str, int i);
-int						get_var_length(char *str, int start, int *end_pos);
 int						is_special_expansion(char *str, int i);
+bool					handle_dollar_expand(char *original, char **result,
+							int *i, t_env *my_env);
+void					handle_dollar_copy(char *original, char **result,
+							int *i, t_quote *quote_state);
 
 /* Environment management */
 bool					add_env_var(t_env *env, char *key, char *value);
@@ -165,7 +168,6 @@ int						handle_input_redirect(char *line, int *i,
 int						handle_operator(char *line, int *i, t_token **head);
 int						handle_output_redirect(char *line, int *i,
 							t_token **head);
-int						handle_pipe_operator(int *i, t_token **head);
 int						handle_quoted_content(char *line, int *i, char **result,
 							char quote);
 int						handle_quote_in_word(char *line, int *i, char **word);

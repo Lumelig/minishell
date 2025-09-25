@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/25 16:48:23 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/25 18:01:46 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,6 @@ static char	*get_input(int is_interactive)
 		trimmed = ft_strtrim(input, "\n");
 		free(input);
 		input = trimmed;
-		// if (input && input[ft_strlen(input) - 1] == '\n')
-		// input[ft_strlen(input) - 1] = '\0';
 	}
 	return (input);
 }
@@ -71,19 +69,11 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 	t_cmd_list	*cmd_list;
 	char		*input;
 
-	// t_cmd_node *debug_list; // debug
-	// int i;                  // debug
-	// t_token *debug;         // debug
 	while (1)
 	{
 		input = get_input(is_interactive);
-		// input = get_complete_input();
 		if (!input && g_sigint_received != 2)
-		{
-			// if (is_interactive)
-			// ft_printf("exit\n");
 			break ;
-		}
 		if (empty_input(input))
 		{
 			free(input);

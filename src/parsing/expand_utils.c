@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:37:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/25 16:47:11 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/25 17:52:37 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,50 +18,51 @@ char	*cpy_str(char *original, char *result, int j, int i)
 	char	*tmp;
 
 	extracted = ft_substr(original, j, i - (j - 1));
-	// printf("999: %s\n", extracted);
 	tmp = ft_strjoin(result, extracted);
 	free(extracted);
 	free(result);
 	return (tmp);
 }
 
-int	is_special_expansion(char *str, int i)
+static int	handle_braced_var(char *str, int start, int *end_pos)
 {
-	if (str[i + 1] == '$' || str[i + 1] == '?' || str[i + 1] == '0')
+	int	i;
+
+	i = start + 1;
+	if ((str[i] == '$' || str[i] == '?') && str[i + 1] == '}')
+	{
+		*end_pos = i + 2;
 		return (1);
-	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$' || str[i
-			+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
-		return (1);
-	return (0);
+	}
+	while (str[i] && str[i] != '}')
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+		{
+			while (str[i] && str[i] != '}')
+				i++;
+			if (str[i] == '}')
+				i++;
+			*end_pos = i;
+			return (-1);
+		}
+		i++;
+	}
+	if (str[i] != '}')
+		return (*end_pos = i, -1);
+	return (*end_pos = i + 1, i - start - 1);
 }
 
-char	*copy_special_var(char *old_result, char *original, int *i,
-		t_env *my_env)
+static int	get_var_length(char *original, int start, int *end_pos)
 {
-	char	*var;
-	int		check_pos;
-	char	*result;
+	int	i;
 
-	// /bin/echo ''$?''"42"
-	check_pos = *i + 1;
-	var = NULL;
-	result = old_result;
-	if (original[check_pos] == '{')
-		check_pos++;
-	if (original[check_pos] == '$')
-		var = ft_itoa(my_env->pid);
-	else if (original[check_pos] == '?')
-		var = ft_itoa(*exit_code());
-	else if (original[check_pos] == '0')
-		var = ft_strdup("minishell");
-	if (var)
-	{
-		result = ft_strjoin(old_result, var);
-		free(var);
-		free(old_result);
-	}
-	*i += get_special_var_skip(original, *i);
-	return (result);
+	i = start;
+	if (original[start] == '{')
+		return (handle_braced_var(original, start, end_pos));
+	while (original[i] && (ft_isalnum(original[i]) || original[i] == '_'))
+		i++;
+	*end_pos = i;
+	return (i - start);
 }
 
 static char	*get_var_value(char *str, int start, int len, t_env *my_env)
@@ -80,7 +81,6 @@ static char	*get_var_value(char *str, int start, int len, t_env *my_env)
 		}
 		current = current->next;
 	}
-	// free(var_name);
 	return (NULL);
 }
 
