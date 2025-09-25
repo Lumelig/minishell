@@ -6,17 +6,23 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:37:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/23 19:28:40 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/25 16:47:11 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_special_var(char *str, int pos)
+char	*cpy_str(char *original, char *result, int j, int i)
 {
-	if (str[pos] == '$' || str[pos] == '?')
-		return (1);
-	return (0);
+	char	*extracted;
+	char	*tmp;
+
+	extracted = ft_substr(original, j, i - (j - 1));
+	// printf("999: %s\n", extracted);
+	tmp = ft_strjoin(result, extracted);
+	free(extracted);
+	free(result);
+	return (tmp);
 }
 
 int	is_special_expansion(char *str, int i)
@@ -29,40 +35,42 @@ int	is_special_expansion(char *str, int i)
 	return (0);
 }
 
-char	*copy_special_var(char *result, char *original, int *i, t_env *env)
+char	*copy_special_var(char *old_result, char *original, int *i,
+		t_env *my_env)
 {
-	char	*tmp;
+	char	*var;
 	int		check_pos;
-	int		chars_written;
+	char	*result;
 
+	// /bin/echo ''$?''"42"
 	check_pos = *i + 1;
-	chars_written = 0;
-	tmp = NULL;
+	var = NULL;
+	result = old_result;
 	if (original[check_pos] == '{')
 		check_pos++;
 	if (original[check_pos] == '$')
-		tmp = ft_itoa(env->pid);
+		var = ft_itoa(my_env->pid);
 	else if (original[check_pos] == '?')
-		tmp = ft_itoa(*exit_code());
+		var = ft_itoa(*exit_code());
 	else if (original[check_pos] == '0')
-		tmp = ft_strdup("minishell");
-	if (tmp)
+		var = ft_strdup("minishell");
+	if (var)
 	{
-		ft_strcpy(result, tmp);
-		chars_written = ft_strlen(tmp);
-		free(tmp);
+		result = ft_strjoin(old_result, var);
+		free(var);
+		free(old_result);
 	}
-	*i += get_special_var_skip(str, *i);
-	return (chars_written);
+	*i += get_special_var_skip(original, *i);
+	return (result);
 }
 
-static char	*get_var_value(char *str, int start, int len, t_envlist *envlist)
+static char	*get_var_value(char *str, int start, int len, t_env *my_env)
 {
 	char		*var_name;
 	t_envlist	*current;
 
 	var_name = ft_substr(str, start, len);
-	current = envlist;
+	current = my_env->head;
 	while (current)
 	{
 		if (ft_strcmp(current->key, var_name) == 0)
@@ -72,36 +80,35 @@ static char	*get_var_value(char *str, int start, int len, t_envlist *envlist)
 		}
 		current = current->next;
 	}
-	free(var_name);
+	// free(var_name);
 	return (NULL);
 }
 
-int	copy_variable(char *result, char *str, int *i, t_envlist *envlist)
+char	*copy_variable(char *old_result, char *original, int *i, t_env *my_env)
 {
 	int		var_start;
 	int		var_end;
 	int		var_len;
-	char	*var_value;
-	int		chars_written;
+	char	*var;
+	char	*result;
 
-	chars_written = 0;
 	var_start = *i + 1;
-	if (str[var_start] == '{')
+	if (original[var_start] == '{')
 		var_start++;
-	// get the $variable length and var_end position
-	var_len = get_var_length(str, *i + 1, &var_end);
+	var_len = get_var_length(original, var_start, &var_end);
 	if (var_len <= 0)
 	{
 		*i = var_end;
-		return (0);
+		return (old_result);
 	}
-	//
-	var_value = get_var_value(str, var_start, var_len, envlist);
-	if (var_value)
+	var = get_var_value(original, var_start, var_len, my_env);
+	if (!var)
 	{
-		ft_strcpy(result, var_value);
-		chars_written = ft_strlen(var_value);
+		*i = var_end;
+		return (old_result);
 	}
+	result = ft_strjoin(old_result, var);
+	free(old_result);
 	*i = var_end;
-	return (chars_written);
+	return (result);
 }
