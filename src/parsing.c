@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 18:02:15 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/25 18:02:38 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/25 19:55:36 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,9 @@ t_cmd_list	*parsing(t_token *token)
 
 	cmd_list = NULL;
 	if (!syntax_validation(token))
+	{
 		*exit_code() = 2;
+	}
 	else
 	{
 		*exit_code() = 0;

@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:23:20 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/25 18:24:49 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/25 19:49:18 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,7 @@ static void	expander_loop(char *original, char **result, t_env *my_env)
 		}
 		else if (quote_state == QUOTE_NONE && original[i[0] + 1] == '\0')
 			if (original[i[0]] != '\'' && original[i[0]] != '"')
-				*result = cpy_str(original, *result, i[1], i[0]);
+				*result = cpy_str(original, *result, i[1]+1, i[0]);
 		i[0]++;
 	}
 	return ;

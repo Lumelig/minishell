@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_word.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:18:25 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/30 15:07:49 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/25 19:50:13 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	process_word_token(char *line, int *i, t_token **head)
 
 	if (!extract_word(line, i, &word, &quote))
 		return (0);
-	if (ft_strlen(word) > 0)
+	if (ft_strlen(word) > 0 || word[0] == '\0')
 	{
 		ret = add_token(head, TOKEN_WORD, word, quote);
 		if (!ret)
