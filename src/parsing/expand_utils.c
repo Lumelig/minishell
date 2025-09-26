@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:37:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/26 14:35:31 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/26 15:29:08 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ char	*copy_variable(char *old_result, char *original, int *i, t_env *my_env)
 	char	*var;
 	char	*result;
 
-	chars_written = 0;
 	var_start = *i + 1;
 	if (original[var_start] == '{')
 		var_start++;
