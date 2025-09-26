@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:17:15 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/22 13:55:17 by jenne            ###   ########.fr       */
+/*   Updated: 2025/09/26 14:30:36 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,21 +73,10 @@ t_token					*tokenize(char *line);
 char					*get_complete_input(void);
 t_quote_state			check_line_completion(char *line);
 int						check_quotes_balanced_enhanced(char *line);
-int						copy_special_var(char *result, char *str, int *i,
-							t_env *env);
-int						copy_variable(char *result, char *str, int *i,
-							t_envlist *envlist);
 int						get_special_var_skip(char *str, int i);
-int						is_special_var(char *str, int pos);
 int						is_special_expansion(char *str, int i);
-int						calculate_var_size(char *str, int i, t_envlist *envlist,
-							t_env *env);
-int						calculate_special_var_size(char *str, int i,
-							t_env *env);
-int						get_var_length(char *str, int start, int *end_pos);
 void					free_environment(t_env *my_env);
 t_cmd_list				*token_to_cmd(t_token *token);
-void					print_cmd_list(t_cmd_list *cmd_list);
 
 void					init_empty_env(t_env *env, char **argv, int argc);
 void					set_environment(t_env *my_env, char **key, char **value,

@@ -6,228 +6,241 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:23:20 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/24 14:03:03 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:35:44 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+"" rules:
+world splitting (IFS)
+pathname expansion (globbing) (*, ?, ...)
+\ only escapes ", $, `, \, \n
+~ does not expand
+"" is an empty word
 
-static int	count_preceding_backslashes(char *str, int pos)
+no quotes:
+\ escapes everything
+
+minishell scope:
+pathname expansions are not necessary to be handled
+escapes technically not either but we will manage that
+we don't handle tilde yet but will probably add it
+need to add handling to turn '' and "" into empty words instead of only removing them
+*/
+// echo "\\\$USER"Test$USER
+// echo j\\\iUSERiTestiUSER
+// echo "\\\$USER"Test$EXPANDED
+// echo "\\\\$EXPANDED"Test$EXPANDED
+
+/*
+echo '"'$USER'"'
+"realm"
+/bin/echo $"HOM"E$USER
+HOMErealm
+
+/bin/echo "'$USER'"
+'realm'
+/bin/echo "''$USER''"
+''realm''
+/bin/echo '"'"$USER"'"'
+"realm"
+/bin/echo "exit_code ->$? user ->$USER home -> $HOME"
+exit_code ->0 user ->realm home -> /home/realm
+
+
+
+/bin/echo $"42$"
+4242$ | 42$
+/bin/echo "$ "
+<$> | <$ >
+/bin/echo \$USER
+
+/bin/echo \\\$USER
+
+/bin/echo \\\\\\\\\$USER
+
+/bin/echo \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\$USER \$PATH \\$PWD
+
+/bin/echo '$USER' "$USER" "text  ' text"
+
+/bin/echo text"'$USER'" ' $USER '
+
+/bin/echo "text"   "$USER"    "$USER"
+
+/bin/echo $USER'$USER'text oui oui     oui  oui $USER oui      $USER ''
+
+/bin/echo "text" "text$USER" ... "$USER"
+
+/bin/echo '' ""
+
+/bin/echo $USER$TESTNOTFOUND$HOME$
+
+/bin/echo $USER$TESTNOTFOUND$HOME$WTF$PWD
+
+echo '' -n
+
+echo "" "" "" -n -n -n -n
+
+cat << $USER
+why
+not
+$USER
+
+cat << "$USER"
+why
+not
+$USER
+
+cat << "$US"E"R"
+because
+we
+love
+bash
+$USER
+
+export T=n
+echo "-"$T$T
+
+export T=nnnnnnnn
+echo "-""$T"nnnnnnnnnnnnn -nnnnnnnn"$T" '-'"$T"
+
+export T=nnnnnnnn
+echo "-""$T"nnnnnnnnnnnnn -nnnnnnnn"$T" '-''$T'
+
+export T=nnnnnnnn
+echo "-"'$T'nnnnnnnnnnnnn -nnnnnnnn'$T' '-'"$T "
+
+export T=nnnnnnnn
+echo "-"'$T'nnnnnnnnnnnnn -nnnnnnnn$T '-''$T '
+
+export T=e E=c S=h L=o
+$T$E$S$L
+
+export T="|"
+echo segfault $T grep segfault
+
+export T='|'
+echo segfault $T grep segfault
+
+export T=">"
+echo segfault $T grep segfault
+
+export T='<'
+echo segfault $T grep segfault
+
+export T="<<"
+echo segfault $T grep segfault
+
+export T='<<'
+echo segfault $T grep segfault
+
+export T="echo segfault | grep segfault"
+$T
+
+export T='|'
+echo $T echo lala $T echo $T echo ?
+
+export T="<<"
+$T.
+
+'''''''''''''''' echo ok
+
+echo "$"$'$'$"$"$"$"$'$'
+
+echo $/ $/
+
+echo "$/ $/"
+
+echo $/"$/"
+
+
+*/
+
+static void	dquote_handler(char *original, char **result, int *i,
+		t_quote *quote_state)
 {
-	int count;
-	
-	count = 0;
-	pos--;  // Start from the character before the current position
-	while (pos >= 0 && str[pos] == '\\')
+	if (*quote_state == QUOTE_DOUBLE && (i[0] == 0 || original[i[0]
+			- 1] != '\\'))
 	{
-		count++;
-		pos--;
+		*quote_state = QUOTE_NONE;
+		if (!*result)
+			*result = ft_substr(original, 0, i[0]);
+		else
+			*result = cpy_str(original, *result, i[1], i[0]);
+		i[1] = i[0];
 	}
-	return (count);
+	else if (*quote_state == QUOTE_NONE)
+	{
+		*quote_state = QUOTE_DOUBLE;
+		i[1] = i[0];
+		if (!*result)
+			*result = ft_substr(original, 0, i[0]);
+	}
 }
 
-static int	is_escaped(char *str, int pos)
+static void	squote_handler(char *original, char **result, int *i,
+		t_quote *quote_state)
 {
-	int backslash_count;
-	
-	if (pos == 0)
-		return (0);
-	backslash_count = count_preceding_backslashes(str, pos);
-	return (backslash_count % 2 == 1);  // Odd number of backslashes means escaped
+	if (*quote_state == QUOTE_SINGLE && (i[0] == 0 || original[i[0]
+			- 1] != '\\'))
+	{
+		*quote_state = QUOTE_NONE;
+		if (!*result)
+			*result = ft_substr(original, 0, i[0]);
+		else
+			*result = cpy_str(original, *result, i[1], i[0]);
+		i[1] = i[0];
+	}
+	else if (*quote_state == QUOTE_NONE)
+	{
+		*quote_state = QUOTE_SINGLE;
+		i[1] = i[0];
+		if (!*result)
+			*result = ft_substr(original, 0, i[0]);
+	}
 }
 
-void	check_quoting(char *original, char **join, char **expand, int *i)
+static void	expander_loop(char *original, char **result, t_env *my_env)
 {
-	t_quote quote_state;
-	int		start;
-	int		start2;
+	t_quote	quote_state;
+	int		i[2];
 
-	start2 = *i;
+	i[0] = 0;
+	i[1] = 0;
 	quote_state = QUOTE_NONE;
-	*join = NULL;  // Initialize join to NULL
-	*expand = NULL;  // Initialize expand to NULL
-	
-	while (original[*i])
+	while (original[i[0]])
 	{
-		if (original[*i] == '"' && !is_escaped(original, *i))
+		if (original[i[0]] == '"')
+			dquote_handler(original, result, i, &quote_state);
+		else if (original[i[0]] == '\'')
+			squote_handler(original, result, i, &quote_state);
+		if ((quote_state == QUOTE_NONE || quote_state == QUOTE_DOUBLE)
+			&& original[i[0]] == '$')
 		{
-			if (quote_state == QUOTE_DOUBLE)
-			{
-				quote_state = QUOTE_NONE;
-			}
-			else if (quote_state == QUOTE_NONE)
-			{
-				quote_state = QUOTE_DOUBLE;
-			}
+			handle_dollar_copy(original, result, i, &quote_state);
+			if (handle_dollar_expand(original, result, i, my_env))
+				continue ;
 		}
-		else if (original[*i] == '\'' || is_escaped(original, *i))
-		{
-			if (quote_state == QUOTE_NONE)
-			{
-				start = *i;  
-				quote_state = QUOTE_SINGLE;	
-			}
-			else if (quote_state == QUOTE_SINGLE)
-			{
-				*expand = ft_substr(original, start2, start - start2);
-				*join = ft_substr(original, start + 1, *i - start - 1);  // Content inside quotes
-				(*i)++;  // Move past the closing quote
-				return ;
-			}
-		}
-		(*i)++;
+		else if (quote_state == QUOTE_NONE && original[i[0] + 1] == '\0')
+			if (original[i[0]] != '\'' && original[i[0]] != '"')
+				*result = cpy_str(original, *result, i[1] + 1, i[0]);
+		i[0]++;
 	}
-	
-	// If no single quote pair found, expand the entire remaining string
-	*expand = ft_substr(original, start2, *i - start2);
-	*join = NULL;
+	return ;
 }
 
-static int	handle_variable_size(char *original, int *i, t_env *env,
-		t_envlist *envlist)
-{
-	int	skip;
-	int	var_end;
-	int	size;
-
-	skip = get_special_var_skip(original, *i);
-	if (skip > 0)
-	{
-		size = calculate_special_var_size(original, *i, env);
-		*i += skip - 1;
-		return (size);
-	}
-	else if (ft_isalpha(original[*i + 1]) || original[*i + 1] == '_'
-		|| original[*i + 1] == '{')
-	{
-		size = calculate_var_size(original, *i, envlist, env);
-		get_var_length(original, *i + 1, &var_end);
-		*i = var_end - 1;
-		return (size);
-	}
-	return (1);  // Return 1 for literal '$' character
-}
-
-int	calculate_expanded_size(char *original, t_env *env, t_envlist *envlist)
-{
-	int	i;
-	int	len;
-	int	result_size;
-
-	i = 0;
-	len = ft_strlen(original);
-	result_size = 0;
-	while (i < len)
-	{
-		if (original[i] == '$')
-			result_size += handle_variable_size(original, &i, env, envlist);
-		else
-			result_size++;
-		i++;
-	}
-	return (result_size + 1);
-}
-
-static void	process_expansion(char *result, char *original, t_envlist *envlist,
-		t_env *env)
-{
-	int	i;
-	int	j;
-	int	len;
-
-	i = 0;
-	j = 0;
-	len = ft_strlen(original);
-	while (i < len)
-	{
-		if (original[i] == '$' && i + 1 < len)
-		{
-			if (is_special_expansion(original, i))
-				j += copy_special_var(result + j, original, &i, env);
-			else if (ft_isalpha(original[i + 1]) || original[i + 1] == '_'
-				|| original[i + 1] == '{')
-				j += copy_variable(result + j, original, &i, envlist);
-			else
-				result[j++] = original[i++];
-		}
-		else
-			result[j++] = original[i++];
-	}
-	result[j] = '\0';
-}
-
-char	*expand_string(char *original, t_envlist *envlist, t_env *env)
+char	*expand_string(char *original, t_env *my_env)
 {
 	char	*result;
-	char	*expand;
-	char	*fin_result;
-	char	*join;
-	char	*temp;
-	int		result_size;
-	int 	i;
 
-	if (!original)
-		return (NULL);
-	if (!ft_strchr(original, '$'))
-		return (ft_strdup(original));
-		
-	i = 0;
-	fin_result = ft_strdup("");  // Initialize with empty string
-	if (!fin_result)
-		return (NULL);
-		
-	while (original[i])
-	{
-		check_quoting(original, &join, &expand, &i);
-		
-		if (!expand)  // Error in check_quoting
-		{
-			free(fin_result);
-			return (NULL);
-		}
-		
-		result_size = calculate_expanded_size(expand, env, envlist);
-		result = malloc(result_size);
-		if (!result)
-		{
-			free(expand);
-			free(join);
-			free(fin_result);
-			return (NULL);
-		}
-		
-		process_expansion(result, expand, envlist, env);
-		
-		// Join the expanded result
-		temp = ft_strjoin(fin_result, result);
-		free(fin_result);
-		free(result);
-		fin_result = temp;
-		
-		if (!fin_result)
-		{
-			free(expand);
-			free(join);
-			return (NULL);
-		}
-		
-		// Join the literal content (from inside single quotes)
-		if (join)
-		{
-			temp = ft_strjoin(fin_result, join);
-			free(fin_result);
-			free(join);
-			fin_result = temp;
-			if (!fin_result)
-			{
-				free(expand);
-				return (NULL);
-			}
-		}
-		
-		free(expand);
-	}
-	
-	return (fin_result);
+	result = NULL;
+	if (!original || !ft_strchr(original, '$'))
+		return (original);
+	expander_loop(original, &result, my_env);
+	if (!result)
+		return (original);
+	free(original);
+	return (result);
 }

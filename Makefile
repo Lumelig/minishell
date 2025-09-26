@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+         #
+#    By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/07 19:22:52 by jpflegha          #+#    #+#              #
-#    Updated: 2025/09/19 17:19:51 by mring            ###   ########.fr        #
+#    Updated: 2025/09/26 14:37:00 by jpflegha         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -114,6 +114,7 @@ noflags: fclean all
 
 # Build libft
 $(LIBFT):
+	@rm -rf libft/.git
 	@printf "$(CYAN)Building libft...$(RESET)\n"
 	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
 	@printf "$(GREEN)Libft built successfully!$(RESET)\n"

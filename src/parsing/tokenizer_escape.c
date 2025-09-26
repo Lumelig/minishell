@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_escape.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:17:51 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/22 16:54:18 by jenne            ###   ########.fr       */
+/*   Updated: 2025/09/26 14:35:52 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,10 @@ int	handle_quote_in_word(char *line, int *i, char **word)
 	char	quote_char;
 
 	quote_char = line[*i];
+	if(line[*i + 1] == quote_char && line[*i + 2] == ' ')
+	{
+		*word = ft_strdup("");
+	}
 	(*i)++;
 	if (!handle_quoted_content(line, i, word, quote_char))
 		return (0);

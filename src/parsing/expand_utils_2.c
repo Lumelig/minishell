@@ -6,111 +6,86 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:19:58 by jenne             #+#    #+#             */
-/*   Updated: 2025/08/29 15:21:32 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:35:07 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	is_special_expansion(char *str, int i)
+{
+	if (str[i + 1] == '$' || str[i + 1] == '?' || str[i + 1] == '0')
+		return (1);
+	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$' || str[i
+			+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
+		return (1);
+	return (0);
+}
+
 int	get_special_var_skip(char *str, int i)
 {
 	if (str[i + 1] == '$' || str[i + 1] == '?' || str[i + 1] == '0')
 		return (2);
-	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$'
-			|| str[i + 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
+	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$' || str[i
+			+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
 		return (4);
 	return (0);
 }
 
-static int	handle_braced_var(char *str, int start, int *end_pos)
+char	*copy_special_var(char *old_result, char *original, int *i,
+		t_env *my_env)
 {
-	int	i;
+	char	*var;
+	int		check_pos;
+	char	*result;
 
-	i = start + 1;
-	if (is_special_var(str, i) && str[i + 1] == '}')
+	check_pos = *i + 1;
+	var = NULL;
+	result = old_result;
+	if (original[check_pos] == '{')
+		check_pos++;
+	if (original[check_pos] == '$')
+		var = ft_itoa(my_env->pid);
+	else if (original[check_pos] == '?')
+		var = ft_itoa(*exit_code());
+	else if (original[check_pos] == '0')
+		var = ft_strdup("minishell");
+	if (var)
 	{
-		*end_pos = i + 2;
+		result = ft_strjoin(old_result, var);
+		free(var);
+		free(old_result);
+	}
+	*i += get_special_var_skip(original, *i);
+	return (result);
+}
+
+void	handle_dollar_copy(char *original, char **result, int *i,
+		t_quote *quote_state)
+{
+	if (!*result)
+		*result = ft_substr(original, 0, i[0]);
+	else if (*quote_state == QUOTE_DOUBLE)
+		*result = cpy_str(original, *result, i[1], i[0] - 1);
+	else
+		*result = cpy_str(original, *result, i[1] + 1, i[0] - 1);
+}
+
+bool	handle_dollar_expand(char *original, char **result, int *i,
+		t_env *my_env)
+{
+	if (is_special_expansion(original, i[0]))
+	{
+		*result = copy_special_var(*result, original, &i[0], my_env);
+		i[1] = i[0];
 		return (1);
 	}
-	while (str[i] && str[i] != '}')
+	else if ((ft_isalpha(original[i[0] + 1]) || original[i[0] + 1] == '_'
+			|| original[i[0] + 1] == '{'))
 	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
-		{
-			while (str[i] && str[i] != '}')
-				i++;
-			if (str[i] == '}')
-				i++;
-			*end_pos = i;
-			return (-1);
-		}
-		i++;
+		*result = copy_variable(*result, original, &i[0], my_env);
+		i[1] = i[0];
+		return (1);
 	}
-	if (str[i] != '}')
-		return (*end_pos = i, -1);
-	return (*end_pos = i + 1, i - start - 1);
-}
-
-int	get_var_length(char *str, int start, int *end_pos)
-{
-	int	i;
-
-	i = start;
-	if (str[start] == '{')
-		return (handle_braced_var(str, start, end_pos));
-	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
-		i++;
-	return (*end_pos = i, i - start);
-}
-
-int	calculate_special_var_size(char *str, int i, t_env *env)
-{
-	char	*tmp;
-	int		size;
-	int		check_pos;
-
-	size = 0;
-	check_pos = i + 1;
-	if (str[check_pos] == '{')
-		check_pos++;
-	if (str[check_pos] == '$')
-	{
-		tmp = ft_itoa(env->pid);
-		size = ft_strlen(tmp);
-		free(tmp);
-	}
-	else if (str[check_pos] == '?')
-	{
-		tmp = ft_itoa(*exit_code());
-		size = ft_strlen(tmp);
-		free(tmp);
-	}
-	return (size);
-}
-
-int	calculate_var_size(char *str, int i, t_envlist *envlist, t_env *env)
-{
-	int			var_end;
-	int			var_len;
-	int			var_start;
-	char		*var_name;
-	t_envlist	*current;
-
-	if (is_special_expansion(str, i))
-		return (calculate_special_var_size(str, i, env));
-	var_start = i + 1;
-	if (str[var_start] == '{')
-		var_start++;
-	var_len = get_var_length(str, i + 1, &var_end);
-	if (var_len <= 0)
-		return (0);
-	var_name = ft_substr(str, var_start, var_len);
-	current = envlist;
-	while (current)
-	{
-		if (ft_strcmp(current->key, var_name) == 0)
-			return (free(var_name), ft_strlen(current->value));
-		current = current->next;
-	}
-	free(var_name);
 	return (0);
 }

@@ -3,13 +3,11 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/09/22 14:40:24 by jenne            ###   ########.fr       */
+/*   Created: 2025/09/25 18:02:15 by jpflegha          #+#    #+#             */
+/*   Updated: 2025/09/26 14:36:34 by jpflegha         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
-
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -78,7 +76,9 @@ t_cmd_list	*parsing(t_token *token)
 
 	cmd_list = NULL;
 	if (!syntax_validation(token))
+	{
 		*exit_code() = 2;
+	}
 	else
 	{
 		*exit_code() = 0;
