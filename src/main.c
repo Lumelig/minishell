@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: maxrmax <mring@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/26 14:36:28 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/27 14:21:54 by maxrmax          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 	t_token		*token;
 	t_cmd_list	*cmd_list;
 	char		*input;
-	// int i = 0;
 
+	// int i = 0;
 	while (1)
 	{
 		input = get_input(is_interactive);
@@ -115,7 +115,7 @@ static void	shell_loop(t_env *my_env, int is_interactive)
 		// 	}
 		// 	debug_list = debug_list->next;
 		// }
-		// 
+		//
 		cleanup(token, input);
 		executor(cmd_list, my_env);
 		clean_cmd_list(cmd_list);

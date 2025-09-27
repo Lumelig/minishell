@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: maxrmax <mring@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:19:58 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/26 14:35:07 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/27 13:29:00 by maxrmax          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ void	handle_dollar_copy(char *original, char **result, int *i,
 	if (!*result)
 		*result = ft_substr(original, 0, i[0]);
 	else if (*quote_state == QUOTE_DOUBLE)
-		*result = cpy_str(original, *result, i[1], i[0] - 1);
+		*result = cpy_str(original, *result, i[1], i[0]);
 	else
-		*result = cpy_str(original, *result, i[1] + 1, i[0] - 1);
+		*result = cpy_str(original, *result, i[1] + 1, i[0]);
 }
 
 bool	handle_dollar_expand(char *original, char **result, int *i,
@@ -87,5 +87,6 @@ bool	handle_dollar_expand(char *original, char **result, int *i,
 		i[1] = i[0];
 		return (1);
 	}
+	i[1] = i[0];
 	return (0);
 }

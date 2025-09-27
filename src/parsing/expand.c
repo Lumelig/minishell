@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: maxrmax <mring@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:23:20 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/26 14:35:44 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/27 14:22:35 by maxrmax          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,15 +168,19 @@ static void	dquote_handler(char *original, char **result, int *i,
 		if (!*result)
 			*result = ft_substr(original, 0, i[0]);
 		else
-			*result = cpy_str(original, *result, i[1], i[0]);
+			// echo $"42$" fails here
+			//> 4242$ (double copy after expansion)
+			*result = cpy_str(original, *result, i[1], i[0] + 1);
 		i[1] = i[0];
 	}
 	else if (*quote_state == QUOTE_NONE)
 	{
 		*quote_state = QUOTE_DOUBLE;
-		i[1] = i[0];
 		if (!*result)
 			*result = ft_substr(original, 0, i[0]);
+		else if (i[1] + 1 <= i[0] - 1)
+			*result = cpy_str(original, *result, i[1] + 1, i[0]);
+		i[1] = i[0];
 	}
 }
 
@@ -190,15 +194,17 @@ static void	squote_handler(char *original, char **result, int *i,
 		if (!*result)
 			*result = ft_substr(original, 0, i[0]);
 		else
-			*result = cpy_str(original, *result, i[1], i[0]);
+			*result = cpy_str(original, *result, i[1], i[0] + 1);
 		i[1] = i[0];
 	}
 	else if (*quote_state == QUOTE_NONE)
 	{
 		*quote_state = QUOTE_SINGLE;
-		i[1] = i[0];
 		if (!*result)
 			*result = ft_substr(original, 0, i[0]);
+		else if (i[1] + 1 <= i[0] - 1)
+			*result = cpy_str(original, *result, i[1] + 1, i[0]);
+		i[1] = i[0];
 	}
 }
 
@@ -212,6 +218,8 @@ static void	expander_loop(char *original, char **result, t_env *my_env)
 	quote_state = QUOTE_NONE;
 	while (original[i[0]])
 	{
+		// if (*result)
+		// printf("stt: %d - %s - %c\n", i[0], *result, original[i[0]]);
 		if (original[i[0]] == '"')
 			dquote_handler(original, result, i, &quote_state);
 		else if (original[i[0]] == '\'')
@@ -223,9 +231,15 @@ static void	expander_loop(char *original, char **result, t_env *my_env)
 			if (handle_dollar_expand(original, result, i, my_env))
 				continue ;
 		}
+		// no case for space after expansion, need another else
+		// or and change this else if
 		else if (quote_state == QUOTE_NONE && original[i[0] + 1] == '\0')
+		{
 			if (original[i[0]] != '\'' && original[i[0]] != '"')
-				*result = cpy_str(original, *result, i[1] + 1, i[0]);
+				*result = cpy_str(original, *result, i[1] + 1, i[0] + 1);
+		}
+		// if (!*result)
+		// printf("end: %d - %s - %c\n", i[0], *result, original[i[0]]);
 		i[0]++;
 	}
 	return ;
