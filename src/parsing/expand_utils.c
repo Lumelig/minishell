@@ -3,21 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: maxrmax <mring@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:37:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/26 15:29:08 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/26 20:46:52 by maxrmax          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*cpy_str(char *original, char *result, int j, int i)
+char	*cpy_str(char *original, char *result, int start, int end)
 {
 	char	*extracted;
 	char	*tmp;
 
-	extracted = ft_substr(original, j, i - (j - 1));
+	if (end <= start)
+		return (result);
+	extracted = ft_substr(original, start, end - start);
 	tmp = ft_strjoin(result, extracted);
 	free(extracted);
 	free(result);
