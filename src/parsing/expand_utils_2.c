@@ -6,7 +6,7 @@
 /*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:19:58 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/26 14:35:07 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/27 04:28:51 by jpflegha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ int	is_special_expansion(char *str, int i)
 {
 	if (str[i + 1] == '$' || str[i + 1] == '?' || str[i + 1] == '0')
 		return (1);
-	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$' || str[i
-			+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
+	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$'
+			|| str[i + 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
 		return (1);
 	return (0);
 }
@@ -26,8 +26,8 @@ int	get_special_var_skip(char *str, int i)
 {
 	if (str[i + 1] == '$' || str[i + 1] == '?' || str[i + 1] == '0')
 		return (2);
-	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$' || str[i
-			+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
+	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$'
+			|| str[i + 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
 		return (4);
 	return (0);
 }
