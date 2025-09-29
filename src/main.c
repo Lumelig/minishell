@@ -6,7 +6,7 @@
 /*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 19:18:14 by jpflegha          #+#    #+#             */
-/*   Updated: 2025/09/29 13:17:49 by mring            ###   ########.fr       */
+/*   Updated: 2025/09/29 14:15:56 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,36 +42,15 @@ static void	cleanup(t_token *token, char *input)
 	free(input);
 }
 
-static char	*get_input(int is_interactive)
-{
-	char	*input;
-	char	*trimmed;
-
-	if (is_interactive)
-	{
-		input = get_complete_input();
-	}
-	else
-	{
-		input = get_next_line(STDIN_FILENO);
-		if (!input)
-			return (NULL);
-		trimmed = ft_strtrim(input, "\n");
-		free(input);
-		input = trimmed;
-	}
-	return (input);
-}
-
 static void	shell_loop(t_env *my_env, int is_interactive)
 {
 	t_token		*token;
 	t_cmd_list	*cmd_list;
 	char		*input;
 
-	while (1)
+	while (is_interactive)
 	{
-		input = get_input(is_interactive);
+		input = get_complete_input();
 		if (!input && g_sigint_received != 2)
 			break ;
 		if (empty_input(input))
