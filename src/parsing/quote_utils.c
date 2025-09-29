@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quote_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jenne <jenne@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 01:25:21 by jenne             #+#    #+#             */
-/*   Updated: 2025/07/18 01:25:22 by jenne            ###   ########.fr       */
+/*   Updated: 2025/09/29 13:28:11 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,6 @@ t_quote_state	check_line_completion(char *line)
 		process_quote_state(line, &i, &state);
 		i++;
 	}
-	state.continuation = state.in_single || state.in_double;
+	state.continuation = (state.in_single || state.in_double);
 	return (state);
 }

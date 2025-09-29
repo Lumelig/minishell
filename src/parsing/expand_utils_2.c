@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maxrmax <mring@student.42heilbronn.de>     +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:19:58 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/27 13:29:00 by maxrmax          ###   ########.fr       */
+/*   Updated: 2025/09/29 13:23:19 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	is_special_expansion(char *str, int i)
 	if (str[i + 1] == '$' || str[i + 1] == '?' || str[i + 1] == '0')
 		return (1);
 	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$' || str[i
-			+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
+				+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
 		return (1);
 	return (0);
 }
@@ -27,7 +27,7 @@ int	get_special_var_skip(char *str, int i)
 	if (str[i + 1] == '$' || str[i + 1] == '?' || str[i + 1] == '0')
 		return (2);
 	if (str[i + 1] == '{' && str[i + 2] && (str[i + 2] == '$' || str[i
-			+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
+				+ 2] == '?' || str[i + 2] == '0') && str[i + 3] == '}')
 		return (4);
 	return (0);
 }
@@ -60,17 +60,6 @@ char	*copy_special_var(char *old_result, char *original, int *i,
 	return (result);
 }
 
-void	handle_dollar_copy(char *original, char **result, int *i,
-		t_quote *quote_state)
-{
-	if (!*result)
-		*result = ft_substr(original, 0, i[0]);
-	else if (*quote_state == QUOTE_DOUBLE)
-		*result = cpy_str(original, *result, i[1], i[0]);
-	else
-		*result = cpy_str(original, *result, i[1] + 1, i[0]);
-}
-
 bool	handle_dollar_expand(char *original, char **result, int *i,
 		t_env *my_env)
 {
@@ -87,6 +76,19 @@ bool	handle_dollar_expand(char *original, char **result, int *i,
 		i[1] = i[0];
 		return (1);
 	}
-	i[1] = i[0];
+	i[1] = i[0] + 1;
 	return (0);
+}
+
+void	handle_dollar_copy(char *original, char **result, int *i,
+		t_quote *quote_state)
+{
+	(void)quote_state;
+	if (!*result)
+		*result = ft_substr(original, 0, i[0]);
+	else if (!ft_isalpha(original[i[0] + 1])
+		&& !is_special_expansion(original, i[0]))
+		*result = cpy_str(original, *result, i[1], i[0] + 1);
+	else
+		*result = cpy_str(original, *result, i[1], i[0]);
 }

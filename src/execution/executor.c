@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpflegha <jpflegha@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:47:11 by mring             #+#    #+#             */
-/*   Updated: 2025/09/26 14:32:47 by jpflegha         ###   ########.fr       */
+/*   Updated: 2025/09/29 12:40:47 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,7 @@ static int	cmd_check(t_cmd_list *cmd_list)
 	t_cmd_node	*curr;
 
 	if (!cmd_list || !cmd_list->head)
-	{
-		// *exit_code() = 1;
-		// write(STDERR_FILENO, "NULL cmd_list\n", 14);
 		return (true);
-	}
 	curr = cmd_list->head;
 	while (curr)
 	{

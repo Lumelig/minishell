@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maxrmax <mring@student.42heilbronn.de>     +#+  +:+       +#+        */
+/*   By: mring <mring@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:37:59 by jenne             #+#    #+#             */
-/*   Updated: 2025/09/26 20:46:52 by maxrmax          ###   ########.fr       */
+/*   Updated: 2025/09/27 19:13:43 by mring            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ static char	*get_var_value(char *str, int start, int len, t_env *my_env)
 		}
 		current = current->next;
 	}
+	free(var_name);
 	return (NULL);
 }
 
